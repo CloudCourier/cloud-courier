@@ -1,4 +1,5 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// 美化终端构建时的进度条样式
 const path = require('path');
 const { getPlugins } = require('./utils/plugin');
 const resolveConfig = require('./utils/resolve');
@@ -40,7 +41,7 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.less$/i,
+        test: /\.scss$/i,
         include: [SRC_PATH],
         exclude: /node_modules/, // 取消匹配node_modules里面的文件
         use: [
@@ -48,12 +49,15 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              modules: false,
+              modules: {
+                mode: 'local',
+                localIdentName: '[contenthash:5]',
+              },
               sourceMap: !IS_PRO,
             },
           },
           'postcss-loader',
-          'less-loader',
+          'sass-loader',
         ],
       },
       {

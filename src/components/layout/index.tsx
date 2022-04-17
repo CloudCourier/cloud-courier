@@ -1,22 +1,22 @@
-import './index.less';
+import { Layout } from '@douyinfe/semi-ui';
+import Sider from './components/sider';
+import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
-import HeadBar from './headBar';
-import SideBar from './sideBar';
+import SuspendFallbackLoading from '../fallback-loading';
+import './index.scss';
 
-function PageLayout() {
+export default () => {
+  const { Content } = Layout;
   return (
-    <div className="c-Layout-index">
-      <SideBar />
-
-      <div className="appMainWrap">
-        <HeadBar />
-
-        <div className="appMain">
-          <Outlet />
-        </div>
-      </div>
-    </div>
+    <Layout className="layout-page">
+      <Sider />
+      <Layout style={{ marginLeft: '60px' }}>
+        <Content className="layout-content">
+          <Suspense fallback={<SuspendFallbackLoading message="正在加载中" />}>
+            <Outlet />
+          </Suspense>
+        </Content>
+      </Layout>
+    </Layout>
   );
-}
-
-export default PageLayout;
+};
