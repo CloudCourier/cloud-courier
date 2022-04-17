@@ -11,5 +11,6 @@ module.exports = {
   alias: {
     '@': SRC_PATH,
     '@images': path.resolve(SRC_PATH, 'assets/images'),
+    websocket: path.resolve(SRC_PATH, 'utils/fakeWebsocket'),
   },
 };

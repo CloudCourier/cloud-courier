@@ -9,6 +9,7 @@ const { IS_DEV, SRC_PATH, IS_PRO, DIST_PATH } = variable;
 module.exports = {
   entry: {
     index: path.join(SRC_PATH, 'index.tsx'),
+    work: path.join(SRC_PATH, './utils/shared.work.js'),
   },
   output: {
     path: DIST_PATH,
@@ -51,7 +52,7 @@ module.exports = {
             options: {
               modules: {
                 mode: 'local',
-                localIdentName: '[contenthash:5]',
+                localIdentName: '[local]-[contenthash:5]',
               },
               sourceMap: !IS_PRO,
             },

@@ -1,0 +1,160 @@
+//
+.maxContainer {
+  position: relative;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid #e9e9e9;
+  display: flex;
+  flex-direction: column;
+  .toolbar {
+    padding: 16px 20px;
+    border-radius: 5px 5px 0px 0px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee0e3;
+    .toolbarNav {
+      height: 30px;
+      display: flex;
+      .toolbarBack {
+        display: flex;
+        align-items: center;
+        flex: 10;
+        font-size: 13px;
+        color: white;
+        .iconBack {
+          font-size: 20px;
+        }
+      }
+      .toolbarMenu {
+        flex: 1;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        // background-color: #4a4e4c;
+        .iconMenu {
+          color: #a3a9b1;
+          font-size: 20px;
+        }
+      }
+      .avatar {
+        margin: 0 10px;
+        display: inline-block;
+        height: 30px;
+        width: 30px;
+        font-size: 10px;
+        line-height: 30px;
+        text-align: center;
+        background-color: #efefef;
+        border: 2px solid #fff;
+        border-radius: 10px;
+        box-sizing: border-box;
+        overflow: hidden;
+        img {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+          object-position: center;
+        }
+      }
+    }
+  }
+  .chatContainer {
+    .emojiMartPreview {
+      display: none;
+    }
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    .msgContainer {
+      flex: 1;
+      position: relative;
+      .msgPanel {
+        position: absolute;
+        height: auto;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        overflow-y: auto;
+        transition: 1s;
+        &::-webkit-scrollbar {
+          height: 6px;
+          width: 6px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: rgba(0, 0, 0, 0.22);
+          border-radius: 40px;
+        }
+        &::-webkit-scrollbar-track {
+          background-color: rgba(0, 0, 0, 0.12);
+        }
+      }
+    }
+    .sendContainer {
+      box-shadow: transparent 0px 0px 0px;
+      border-top: 1px solid #f7f7f9;
+      background-color: #fff;
+      color: #92929e;
+      // height: 50px;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      .sendTextarea {
+        flex: 1;
+        // height: 18px;
+        .Textarea {
+          font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', 'Segoe UI', 'Apple Color Emoji',
+            'Twemoji Mozilla', 'Noto Color Emoji', 'Android Emoji', -apple-system,
+            BlinkMacSystemFont, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif !important ;
+        }
+      }
+      .funcContainer {
+        position: relative;
+        width: 80px;
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        .iconZan {
+          color: rgb(105, 105, 105);
+        }
+        .iconSend {
+          color: #03a84e;
+        }
+        .emojiContainer {
+          position: absolute;
+          bottom: 33px;
+          right: 10px;
+        }
+        .iconEmoji,
+        .iconZan,
+        .iconSend {
+          cursor: pointer;
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}
+
+.messageBubbleContainer {
+  max-width: 75%;
+  word-break: break-all;
+  .bubbleContainer {
+    display: inline-block;
+    background: rgb(239, 253, 222);
+    margin: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    .bubble {
+      position: relative;
+    }
+    .bubbleTime {
+      position: absolute;
+      right: -70px;
+      bottom: 0px;
+      color: #92929e;
+      font-size: 13.5px;
+    }
+  }
+}

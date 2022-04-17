@@ -8,6 +8,7 @@ import Empty from '@/components/empty';
 import { WrapperRouteComponent, WrapperRouteWithOutLayoutComponent } from './config';
 
 const DashboardAnlyanis = lazy(() => import('@/pages/dashboard/anlyanis'));
+const CustomerChat = lazy(() => import('@/pages/message'));
 const UserCenter = lazy(() => import('@/pages/user/center'));
 
 const Abnormal403 = lazy(() => import('@/pages/abnormal/403'));
@@ -21,7 +22,7 @@ const routeList: RouteObject[] = [
     children: [
       {
         path: 'customer/chat',
-        element: <WrapperRouteComponent element={<DashboardAnlyanis />} titleId="聊天页" auth />,
+        element: <WrapperRouteComponent element={<CustomerChat />} titleId="聊天页" auth />,
       },
       {
         path: 'user/center',
