@@ -5,7 +5,7 @@ import { updateAvatar } from '@/api/user';
 import { upload } from './utils';
 import { CropperCard } from './cropper';
 import { IconCloud, IconCamera } from '@douyinfe/semi-icons';
-import styles from './index.scss';
+import styles from './index.module.scss';
 
 export default function UploadImg({ avatarUrl, setAvatarUrl }: any) {
   // TODO: 图片上传，添加旋转功能

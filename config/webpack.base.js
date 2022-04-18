@@ -52,6 +52,7 @@ module.exports = {
             options: {
               modules: {
                 mode: 'local',
+                auto: /\.module\.\w+$/i,
                 localIdentName: '[local]-[contenthash:5]',
               },
               sourceMap: !IS_PRO,

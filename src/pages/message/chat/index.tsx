@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { useState, useRef } from 'react';
 
 import i18 from './i18';
-import styles from './index.scss';
+import styles from './index.module.scss';
 
 function Chat({ messageList }: any) {
   //  time: moment(new Date()).format('HH:mm:ss'),
@@ -21,7 +21,7 @@ function Chat({ messageList }: any) {
       <div className={styles.bubbleContainer}>
         <div className={styles.bubble}>
           <div>{item.content}</div>
-          <div className={styles.bubbleTime}>{item.timestamp}</div>
+          <div className={styles.bubbleTime}>{item.content}</div>
         </div>
       </div>
     </div>
@@ -35,7 +35,6 @@ function Chat({ messageList }: any) {
     }, 200);
   }
 
-  console.log(InitList);
   function searchEmoji(emojis: any) {
     setEmojiModal(false);
     setMsg(!_.isEmpty(msg) ? msg + emojis.native : emojis.native);
@@ -61,8 +60,7 @@ function Chat({ messageList }: any) {
       <div className={styles.chatContainer}>
         <div className={styles.msgContainer}>
           <div className={styles.msgPanel} ref={scroll}>
-            <div>"{InitList}"</div>
-            <div>2234</div>
+            <div>{InitList}</div>
           </div>
         </div>
         <div className={styles.sendContainer}>

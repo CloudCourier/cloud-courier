@@ -7,6 +7,7 @@ import Empty from '@/components/empty';
 const PrivateRoute: FC<RouteProps> = props => {
   const location = useLocation();
   const { pathname } = location;
+  // TODO 这里需要添加权限验证
   // const logged = useStore((state) => state.logged)
   const logged = true; // 这里做登录验证
 

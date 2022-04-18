@@ -1,7 +1,7 @@
 import CFooter from '@/components/CFooter/CFooter';
 import { Card } from '@douyinfe/semi-ui';
 import { useEffect } from 'react';
-import styles from './LoginRegisterBase.scss';
+import styles from './LoginRegisterBase.module.scss';
 
 export default function LoginRegisterBase(props) {
   // useEffect(() => {

@@ -4,7 +4,7 @@ import { IconSemiLogo } from '@douyinfe/semi-icons';
 import menuList, { MenuItem } from '../../config';
 import { useLocation, useNavigate } from 'react-router';
 import { useLocale } from '@/locales';
-import '../../index.scss';
+import '../../index.module.scss';
 import { useAppSelector } from '@/hooks/store';
 
 const { Sider } = Layout;

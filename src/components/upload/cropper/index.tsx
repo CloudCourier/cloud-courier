@@ -1,7 +1,7 @@
 import { useState, useImperativeHandle, useRef, forwardRef } from 'react';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-import styles from './index.scss';
+import styles from './index.module.scss';
 
 export const CropperCard = forwardRef(({ imageUrl }: any, uploadRef) => {
   const [cropper, setCropper] = useState<any>();

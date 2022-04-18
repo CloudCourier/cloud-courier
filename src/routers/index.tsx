@@ -10,7 +10,7 @@ import { WrapperRouteComponent, WrapperRouteWithOutLayoutComponent } from './con
 const DashboardAnlyanis = lazy(() => import('@/pages/dashboard/anlyanis'));
 const CustomerChat = lazy(() => import('@/pages/message'));
 const UserCenter = lazy(() => import('@/pages/user/center'));
-
+const WorkBench = lazy(() => import('@/pages/workbench'));
 const Abnormal403 = lazy(() => import('@/pages/abnormal/403'));
 const Abnormal404 = lazy(() => import('@/pages/abnormal/404'));
 const Abnormal500 = lazy(() => import('@/pages/abnormal/500'));
@@ -23,6 +23,10 @@ const routeList: RouteObject[] = [
       {
         path: 'customer/chat',
         element: <WrapperRouteComponent element={<CustomerChat />} titleId="聊天页" auth />,
+      },
+      {
+        path: 'workbench',
+        element: <WrapperRouteComponent element={<WorkBench />} titleId="工作台" auth />,
       },
       {
         path: 'user/center',

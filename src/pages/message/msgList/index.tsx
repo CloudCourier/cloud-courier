@@ -1,15 +1,11 @@
-// import { joined } from '@/api/subjects';
-// import { useQuery } from 'react-query';
 import Search from './search';
-import styles from './index.scss';
+import styles from './index.module.scss';
 
 export default function MsgListD({ userList, setUserId }: any) {
-  console.log('userList: ', userList);
   const choicUser = (e: any) => {
-    // console.log(e.target);
-    // console.log(e.target.getAttribute('id'));
-    setUserId(e.target.getAttribute('id'));
+    // setUserId(e.target.getAttribute('id'));
   };
+
   const MsgList = () =>
     userList.map((item: any) => (
       <div key={item.key} className={styles.feedCard}>

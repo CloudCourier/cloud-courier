@@ -2,7 +2,7 @@ import { sendCode } from './utils';
 import { Button, Form, useFormApi } from '@douyinfe/semi-ui';
 import { Dispatch, MutableRefObject, SetStateAction, useState } from 'react';
 import Center from '@/pages/user/center';
-import styles from './index.scss';
+import styles from './index.module.scss';
 
 interface ICUserCode {
   setCodeText: Dispatch<SetStateAction<string>>;

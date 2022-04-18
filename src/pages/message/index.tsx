@@ -1,19 +1,21 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import Chat from './chat';
 import MsgList from './msgList';
-import styles from './index.scss';
+import styles from './index.module.scss';
+import { useContext } from 'react';
+import { MsgContext } from '@/components/layout';
 
 function Message() {
   const [messageList, setMessageList] = useState([]);
   const [userList, setUserList] = useState([]);
-
-  // const ref= useRef();
-  // const [userId, setUserId] = useState('');
-
-  // useEffect(() => {
-  //   ref.current = userList;
-  // },[userList]);
-
+  const usertemp = useContext(MsgContext);
+  useEffect(() => {
+    if (usertemp.length > 0) {
+      setUserList(usertemp);
+      console.log(usertemp);
+      setMessageList(usertemp[0].message);
+    }
+  }, [usertemp]);
   return (
     <div className={styles.rootContain}>
       <div className={styles.msgList}>

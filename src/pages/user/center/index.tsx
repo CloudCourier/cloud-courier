@@ -1,7 +1,7 @@
 import { IconSetting, IconUserCircle } from '@douyinfe/semi-icons';
 import { Anchor, Tabs } from '@douyinfe/semi-ui';
 import UserBaseInfo from '../components/UserBaseInfo/UserBaseInfo';
-import styles from './index.scss';
+import styles from './index.module.scss';
 
 const { TabPane } = Tabs;
 
