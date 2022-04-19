@@ -6,7 +6,7 @@ import zh_CN from '@douyinfe/semi-ui/lib/es/locale/source/zh_CN';
 import en_GB from '@douyinfe/semi-ui/lib/es/locale/source/en_GB';
 import { localeConfig } from './locales';
 import RenderRouter from './routers';
-import './App.scss';
+import './reset.scss';
 import { useAppSelector } from './hooks/store';
 
 function App() {

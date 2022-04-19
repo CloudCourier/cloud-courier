@@ -4,7 +4,6 @@ import { IconSemiLogo } from '@douyinfe/semi-icons';
 import menuList, { MenuItem } from '../../config';
 import { useLocation, useNavigate } from 'react-router';
 import { useLocale } from '@/locales';
-import '../../index.module.scss';
 import { useAppSelector } from '@/hooks/store';
 
 const { Sider } = Layout;
@@ -75,7 +74,7 @@ const Index: FC = () => {
   }, [pathname]);
 
   return (
-    <Sider style={{ backgroundColor: 'var(--semi-color-bg-1)', position: 'fixed' }}>
+    <Sider style={{ backgroundColor: 'var(--semi-color-bg-1)', position: 'fixed', height: '100%' }}>
       <Nav
         items={navList}
         openKeys={openKeys}

@@ -16,8 +16,12 @@ const config = {
     hot: true,
     compress: true,
     historyApiFallback: true,
+    devMiddleware: { writeToDisk: true },
   },
   plugins: [new ReactRefreshWebpackPlugin()].filter(Boolean),
+  optimization: {
+    runtimeChunk: 'single',
+  },
   watchOptions: {
     aggregateTimeout: 500,
     poll: 1000,

@@ -1,0 +1,22 @@
+.semi-input-wrapper {
+  margin: 10px;
+}
+
+.semi-search-dropdown {
+  overflow-y: auto;
+  transition: 1s;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.22);
+    border-radius: 40px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+}

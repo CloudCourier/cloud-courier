@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { AutoComplete, Avatar, Empty } from '@douyinfe/semi-ui';
 import { IconSearch } from '@douyinfe/semi-icons';
-import { IllustrationNoContent } from '@douyinfe/semi-illustrations';
+import { IllustrationConstruction } from '@douyinfe/semi-illustrations';
+import './style.scss';
 
 export default () => {
   const [data, setData] = useState([]);
   const [list, setList] = useState([
-    { name: '夏可漫', email: 'xiakeman@example.com', abbr: 'XK', color: 'amber' },
-    { name: '申悦', email: 'shenyue@example.com', abbr: 'SY', color: 'indigo' },
-    { name: '曲晨一', email: 'quchenyi@example.com', abbr: 'CY', color: 'blue' },
-    { name: '文嘉茂', email: 'wenjiamao@example.com', abbr: 'JM', color: 'cyan' },
+    { name: '夏可漫', email: 'xiakeman@', abbr: 'XK', color: 'amber' },
+    { name: '申悦', email: 'shenyue@e', abbr: 'SY', color: 'indigo' },
+    { name: '申悦', email: 'shenyue@e', abbr: 'SY', color: 'indigo' },
+    { name: '曲晨一', email: 'quchenyi@', abbr: 'CY', color: 'blue' },
+    { name: '曲晨一', email: 'quchenyi@', abbr: 'CY', color: 'blue' },
+    { name: '文嘉茂', email: 'wenjiamao@exam', abbr: 'JM', color: 'cyan' },
+    { name: '文嘉茂', email: 'wenjiamao@exam', abbr: 'JM', color: 'cyan' },
   ]);
 
   const search = value => {
@@ -49,11 +53,12 @@ export default () => {
       renderSelectedItem={option => option.email}
       renderItem={renderOption}
       onSearch={search}
+      dropdownClassName="semi-search-dropdown"
       dropdownStyle={{ width: '200px' }}
       emptyContent={
         <Empty
           style={{ padding: 12, width: 200 }}
-          image={<IllustrationNoContent style={{ width: 90, height: 90 }} />}
+          image={<IllustrationConstruction style={{ width: 90, height: 90 }} />}
           description={'暂无内容'}
         />
       }
