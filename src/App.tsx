@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { LocaleProvider } from '@douyinfe/semi-ui';
 import { IntlProvider } from 'react-intl';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import zh_CN from '@douyinfe/semi-ui/lib/es/locale/source/zh_CN';
 import en_GB from '@douyinfe/semi-ui/lib/es/locale/source/en_GB';
 import { localeConfig } from './locales';
@@ -23,9 +23,9 @@ function App() {
   return (
     <LocaleProvider locale={getLocale}>
       <IntlProvider locale={locale.split('_')[0]} messages={localeConfig[locale]}>
-        <BrowserRouter>
+        <HashRouter>
           <RenderRouter />
-        </BrowserRouter>
+        </HashRouter>
       </IntlProvider>
     </LocaleProvider>
   );

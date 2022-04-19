@@ -15,7 +15,6 @@ function Message() {
   useEffect(() => {
     if (usertemp.length > 0) {
       setUserList(usertemp);
-      console.log(usertemp);
     }
   }, [usertemp]);
   useEffect(() => {
@@ -24,7 +23,8 @@ function Message() {
       // 将选择用户的消息列表传递给组件，进行展示
       setMessageList(choreUser[0].message);
     }
-  }, [userId]);
+    // 通过监听消息列表的变化和用户的切换，来更新消息列表
+  }, [usertemp, userId]);
   const emptyStyle = {
     // padding: 30,
     height: '100%',
@@ -34,6 +34,7 @@ function Message() {
     alignItems: 'center',
     border: '1px solid #e9e9e9',
   };
+
   return (
     <div className={styles.rootContain}>
       <div className={styles.msgList}>
@@ -41,7 +42,12 @@ function Message() {
       </div>
       <div className={styles.chatMessage}>
         {messageList.length > 0 ? (
-          <Chat messageList={messageList} setMessageList={setMessageList} cloudCourier />
+          <Chat
+            messageList={messageList}
+            setMessageList={setMessageList}
+            userId={userId}
+            cloudCourier
+          />
         ) : (
           <Empty
             image={<IllustrationNoContent />}

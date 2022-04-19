@@ -17,14 +17,15 @@ export default () => {
     sharedworker.port.onmessage = e => {
       console.log(`主线程 ：${e.data}`);
     };
-
+    sharedworker.port.start();
+    // sharedworker.port.postMessage({
+    //   from: "idxxczcxsad",
+    // });
     // 待认证 = 0 通信 = 1 预认证/未连接 = 3
     let webSocketState = WebSocket.CONNECTING;
 
     // Listen to broadcasts from server
-    function handleBroadcast(data) {
-      setTime(data);
-    }
+
     const broadcastChannel = new BroadcastChannel('WebSocketChannel');
     broadcastChannel.addEventListener('message', event => {
       switch (event.data.type) {
@@ -33,7 +34,12 @@ export default () => {
           console.log('WebSocketState:', webSocketState);
           break;
         case 'message':
-          handleBroadcast(event.data.timestamp);
+          // 监听新消息的时间，来判断是否去传递新的消息
+          setTime(event.data.timestamp);
+          break;
+        case 'instance':
+          // 监听新消息的时间，来判断是否去传递新的消息
+          console.log(event.data.instance);
           break;
         default:
           break;

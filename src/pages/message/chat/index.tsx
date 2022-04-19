@@ -8,13 +8,14 @@ import { useState, useRef } from 'react';
 
 import i18 from './i18';
 import styles from './index.module.scss';
+import { memo } from 'react';
+import { useEffect } from 'react';
 
-function Chat({ messageList }: any) {
+function Chat({ messageList, userId }: any) {
   //  time: moment(new Date()).format('HH:mm:ss'),
   const scroll = useRef<HTMLDivElement>();
   const [msg, setMsg] = useState('');
   const [showEmojiModal, setEmojiModal] = useState(false);
-
   const InitList = messageList.map((item: any) => (
     // TODO
     <div key={Math.random()} className={styles.messageBubbleContainer}>
@@ -26,14 +27,18 @@ function Chat({ messageList }: any) {
       </div>
     </div>
   ));
+  useEffect(() => {
+    scroll.current.scrollTop = scroll.current.scrollHeight;
+  }, [messageList]);
+
   function sendMsg() {
-    // cloudCourier.send(
-    //   new ServerboundMessagePacket('s:SUymUa6gb8vjI8phU2xrxR-1d8m37dV7soZyE6FCcq', 'hello'),
-    // );
-    setTimeout(() => {
-      scroll.current.scrollTop = scroll.current.scrollHeight;
-    }, 200);
+    broadcastChannel.postMessage({
+      type: 'sendRequest',
+      id: userId,
+      message: 'hello',
+    });
   }
+  const broadcastChannel = new BroadcastChannel('WebSocketChannel');
 
   function searchEmoji(emojis: any) {
     setEmojiModal(false);
@@ -96,4 +101,4 @@ function Chat({ messageList }: any) {
   );
 }
 
-export default Chat;
+export default memo(Chat);
