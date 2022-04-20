@@ -9,7 +9,7 @@ import {
   ServerboundMessagePacket,
 } from '@cloud-courier/cloud-courier-lib';
 import { openDB } from 'idb/with-async-ittr';
-
+import { debounce } from 'lodash';
 const idToPortMap = {};
 
 let instance;
@@ -32,12 +32,12 @@ const cloudCourier = new CloudCourier({
 });
 // eslint-disable-next-line no-undef
 const broadcastChannel = new BroadcastChannel('WebSocketChannel');
-broadcastChannel.onmessage = e => {
+broadcastChannel.onmessage = debounce(e => {
   const { type, id, message } = e.data;
   if (type === 'sendRequest') {
     cloudCourier.send(new ServerboundMessagePacket(id, message));
   }
-};
+}, 100);
 
 cloudCourier
   .preAuth()
@@ -67,11 +67,13 @@ cloudCourier.addListener({
     } else if (packet instanceof ClientboundMessagePacket) {
       // 判断消息是不是自己的，如果是自己的就发送给主线程
       // TODO 其实好像并不用，因为使用就一个用户
-      const { content, source, target, timestamp } = packet;
-      console.log('packet', packet);
+      let { content, source, target, timestamp } = packet;
+      // 将 Long 型的时间转换成 number
+      timestamp = timestamp.toNumber();
       instanceDB.then(async e => {
         const tx = e.transaction('userList', 'readwrite');
         const index = tx.store.index('key');
+        // 遍历 userID === source 的对象,将消息加进去
         for await (const cursor of index.iterate(source)) {
           const user = { ...cursor.value };
           user.lastDate = timestamp;
@@ -91,6 +93,7 @@ cloudCourier.addListener({
       // console.log('我收到消息 了packet: ', packet);
     } else if (packet instanceof ClientboundStrangerPacket) {
       /**
+       * 来访客了
        * appKey 群组ID g:10
        * clientVendor 浏览器信息
        * key 访客ID s:xxxxx
@@ -127,8 +130,31 @@ cloudCourier.addListener({
       // });
     }
   },
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  packetSent() {},
+  packetSent({ packet }) {
+    if (packet instanceof ServerboundMessagePacket) {
+      const { content, target } = packet;
+      const timestamp = Date.now();
+      instanceDB.then(async e => {
+        const tx = e.transaction('userList', 'readwrite');
+        const index = tx.store.index('key');
+        // 遍历 userID === source 的对象,将消息加进去
+        for await (const cursor of index.iterate(target)) {
+          const user = { ...cursor.value };
+          user.message.push({
+            content,
+            timestamp,
+            target,
+          });
+          cursor.update(user);
+        }
+        await tx.done;
+      });
+      broadcastChannel.postMessage({
+        type: 'message',
+        timestamp,
+      });
+    }
+  },
   packetError(event) {
     if (!event.supress) {
       console.error('解析包失败: ', event.cause);
@@ -139,18 +165,3 @@ cloudCourier.addListener({
     console.error('断开连接', event.reason, event.cause);
   },
 });
-
-// eslint-disable-next-line no-undef
-// self.onconnect = e => {
-//   const port = e.ports[0];
-//   instance = port;
-//   port.onmessage = msg => {
-//     console.log('work线程收到了消息', idToPortMap);
-//   };
-//   console.log('balabala')
-//   port.start();
-// };
-// eslint-disable-next-line no-undef
-console.log('self', self);
-// eslint-disable-next-line no-undef
-console.log('self.onconnect', self.onconnect);

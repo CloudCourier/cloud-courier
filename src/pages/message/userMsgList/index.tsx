@@ -1,7 +1,8 @@
 import Search from './search';
 import styles from './index.module.scss';
+import { memo } from 'react';
 
-export default function MsgListD({ userList, setUserId }: any) {
+function userMsgList({ userList, setUserId }: any) {
   const choicUser = e => {
     let first = true;
     while (first === true ? !e.target.getAttribute('id') : !e.getAttribute('id')) {
@@ -55,3 +56,4 @@ export default function MsgListD({ userList, setUserId }: any) {
     </div>
   );
 }
+export default memo(userMsgList);
