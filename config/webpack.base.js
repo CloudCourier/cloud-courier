@@ -5,14 +5,17 @@ const { getPlugins } = require('./utils/plugin');
 const resolveConfig = require('./utils/resolve');
 const variable = require('./utils/variable');
 
-const { IS_DEV, SRC_PATH, IS_PRO, DIST_PATH } = variable;
+const { IS_DEV, SRC_PATH, IS_PRO, BUILD_PATH } = variable;
 module.exports = {
   entry: {
     index: path.join(SRC_PATH, 'index.tsx'),
-    work: path.join(SRC_PATH, './utils/shared.work.js'),
+    work: {
+      import: path.join(SRC_PATH, './utils/shared.work.js'),
+      filename: 'sharedwork.js',
+    },
   },
   output: {
-    path: DIST_PATH,
+    path: BUILD_PATH,
     filename: IS_DEV ? 'js/[name].bundle.js' : 'js/[name].[contenthash:8].bundle.js',
     // publicPath: getCDNPath(),
     chunkFilename: IS_DEV ? 'js/[name].chunk.js' : 'js/[name].[contenthash:8].chunk.js',
@@ -44,7 +47,7 @@ module.exports = {
       {
         test: /\.scss$/i,
         include: [SRC_PATH],
-        exclude: /node_modules/, // 取消匹配node_modules里面的文件
+        exclude: /node_modules/,
         use: [
           IS_DEV ? 'style-loader' : MiniCssExtractPlugin.loader,
           {
@@ -52,7 +55,6 @@ module.exports = {
             options: {
               modules: {
                 mode: 'local',
-                auto: /\.module\.\w+$/i,
                 localIdentName: '[local]-[contenthash:5]',
               },
               sourceMap: !IS_PRO,

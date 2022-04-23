@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import Chat from './chat';
 import UserMsgList from './userMsgList';
-import styles from './index.module.scss';
+import styles from './index.scss';
 import { useContext } from 'react';
 import { MsgContext } from '@/components/layout';
 import { Empty } from '@douyinfe/semi-ui';

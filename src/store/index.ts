@@ -3,12 +3,13 @@ import authReducer from '@/store/auth.slice';
 import sideReducer from './sidebar.slice';
 // import {connectionSlice} from "./connection.slice";
 import globalReducer from './common/global.slice';
-
+import workbenchListReducer from './workbench.slice';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     sider: sideReducer,
     global: globalReducer,
+    workbenchList: workbenchListReducer,
   },
 });
 

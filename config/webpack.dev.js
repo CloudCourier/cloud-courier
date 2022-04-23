@@ -27,7 +27,7 @@ const config = {
     poll: 1000,
     ignored: /node_modules/,
   },
-  devtool: 'source-map',
+  // devtool: 'source-map',
 };
 const mergedConfig = webpackMerge.merge(baseConfig, config);
 module.exports = mergedConfig;

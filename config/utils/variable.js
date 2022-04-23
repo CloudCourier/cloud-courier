@@ -8,7 +8,7 @@ const { config: loadConfig } = dotenv;
 const NODE_ENV = webpackUtils.getEnv();
 
 // 构建目录
-const DIST_PATH = path.resolve(__dirname, '../../', 'dist');
+const BUILD_PATH = path.resolve(__dirname, '../../', 'build');
 // 源码目录
 const SRC_PATH = path.resolve(__dirname, '../../', 'src');
 // public 目录
@@ -39,7 +39,7 @@ console.log('::NODE_ENV', NODE_ENV);
 console.log('version', version);
 
 module.exports = {
-  DIST_PATH,
+  BUILD_PATH,
   SRC_PATH,
   PUBLIC_PATH,
   ROOT_PATH,

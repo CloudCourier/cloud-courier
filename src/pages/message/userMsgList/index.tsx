@@ -1,9 +1,9 @@
 import Search from './search';
-import styles from './index.module.scss';
+import styles from './index.scss';
 import { memo } from 'react';
 
 function userMsgList({ userList, setUserId }: any) {
-  const choicUser = e => {
+  const choiceUser = e => {
     let first = true;
     while (first === true ? !e.target.getAttribute('id') : !e.getAttribute('id')) {
       // 当第一次点击，且没有获取到ID的时候
@@ -25,7 +25,7 @@ function userMsgList({ userList, setUserId }: any) {
 
   const MsgList = () =>
     userList.map((item: any) => (
-      <div key={item.key} id={item.key} className={styles.feedCard} onClick={choicUser}>
+      <div key={item.key} id={item.key} className={styles.feedCard} onClick={choiceUser}>
         <div className={styles.feedCardAvatar}>
           <div className={styles.avatar}>
             <img src={item.appLogo} alt="logo" />

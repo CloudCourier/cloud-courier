@@ -6,11 +6,13 @@ import RegisterPage from '@/pages/user/register';
 import LayoutPage from '@/components/layout';
 import Empty from '@/components/empty';
 import { WrapperRouteComponent, WrapperRouteWithOutLayoutComponent } from './config';
+import workbenchChildren from '@/routers/workbenchChildren';
 
 const DashboardAnlyanis = lazy(() => import('@/pages/dashboard/anlyanis'));
 const CustomerChat = lazy(() => import('@/pages/message'));
 const UserCenter = lazy(() => import('@/pages/user/center'));
 const WorkBench = lazy(() => import('@/pages/workbench'));
+
 const Abnormal403 = lazy(() => import('@/pages/abnormal/403'));
 const Abnormal404 = lazy(() => import('@/pages/abnormal/404'));
 const Abnormal500 = lazy(() => import('@/pages/abnormal/500'));
@@ -27,6 +29,7 @@ const routeList: RouteObject[] = [
       {
         path: 'workbench',
         element: <WrapperRouteComponent element={<WorkBench />} titleId="工作台" auth />,
+        children: workbenchChildren,
       },
       {
         path: 'user/center',

@@ -1,0 +1,10 @@
+.rootContain {
+  display: flex;
+  height: 100%;
+  .msgList {
+    width: 200px;
+  }
+  .chatMessage {
+    flex: 1;
+  }
+}

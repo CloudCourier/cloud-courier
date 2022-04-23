@@ -8,25 +8,25 @@ import { ToastInfo } from '@/utils/common';
 import { useState, useRef } from 'react';
 
 import i18 from './i18';
-import styles from './index.module.scss';
+import styles from './index.scss';
 import { memo, useMemo, useCallback, useEffect } from 'react';
 
 function Chat({ selectedUser }) {
   const [msg, setMsg] = useState('');
   const { key, message, appLogo, appName, clientVendor, name } = selectedUser;
-  console.log(message);
   const scroll = useRef<HTMLDivElement>();
   const [showEmojiModal, setEmojiModal] = useState(false);
   const InitList = useMemo(
     () =>
       message.map(item => (
-        <div key={item.timestamp} className={styles.messageBubbleContainer}>
+        <div
+          key={item.timestamp}
+          className={`${styles.messageBubbleContainer} ${item.target === key ? styles.owner : ''} `}
+        >
           <div className={styles.bubbleContainer}>
             <div className={styles.bubble}>
-              <div>
-                {item.content}
-                <div className={styles.bubbleTime}>{dayjs(item.timestamp).format('HH:mm:ss')}</div>
-              </div>
+              <div>{item.content}</div>
+              <div className={styles.bubbleTime}>{dayjs(item.timestamp).format('HH:mm:ss')}</div>
             </div>
           </div>
         </div>
@@ -34,7 +34,7 @@ function Chat({ selectedUser }) {
     [message],
   );
 
-  const sendMsg = useCallback(() => {
+  const sendMsg = () => {
     if (msg.trim() === '') {
       ToastInfo('请输入内容');
       setMsg('');
@@ -47,13 +47,11 @@ function Chat({ selectedUser }) {
       message: msg,
     });
     setMsg('');
-    // 方法固定，永远不需要更新
-  }, []);
-
-  const searchEmoji = useCallback(emojis => {
+  };
+  const searchEmoji = emojis => {
     setEmojiModal(false);
     setMsg(!_.isEmpty(msg) ? msg + emojis.native : emojis.native);
-  }, []);
+  };
 
   useEffect(() => {
     scroll.current.scrollTop = scroll.current.scrollHeight;
@@ -77,7 +75,7 @@ function Chat({ selectedUser }) {
       <div className={styles.chatContainer}>
         <div className={styles.msgContainer}>
           <div className={styles.msgPanel} ref={scroll}>
-            <div>{InitList}</div>
+            {InitList}
           </div>
         </div>
         <div className={styles.sendContainer}>

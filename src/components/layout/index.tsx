@@ -13,7 +13,7 @@ export default () => {
   const [messageList, setMessageList] = useState([]);
   const [time, setTime] = useState(1);
   useEffect(() => {
-    const sharedworker = new SharedWorker('http://localhost:9000/js/work.bundle.js');
+    const sharedworker = new SharedWorker(`${process.env.API_LOCAL}/sharedwork.js`);
     sharedworker.port.onmessage = e => {
       console.log(`主线程 ：${e.data}`);
     };
@@ -25,7 +25,6 @@ export default () => {
     let webSocketState = WebSocket.CONNECTING;
 
     // Listen to broadcasts from server
-
     const broadcastChannel = new BroadcastChannel('WebSocketChannel');
     broadcastChannel.addEventListener('message', event => {
       switch (event.data.type) {
@@ -48,6 +47,7 @@ export default () => {
     // 只用请求一次，防止请求两次导致WS连接失败
   }, []);
   useEffect(() => {
+    // TODO 无消息列表的时候会报错，带历史消息出来后再解决
     openDB('cloudCourier').then(db => {
       db.getAll('userList').then(res => {
         setMessageList(res);

@@ -10,10 +10,7 @@ import {
 } from '@cloud-courier/cloud-courier-lib';
 import { openDB } from 'idb/with-async-ittr';
 import { debounce } from 'lodash';
-const idToPortMap = {};
 
-let instance;
-console.warn('what are you doing');
 const instanceDB = openDB('cloudCourier', 1, {
   upgrade(db) {
     const Store = db.createObjectStore('userList', {
@@ -71,6 +68,7 @@ cloudCourier.addListener({
       // 将 Long 型的时间转换成 number
       timestamp = timestamp.toNumber();
       instanceDB.then(async e => {
+        // TODO tx undefined
         const tx = e.transaction('userList', 'readwrite');
         const index = tx.store.index('key');
         // 遍历 userID === source 的对象,将消息加进去
