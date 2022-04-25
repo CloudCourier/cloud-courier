@@ -1,33 +1,24 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import Chat from './chat';
 import UserMsgList from './userMsgList';
 import styles from './index.scss';
-import { useContext } from 'react';
-import { MsgContext } from '@/components/layout';
 import { Empty } from '@douyinfe/semi-ui';
 import { IllustrationNoContent, IllustrationNoContentDark } from '@douyinfe/semi-illustrations';
+import { useAppSelector } from '@/hooks/store';
 
 function Message() {
   const [selectedUser, setSelectedUser] = useState('none');
-  const [userList, setUserList] = useState([]);
   const [userId, setUserId] = useState('');
-  const usertemp = useContext(MsgContext);
-  useEffect(() => {
-    if (usertemp.length > 0) {
-      setUserList(usertemp);
-    }
-    // 消息列表更新的时候才去更新用户列表
-  }, [usertemp]);
+  const userMessage = useAppSelector(state => state.message.message);
   useEffect(() => {
     if (userId !== '') {
-      const tempUser = usertemp.filter(item => item.key === userId);
+      const tempUser = userMessage.filter(item => item.key === userId);
       // 将选择用户的消息列表传递给组件，进行展示
       setSelectedUser(tempUser[0]);
     }
     // 通过监听消息列表的变化和用户的切换，来更新消息列表
-  }, [usertemp, userId]);
+  }, [userMessage, userId]);
   const emptyStyle = {
-    // padding: 30,
     height: '100%',
     width: '100%',
     display: 'flex',
@@ -39,7 +30,7 @@ function Message() {
   return (
     <div className={styles.rootContain}>
       <div className={styles.msgList}>
-        <UserMsgList userList={userList} setUserId={setUserId} />
+        <UserMsgList setUserId={setUserId} />
       </div>
       <div className={styles.chatMessage}>
         {selectedUser !== 'none' ? (
@@ -55,4 +46,4 @@ function Message() {
     </div>
   );
 }
-export default memo(Message);
+export default Message;

@@ -6,6 +6,7 @@ import { setActiveKey } from '@/store/workbench.slice';
 import { choiceId } from '@/utils/common';
 import { useAppDispatch } from '@/hooks/store';
 import { useNavigate } from 'react-router';
+import styles from './index.scss';
 
 export default () => {
   const nav = useNavigate();
@@ -20,8 +21,8 @@ export default () => {
     item.path === 'dashboard' ? null : (
       <div key={item.key} id={item.key} onClick={choiceCard}>
         <Card
-          shadows="always"
-          style={{ maxWidth: 300 }}
+          shadows="hover"
+          style={{ width: '260px', margin: '20px' }}
           bodyStyle={{
             display: 'flex',
             alignItems: 'center',
@@ -43,5 +44,5 @@ export default () => {
       </div>
     ),
   );
-  return <div>{CardList}</div>;
+  return <div className={styles.cardList}>{CardList}</div>;
 };

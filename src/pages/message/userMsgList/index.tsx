@@ -1,8 +1,8 @@
 import Search from './search';
 import styles from './index.scss';
-import { memo } from 'react';
+import { useAppSelector } from '@/hooks/store';
 
-function userMsgList({ userList, setUserId }: any) {
+function userMsgList({ setUserId }) {
   const choiceUser = e => {
     let first = true;
     while (first === true ? !e.target.getAttribute('id') : !e.getAttribute('id')) {
@@ -22,9 +22,9 @@ function userMsgList({ userList, setUserId }: any) {
     }
     setUserId(e.getAttribute('id'));
   };
-
+  const message = useAppSelector(state => state.message.message);
   const MsgList = () =>
-    userList.map((item: any) => (
+    message.map(item => (
       <div key={item.key} id={item.key} className={styles.feedCard} onClick={choiceUser}>
         <div className={styles.feedCardAvatar}>
           <div className={styles.avatar}>
@@ -48,12 +48,11 @@ function userMsgList({ userList, setUserId }: any) {
         </div>
       </div>
     ));
-
   return (
     <div>
       <Search />
-      <MsgList />
+      {MsgList()}
     </div>
   );
 }
-export default memo(userMsgList);
+export default userMsgList;

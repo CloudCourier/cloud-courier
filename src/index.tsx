@@ -9,9 +9,9 @@ const queryClient = new QueryClient();
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      {/* <QueryClientProvider client={queryClient}> */}
-      <App />
-      {/* </QueryClientProvider> */}
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root'),

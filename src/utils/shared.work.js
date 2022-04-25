@@ -67,9 +67,9 @@ cloudCourier.addListener({
       let { content, source, target, timestamp } = packet;
       // 将 Long 型的时间转换成 number
       timestamp = timestamp.toNumber();
-      instanceDB.then(async e => {
+      instanceDB.then(async db => {
         // TODO tx undefined
-        const tx = e.transaction('userList', 'readwrite');
+        const tx = db.transaction('userList', 'readwrite');
         const index = tx.store.index('key');
         // 遍历 userID === source 的对象,将消息加进去
         for await (const cursor of index.iterate(source)) {
@@ -83,10 +83,13 @@ cloudCourier.addListener({
           cursor.update(user);
         }
         await tx.done;
-      });
-      broadcastChannel.postMessage({
-        type: 'message',
-        timestamp,
+
+        db.getAll('userList').then(message => {
+          broadcastChannel.postMessage({
+            type: 'message',
+            message,
+          });
+        });
       });
       // console.log('我收到消息 了packet: ', packet);
     } else if (packet instanceof ClientboundStrangerPacket) {

@@ -8,9 +8,7 @@ import Empty from '@/components/empty';
 import { WrapperRouteComponent, WrapperRouteWithOutLayoutComponent } from './config';
 import workbenchChildren from '@/routers/workbenchChildren';
 
-const DashboardAnlyanis = lazy(() => import('@/pages/dashboard/anlyanis'));
 const CustomerChat = lazy(() => import('@/pages/message'));
-const UserCenter = lazy(() => import('@/pages/user/center'));
 const WorkBench = lazy(() => import('@/pages/workbench'));
 
 const Abnormal403 = lazy(() => import('@/pages/abnormal/403'));
@@ -31,10 +29,7 @@ const routeList: RouteObject[] = [
         element: <WrapperRouteComponent element={<WorkBench />} titleId="工作台" auth />,
         children: workbenchChildren,
       },
-      {
-        path: 'user/center',
-        element: <WrapperRouteComponent element={<UserCenter />} titleId="个人中心" auth />,
-      },
+
       {
         path: 'abnormal/403',
         element: <WrapperRouteComponent element={<Abnormal403 />} titleId="403" auth />,

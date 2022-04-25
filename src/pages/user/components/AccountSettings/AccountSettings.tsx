@@ -4,7 +4,7 @@ import { Button, List, Typography } from '@douyinfe/semi-ui';
 import { useState } from 'react';
 import DelAccount from '../DelAccount/DelAccount';
 import LoginRecord from '../LoginRecord/LoginRecord';
-import UpdateEmail from '../UpdateEmail/UpdateEmail';
+import UpdateEmail from '../../../workbench/user/components/UpdateEmail/UpdateEmail';
 import UpdatePassword from '../UpdatePassword/UpdatePassword';
 
 export default function AccountSettings() {

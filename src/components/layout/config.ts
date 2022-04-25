@@ -20,13 +20,7 @@ const MENU_CONFIG: MenuItem[] = [
     itemKey: '2',
     text: 'app.workbench',
     icon: IconApps,
-    path: '/workbench',
-  },
-  {
-    itemKey: '7',
-    text: 'app.user',
-    icon: IconUser,
-    path: '/user/center',
+    path: '/workbench/dashboard',
   },
 ];
 

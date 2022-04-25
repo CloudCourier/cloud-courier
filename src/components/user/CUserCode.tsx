@@ -1,7 +1,7 @@
 import { sendCode } from './utils';
 import { Button, Form, useFormApi } from '@douyinfe/semi-ui';
 import { Dispatch, MutableRefObject, SetStateAction, useState } from 'react';
-import Center from '@/pages/user/center';
+import Center from '@/pages/workbench/userser';
 import styles from './index.scss';
 
 interface ICUserCode {
