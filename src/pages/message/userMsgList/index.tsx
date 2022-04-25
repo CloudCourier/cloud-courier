@@ -1,26 +1,15 @@
 import Search from './search';
 import styles from './index.scss';
 import { useAppSelector } from '@/hooks/store';
-
-function userMsgList({ setUserId }) {
+import { choiceIdEle } from '@/utils/common';
+function userMsgList({ setSearch, setUserId }) {
   const choiceUser = e => {
-    let first = true;
-    while (first === true ? !e.target.getAttribute('id') : !e.getAttribute('id')) {
-      // 当第一次点击，且没有获取到ID的时候
-      if (first) {
-        // 第一次循环
-        e = e.target.parentNode;
-        first = false;
-      } else {
-        // 除了第一次循环，其他循环
-        e = e.parentNode;
-      }
-    }
-    if (first) {
-      // 当第一次点击，就获取到ID的时候
-      e = e.target;
-    }
-    setUserId(e.getAttribute('id'));
+    const ele = choiceIdEle(e);
+    Array.prototype.map.call(ele.parentElement.children, item => {
+      item.className = item.className.replace('active', '');
+    });
+    ele.className = `${ele.className} active`;
+    setUserId(ele.getAttribute('id'));
   };
   const message = useAppSelector(state => state.message.message);
   const MsgList = () =>
@@ -49,9 +38,11 @@ function userMsgList({ setUserId }) {
       </div>
     ));
   return (
-    <div>
-      <Search />
-      {MsgList()}
+    <div className={styles.messageContain}>
+      <div className={styles.searchContain}>
+        <Search setSearch={setSearch} />
+      </div>
+      <div className={styles.messageList}>{MsgList()}</div>
     </div>
   );
 }

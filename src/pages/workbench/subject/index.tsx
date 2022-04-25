@@ -32,10 +32,15 @@ function Tables() {
   // }
   const dispatch = useAppDispatch();
 
-  const editerModal = (e: any) => {
+  const editerModal = e => {
     dispatch(setSubjectId(e.currentTarget.getAttribute('id')));
     dispatch(setToken(e.currentTarget.getAttribute('attr-token')));
     dispatch(openProjectModal('editer'));
+  };
+  const memberManage = e => {
+    dispatch(setSubjectId(e.currentTarget.getAttribute('id')));
+    dispatch(setToken(e.currentTarget.getAttribute('attr-token')));
+    dispatch(openProjectModal('memberManage'));
   };
   const columns = [
     {
@@ -61,6 +66,9 @@ function Tables() {
         <Space>
           <Button onClick={editerModal} id={`${id}`} attr-token={object.token}>
             详情
+          </Button>
+          <Button onClick={memberManage} id={`${id}`} attr-token={object.token}>
+            成员管理
           </Button>
           <Popconfirm
             title="真的要删除这个项目吗？"

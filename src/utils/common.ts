@@ -122,7 +122,7 @@ export function getUserInfo() {
   );
 }
 
-export const choiceId = e => {
+export const choiceIdEle = e => {
   let first = true;
   while (first === true ? !e.target.getAttribute('id') : !e.getAttribute('id')) {
     // 当第一次点击，且没有获取到ID的时候
@@ -139,5 +139,5 @@ export const choiceId = e => {
     // 当第一次点击，就获取到ID的时候
     e = e.target;
   }
-  return e.getAttribute('id');
+  return e;
 };

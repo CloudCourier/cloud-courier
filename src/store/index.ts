@@ -20,3 +20,5 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+// 大量使用 redux 是因为，防止 context state props 使父组件拥有状态，从而导致下面的所有组件在每次渲染时都会 render，即使有些值没有变化，因为DIFF是深比较，导致性能问题

@@ -3,7 +3,7 @@ import Meta from '@douyinfe/semi-ui/lib/es/card/meta';
 import { workbenchChildrenKey } from '@/routers/workbenchChildren';
 import { addWorkbenchList } from '@/store/workbench.slice';
 import { setActiveKey } from '@/store/workbench.slice';
-import { choiceId } from '@/utils/common';
+import { choiceIdEle } from '@/utils/common';
 import { useAppDispatch } from '@/hooks/store';
 import { useNavigate } from 'react-router';
 import styles from './index.scss';
@@ -12,7 +12,7 @@ export default () => {
   const nav = useNavigate();
   const dispatch = useAppDispatch();
   const choiceCard = e => {
-    const id = choiceId(e);
+    const id = choiceIdEle(e).getAttribute('id');
     dispatch(addWorkbenchList(id));
     dispatch(setActiveKey(id));
     nav(`/workbench/${id}`);

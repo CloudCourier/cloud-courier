@@ -3,43 +3,46 @@ import { AutoComplete, Avatar, Empty } from '@douyinfe/semi-ui';
 import { IconSearch } from '@douyinfe/semi-icons';
 import { IllustrationConstruction } from '@douyinfe/semi-illustrations';
 import './style.scss';
+import { useAppSelector } from '@/hooks/store';
+import dayjs from 'dayjs';
+import { debounce } from 'lodash';
+import { useCallback } from 'react';
+import { useEffect } from 'react';
+import { useRef } from 'react';
 
-export default () => {
+export default ({ setSearch }) => {
   const [data, setData] = useState([]);
-  const [list, setList] = useState([
-    { name: '夏可漫', email: 'xiakeman@', abbr: 'XK', color: 'amber' },
-    { name: '申悦', email: 'shenyue@e', abbr: 'SY', color: 'indigo' },
-    { name: '申悦', email: 'shenyue@e', abbr: 'SY', color: 'indigo' },
-    { name: '曲晨一', email: 'quchenyi@', abbr: 'CY', color: 'blue' },
-    { name: '曲晨一', email: 'quchenyi@', abbr: 'CY', color: 'blue' },
-    { name: '文嘉茂', email: 'wenjiamao@exam', abbr: 'JM', color: 'cyan' },
-    { name: '文嘉茂', email: 'wenjiamao@exam', abbr: 'JM', color: 'cyan' },
-  ]);
+  // TODO message 为空?
+  let message = useAppSelector(state => state.message.message);
+  const msgRef = useRef([]);
+  useEffect(() => {
+    if (message === []) return;
+    message = message.map(item => {
+      return { ...item, value: item.name, label: item.appLogo };
+    });
+    msgRef.current = message;
+  }, [message]);
 
-  const search = value => {
-    let result;
-    if (value) {
-      result = list.map(item => {
-        return { ...item, value: item.name, label: item.email };
-      });
-    } else {
-      result = [];
-    }
-    setData(result);
-  };
+  const search = useCallback(
+    debounce(value => {
+      let result;
+      if (value && message !== []) {
+        result = msgRef.current.filter(item => item.name.includes(value));
+      } else {
+        result = [];
+      }
+      setData(result);
+    }, 300),
+    [],
+  );
 
   const renderOption = item => {
-    const optionStyle = {
-      display: 'flex',
-    };
     return (
       <>
-        <Avatar color={item.color} size="small">
-          {item.abbr}
-        </Avatar>
+        <Avatar src={item.appLogo} size="small" />
         <div style={{ marginLeft: 4 }}>
           <div style={{ fontSize: 14, marginLeft: 4 }}>{item.name}</div>
-          <div style={{ marginLeft: 4 }}>{item.email}</div>
+          <div style={{ marginLeft: 4 }}>{dayjs(item.timestamp).format('HH:mm:ss')}</div>
         </div>
       </>
     );
@@ -49,20 +52,20 @@ export default () => {
     <AutoComplete
       data={data}
       prefix={<IconSearch />}
-      style={{ width: '200px' }}
-      renderSelectedItem={option => option.email}
+      style={{ width: '204px', position: 'fixed', zIndex: 999, backgroundColor: 'white' }}
+      renderSelectedItem={option => option.name}
       renderItem={renderOption}
       onSearch={search}
       dropdownClassName="semi-search-dropdown"
-      dropdownStyle={{ width: '200px' }}
+      dropdownStyle={{ width: '204px' }}
       emptyContent={
         <Empty
-          style={{ padding: 12, width: 200 }}
+          style={{ padding: 12, width: 204 }}
           image={<IllustrationConstruction style={{ width: 90, height: 90 }} />}
           description={'暂无内容'}
         />
       }
-      onSelect={v => console.log(v)}
+      onSelect={v => setSearch(v)}
     ></AutoComplete>
   );
 };

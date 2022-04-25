@@ -18,22 +18,45 @@ export default () => {
   const subjectModalOpen = useAppSelector(state => state.subject.projectModalOpen);
   const model = useAppSelector(state => state.subject.modalModel);
   const id = useAppSelector(state => state.subject.id);
+  const [memberList, setMemberList] = useState([]);
   useEffect(() => {
     console.log('id', id);
     if (model === 'editer' && id !== undefined) {
-      getMembers(id).then(res => {
-        console.log('res', res.data[0]);
-        setLogo(res.data[0].avatar);
-        formApi.current.setValues(
-          {
-            name: res.data[0].username,
-          },
-          { isOverride: true },
-        );
-      });
+      // 因为 semi design form 为按需加载，当第一次打开的时候需要降低请求的优先级，让formapi先初始化
+      // if (!formApi.current) {
+      //   setTimeout(() => {
+      //     getMembersList();
+      //   }, 0);
+      //   return;
+      // }
+      // getMembersList();
+    } else if (model === 'memberManage' && id !== undefined) {
+      if (!formApi.current) {
+        setTimeout(() => {
+          getMembersList();
+        }, 0);
+        return;
+      }
+      getMembersList();
     }
   }, [id]);
-
+  const getMembersList = () => {
+    getMembers(id).then(res => {
+      setMemberList(res.data);
+    });
+  };
+  // const getMembersList = () => {
+  //   getMembers(id).then(res => {
+  //     console.log('res', res.data[0]);
+  //     setLogo(res.data[0].avatar);
+  //     formApi.current.setValues(
+  //       {
+  //         name: res.data[0].username,
+  //       },
+  //       { isOverride: true },
+  //     );
+  //   });
+  // };
   const handleSubmit = form => {
     const { name } = form;
     if (model === 'add') {

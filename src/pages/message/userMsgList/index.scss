@@ -6,6 +6,8 @@
   height: 60px;
   padding: 10px 14px;
   box-sizing: border-box;
+  border-left: 3px solid transparent;
+
   cursor: pointer;
   .feedCardAvatar {
     width: 32px;
@@ -86,6 +88,16 @@
     opacity: 0;
   }
   &:hover {
-    background: rgba(0, 0, 0, 0.03);
+    background: rgba(220, 224, 226);
+  }
+}
+.messageContain {
+  display: flex;
+  flex-direction: column;
+  .searchContain {
+    height: 52px;
+  }
+  .messageList {
+    flex: 1;
   }
 }

@@ -203,4 +203,8 @@
   * {
     box-sizing: border-box;
   }
+  .active {
+    background-color: rgb(238, 240, 241);
+    border-left: 3px solid rgb(51, 113, 254) !important;
+  }
 }
