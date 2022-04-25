@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { openDB } from 'idb';
 
 export const messageSlice = createSlice({
   name: 'messageSlice',

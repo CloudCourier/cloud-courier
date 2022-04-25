@@ -1,17 +1,22 @@
-import { Button, Space, Table, Avatar } from '@douyinfe/semi-ui';
+import { Button, Space, Table, Avatar, Tooltip, Popconfirm } from '@douyinfe/semi-ui';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { delMySubject, getMembers, mySubjects } from '@/api/subjects';
 import { IconGlobe } from '@douyinfe/semi-icons';
 import { openProjectModal, setSubjectId, setToken } from '@/store/subject.slice';
 import { useAppDispatch, useAppSelector } from '@/hooks/store';
-import { useEffect } from 'react';
 import SubjectModal from './subjectModal';
+import { ToastError } from '@/utils/common';
 
 function Tables() {
-  // const { confirm } = Modal;
+  // TODO 网络请求
   const queryClient = useQueryClient();
   const { mutate } = useMutation((id: number) => delMySubject(id), {
-    onSuccess: () => queryClient.invalidateQueries('mySubjects'),
+    onError: () => {
+      ToastError('删除失败');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries('mySubjects');
+    },
   });
   const { data, isLoading } = useQuery('mySubjects', mySubjects);
   // const [pagination, setpagination] = useState({
@@ -27,30 +32,10 @@ function Tables() {
   // }
   const dispatch = useAppDispatch();
 
-  const delSubject = (e: any) => {
-    // confirm({
-    //   title: 'Are you sure delete this task?',
-    //   icon: <ExclamationCircleOutlined />,
-    //   content: 'Some descriptions',
-    //   okText: 'Yes',
-    //   okType: 'danger',
-    //   cancelText: 'No',
-    //   onOk() {
-    //     let id = e.target.getAttribute('id');
-    //     if (id === null) {
-    //       id = e.target.parentNode.getAttribute('id');
-    //     }
-    //     mutate(id);
-    //   },
-    //   onCancel() {
-    //     console.log('Cancel');
-    //   },
-    // });
-  };
   const editerModal = (e: any) => {
     dispatch(setSubjectId(e.currentTarget.getAttribute('id')));
     dispatch(setToken(e.currentTarget.getAttribute('attr-token')));
-    dispatch(openProjectModal);
+    dispatch(openProjectModal('editer'));
   };
   const columns = [
     {
@@ -77,9 +62,17 @@ function Tables() {
           <Button onClick={editerModal} id={`${id}`} attr-token={object.token}>
             详情
           </Button>
-          <Button id={`${id}`} onClick={delSubject}>
-            删除
-          </Button>
+          <Popconfirm
+            title="真的要删除这个项目吗？"
+            content="此修改将不可逆"
+            onConfirm={() => mutate(id)}
+          >
+            <span style={{ display: 'inline-block' }}>
+              <Tooltip content={'删除项目'}>
+                <Button id={`${id}`}>删除</Button>
+              </Tooltip>
+            </span>
+          </Popconfirm>
         </Space>
       ),
     },
