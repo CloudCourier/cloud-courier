@@ -149,10 +149,12 @@ cloudCourier.addListener({
           cursor.update(user);
         }
         await tx.done;
-      });
-      broadcastChannel.postMessage({
-        type: 'message',
-        timestamp,
+        e.getAll('userList').then(message => {
+          broadcastChannel.postMessage({
+            type: 'message',
+            message,
+          });
+        });
       });
     }
   },

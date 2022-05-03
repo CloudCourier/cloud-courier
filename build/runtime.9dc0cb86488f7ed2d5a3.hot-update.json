@@ -1,9 +1,0 @@
-{
-  "c": ["index", "runtime", "src_pages_workbench_subject_index_tsx"],
-  "r": [
-    "src_pages_workbench_user_index_tsx",
-    "vendors-node_modules_react-cropper_dist_react-cropper_umd_js-node_modules_spark-md5_spark-md5-76bc40",
-    "src_components_upload_index_tsx-data_image_png_base64_iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAA-bb7d66"
-  ],
-  "m": ["./src/api/subjects.ts", "./src/pages/workbench/subject/subjectModal.tsx"]
-}

@@ -1,5 +1,0 @@
-{
-  "c": ["runtime", "src_pages_workbench_subject_index_tsx"],
-  "r": [],
-  "m": ["./src/api/subjects.ts", "./src/pages/workbench/subject/subjectModal.tsx"]
-}

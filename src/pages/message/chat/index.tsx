@@ -105,6 +105,7 @@ function Chat({ selectedUser }) {
                   showPreview={false}
                   onClick={(emoji: any) => searchEmoji(emoji)}
                   i18n={i18}
+                  showSkinTones={false}
                 />
               )}
             </div>
