@@ -5,18 +5,16 @@ const { getPlugins } = require('./utils/plugin');
 const resolveConfig = require('./utils/resolve');
 const variable = require('./utils/variable');
 
-const { IS_DEV, SRC_PATH, IS_PRO, BUILD_PATH } = variable;
+const { IS_DEV, SRC_PATH, IS_PRO, DIST_PATH } = variable;
 module.exports = {
   entry: {
     index: path.join(SRC_PATH, 'index.tsx'),
-    work: {
-      import: path.join(SRC_PATH, './utils/shared.work.js'),
-      filename: 'sharedwork.js',
-    },
+    sharedwork: path.join(SRC_PATH, './utils/sharedWork.js'),
   },
   output: {
-    path: BUILD_PATH,
-    filename: IS_DEV ? 'js/[name].bundle.js' : 'js/[name].[contenthash:8].bundle.js',
+    path: DIST_PATH,
+    filename: 'js/[name].bundle.js',
+    workerChunkLoading: 'import',
     // publicPath: getCDNPath(),
     chunkFilename: IS_DEV ? 'js/[name].chunk.js' : 'js/[name].[contenthash:8].chunk.js',
     assetModuleFilename: 'assets/[hash][ext][query]',

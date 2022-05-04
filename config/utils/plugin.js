@@ -8,11 +8,11 @@ const PurgeCSSPlugin = require('purgecss-webpack-plugin');
 const DotenvPlugin = require('dotenv-webpack');
 const glob = require('glob');
 const variable = require('./variable');
-
 const { PUBLIC_PATH, SRC_PATH, ENV_CONFIG_PATH } = variable;
 
 const getPlugins = () => {
   const htmlWebpackPlugin = new HtmlWebpackPlugin({
+    excludeChunks: ['sharedwork'],
     template: path.join(PUBLIC_PATH, 'index.html'),
     filename: 'index.html',
     minify: {

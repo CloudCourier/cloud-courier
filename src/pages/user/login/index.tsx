@@ -14,10 +14,14 @@ export default function Login() {
     setLoading(true);
     login(form)
       .then(res => {
-        ToastSuccess('欢迎回来 (oﾟ▽ﾟ)o', 5);
-        localStorage.setItem('userInfo', JSON.stringify(res.data));
-        setLoading(false);
-        navigate('/');
+        if (res.status === 200) {
+          ToastSuccess('欢迎回来 (oﾟ▽ﾟ)o', 5);
+          localStorage.setItem('userInfo', JSON.stringify(res.data));
+          setLoading(false);
+          navigate('/');
+          return;
+        }
+        console.log('res:', res);
       })
       .finally(() => {
         if (loading) {

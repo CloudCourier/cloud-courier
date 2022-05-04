@@ -13,10 +13,13 @@ export default () => {
   const dispatch = useAppDispatch();
   const { Content } = Layout;
   useEffect(() => {
-    const sharedworker = new SharedWorker(`${process.env.API_LOCAL}/sharedwork.js`);
-    sharedworker.port.onmessage = e => {
-      console.log(`主线程 ：${e.data}`);
-    };
+    const sharedWorker = new SharedWorker(`${process.env.API_LOCAL}/sharedwork.bundle.js`);
+    console.log('sharedWorker', sharedWorker);
+    // const worker = new Worker(`${process.env.API_LOCAL}/sharedwork.bundle.js`);
+    // console.log(worker)
+    // sharedWorker.port.onmessage = e => {
+    //   console.log(`主线程 ：${e.data}`);
+    // };
     let webSocketState = WebSocket.CONNECTING;
     const broadcastChannel = new BroadcastChannel('WebSocketChannel');
     broadcastChannel.addEventListener('message', event => {
@@ -26,8 +29,6 @@ export default () => {
           console.log('WebSocketState:', webSocketState);
           break;
         case 'message':
-          // 监听新消息的时间，来判断是否去传递新的消息
-          // setTime(event.data.timestamp);
           dispatch(updateMessage(event.data.message));
           break;
         case 'instance':
@@ -42,12 +43,12 @@ export default () => {
   }, []);
   useEffect(() => {
     // 初始化消息
-    // TODO 无消息列表的时候会报错，带历史消息出来后再解决
-    openDB('cloudCourier').then(db => {
-      db.getAll('userList').then(res => {
-        dispatch(updateMessage(res));
-      });
-    });
+    // TODO 无消息列表的时候会报错，待历史消息API出来后再解决
+    // openDB('cloudCourier').then(db => {
+    //   db.getAll('userList').then(res => {
+    //     dispatch(updateMessage(res));
+    //   });
+    // });
   }, []);
   return (
     <Layout>

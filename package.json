@@ -120,6 +120,7 @@
     "thread-loader": "^3.0.4",
     "webpack": "^5.70.0",
     "webpack-merge": "^5.8.0",
-    "webpackbar": "^5.0.2"
+    "webpackbar": "^5.0.2",
+    "worker-plugin": "^5.0.1"
   }
 }

@@ -10,8 +10,10 @@ const config = {
   output: {
     pathinfo: false, // 优化
   },
+  devtool: 'source-map',
   optimization: {
-    minimizer: [new TerserPlugin(), new HtmlMinimizerPlugin()],
+    // new TerserPlugin(),
+    minimizer: [new HtmlMinimizerPlugin()],
     splitChunks: {
       chunks: 'all', // 匹配的块的类型：initial（初始块），async（按需加载的异步块），all（所有块）
       automaticNameDelimiter: '-',
