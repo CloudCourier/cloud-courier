@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cross-env NODE_ENV=prod webpack --config ./config/webpack.prod.js",
     "build:stats": "webpack --config ./config/webpack.prod.js --json > stats.json",
-    "dev": "cross-env NODE_ENV=dev webpack-dev-server --config ./config/webpack.dev.js",
+    "dev": "cross-env NODE_ENV=dev webpack-dev-server --config ./config/webpack.base.js",
     "prepare": "husky install",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
   },
@@ -90,6 +90,7 @@
     "echarts-for-react": "^3.0.0",
     "emoji-mart": "^3.0.1",
     "emoji-mart-virtualized": "^3.1.3",
+    "events": "^3.3.0",
     "file-loader": "^6.2.0",
     "glob": "^7.2.0",
     "html-minimizer-webpack-plugin": "^3.5.0",
@@ -115,12 +116,14 @@
     "react-refresh": "^0.11.0",
     "react-router-dom": "6.0.2",
     "sass-loader": "^12.6.0",
+    "shared-worker-loader": "^0.2.0",
     "spark-md5": "^3.0.2",
     "terser-webpack-plugin": "^5.3.1",
     "thread-loader": "^3.0.4",
     "webpack": "^5.70.0",
     "webpack-merge": "^5.8.0",
     "webpackbar": "^5.0.2",
+    "worker-loader": "^3.0.8",
     "worker-plugin": "^5.0.1"
   }
 }

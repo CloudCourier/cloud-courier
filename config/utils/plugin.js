@@ -12,7 +12,6 @@ const { PUBLIC_PATH, SRC_PATH, ENV_CONFIG_PATH } = variable;
 
 const getPlugins = () => {
   const htmlWebpackPlugin = new HtmlWebpackPlugin({
-    excludeChunks: ['sharedwork'],
     template: path.join(PUBLIC_PATH, 'index.html'),
     filename: 'index.html',
     minify: {

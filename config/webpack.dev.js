@@ -6,9 +6,6 @@ const baseConfig = require('./webpack.base');
 const config = {
   mode: 'development',
   stats: 'errors-only',
-  output: {
-    publicPath: '/',
-  },
   devServer: {
     open: true,
     host: 'localhost',

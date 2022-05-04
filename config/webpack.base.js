@@ -4,18 +4,18 @@ const path = require('path');
 const { getPlugins } = require('./utils/plugin');
 const resolveConfig = require('./utils/resolve');
 const variable = require('./utils/variable');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
-const { IS_DEV, SRC_PATH, IS_PRO, DIST_PATH } = variable;
-module.exports = {
+const { IS_DEV, SRC_PATH, IS_PRO, DIST_PATH, PUBLIC_PATH } = variable;
+const main = {
   entry: {
     index: path.join(SRC_PATH, 'index.tsx'),
-    sharedwork: path.join(SRC_PATH, './utils/sharedWork.js'),
   },
   output: {
     path: DIST_PATH,
     filename: 'js/[name].bundle.js',
-    workerChunkLoading: 'import',
     // publicPath: getCDNPath(),
+    publicPath: 'auto',
     chunkFilename: IS_DEV ? 'js/[name].chunk.js' : 'js/[name].[contenthash:8].chunk.js',
     assetModuleFilename: 'assets/[hash][ext][query]',
     clean: true,
@@ -26,9 +26,8 @@ module.exports = {
       {
         test: /\.(tsx?|js|jsx)$/,
         include: [SRC_PATH],
-        exclude: [/node_modules/, /public/, /(.|_)min\.js$/],
+        exclude: [/node_modules/, /public/, /(.|_)min\.js$/, /\.worker\.(js|ts)$/],
         use: [
-          'cache-loader',
           {
             loader: 'thread-loader',
             options: {
@@ -77,6 +76,51 @@ module.exports = {
       },
     ],
   },
-  plugins: getPlugins(),
+  plugins: getPlugins().concat([new ReactRefreshWebpackPlugin()].filter(Boolean)),
   resolve: resolveConfig,
+  mode: 'development',
+  stats: 'errors-only',
+  optimization: {
+    runtimeChunk: 'single',
+  },
+  watchOptions: {
+    aggregateTimeout: 500,
+    poll: 1000,
+    ignored: /node_modules/,
+  },
 };
+const worker = {
+  entry: path.join(SRC_PATH, './utils/shared.worker.js'),
+  output: {
+    filename: 'shared.worker.js',
+    path: path.join(SRC_PATH, '../build'),
+  },
+  target: 'webworker',
+  devtool: 'source-map',
+  mode: 'development',
+  resolve: {
+    modules: ['src', 'node_modules'],
+    extensions: ['.js', '.ts', '.tsx'],
+    plugins: [],
+  },
+  stats: 'errors-only',
+  module: {
+    rules: [
+      {
+        test: /\.worker\.(js|ts)$/,
+        include: [SRC_PATH],
+        exclude: [/node_modules/, /public/, /(.|_)min\.js$/],
+        use: [
+          {
+            loader: 'thread-loader',
+            options: {
+              workers: 3,
+            },
+          },
+          'babel-loader?cacheDirectory=true',
+        ],
+      },
+    ],
+  },
+};
+module.exports = [main, worker];

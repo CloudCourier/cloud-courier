@@ -13,20 +13,18 @@ export default () => {
   const dispatch = useAppDispatch();
   const { Content } = Layout;
   useEffect(() => {
-    const sharedWorker = new SharedWorker(`${process.env.API_LOCAL}/sharedwork.bundle.js`);
-    console.log('sharedWorker', sharedWorker);
-    // const worker = new Worker(`${process.env.API_LOCAL}/sharedwork.bundle.js`);
-    // console.log(worker)
-    // sharedWorker.port.onmessage = e => {
-    //   console.log(`主线程 ：${e.data}`);
-    // };
+    const sharedWorker = new SharedWorker('http://localhost:8080/shared.worker.js');
     let webSocketState = WebSocket.CONNECTING;
     const broadcastChannel = new BroadcastChannel('WebSocketChannel');
     broadcastChannel.addEventListener('message', event => {
       switch (event.data.type) {
         case 'WSState':
           webSocketState = event.data.state;
-          console.log('WebSocketState:', webSocketState);
+          openDB('cloudCourier').then(db => {
+            db.getAll('userList').then(res => {
+              dispatch(updateMessage(res));
+            });
+          });
           break;
         case 'message':
           dispatch(updateMessage(event.data.message));
@@ -40,15 +38,6 @@ export default () => {
       }
     });
     // 只用请求一次，防止请求两次导致WS连接失败
-  }, []);
-  useEffect(() => {
-    // 初始化消息
-    // TODO 无消息列表的时候会报错，待历史消息API出来后再解决
-    // openDB('cloudCourier').then(db => {
-    //   db.getAll('userList').then(res => {
-    //     dispatch(updateMessage(res));
-    //   });
-    // });
   }, []);
   return (
     <Layout>
