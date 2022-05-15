@@ -21,7 +21,9 @@ function Message() {
     }
     // 通过监听消息列表的变化和用户的切换，来更新消息列表
   }, [userMessage, userId]);
+
   useEffect(() => {
+    // 搜索用户，更新选中的用户
     if (search === '') return;
     const index = userMessage.findIndex(item => item.name === search);
     const searchEleArray = srollRef.current.children[0].children[1].children;

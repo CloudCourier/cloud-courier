@@ -41,7 +41,7 @@ cloudCourier
     cloudCourier.connect();
   })
   .then(() => {
-    console.log('连接成功', cloudCourier);
+    console.log('连接成功', cloudCourier.getState());
     broadcastChannel.postMessage({ type: 'WSState', state: cloudCourier.getState() });
   })
   .catch(e => {

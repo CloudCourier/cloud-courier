@@ -2,6 +2,7 @@ import Search from './search';
 import styles from './index.scss';
 import { useAppSelector } from '@/hooks/store';
 import { choiceIdEle } from '@/utils/common';
+
 function userMsgList({ setSearch, setUserId }) {
   const choiceUser = e => {
     const ele = choiceIdEle(e);

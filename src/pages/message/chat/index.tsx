@@ -6,10 +6,9 @@ import { IconMenu, IconFilpVertical, IconEmoji } from '@douyinfe/semi-icons';
 import _ from 'lodash';
 import { ToastInfo } from '@/utils/common';
 import { useState, useRef } from 'react';
-
 import i18 from './i18';
 import styles from './index.scss';
-import { memo, useMemo, useCallback, useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 
 function Chat({ selectedUser }) {
   const [msg, setMsg] = useState('');
