@@ -18,7 +18,6 @@ export default function AccountSettings() {
     const user = getUserInfo();
     if (!user.avatar) {
       user.then(data => {
-        console.log(data);
         setAvatarUrl(data.avatar);
         setUserName(data.username);
       });
