@@ -37,5 +37,5 @@ const config = {
     },
   },
 };
-const mergedConfig = webpackMerge.merge(baseConfig, config);
-module.exports = mergedConfig;
+const mergedConfig = webpackMerge.merge(baseConfig[0], config);
+module.exports = [baseConfig[1],mergedConfig];

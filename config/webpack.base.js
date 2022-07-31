@@ -6,7 +6,7 @@ const resolveConfig = require('./utils/resolve');
 const variable = require('./utils/variable');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
-const { IS_DEV, SRC_PATH, IS_PRO, DIST_PATH, PUBLIC_PATH } = variable;
+const { IS_DEV, SRC_PATH, IS_PRO, DIST_PATH } = variable;
 const main = {
   entry: {
     index: path.join(SRC_PATH, 'index.tsx'),
@@ -18,7 +18,6 @@ const main = {
     publicPath: 'auto',
     chunkFilename: IS_DEV ? 'js/[name].chunk.js' : 'js/[name].[contenthash:8].chunk.js',
     assetModuleFilename: 'assets/[hash][ext][query]',
-    clean: true,
   },
   cache: { type: 'memory' },
   module: {
@@ -92,12 +91,14 @@ const main = {
 const worker = {
   entry: path.join(SRC_PATH, './utils/shared.worker.js'),
   output: {
-    filename: 'shared.worker.js',
-    path: path.join(SRC_PATH, '../build'),
+    chunkFilename: IS_DEV ? 'js/[name].chunk.js' : 'js/[name].[contenthash:8].chunk.js',
+    filename: 'worker/shared.worker.js',
+    path: DIST_PATH,
+    clean: true,
   },
   target: 'webworker',
   devtool: 'source-map',
-  mode: 'development',
+  mode: IS_DEV ? 'development' : 'production',
   resolve: {
     modules: ['src', 'node_modules'],
     extensions: ['.js', '.ts', '.tsx'],
