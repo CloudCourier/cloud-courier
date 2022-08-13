@@ -8,7 +8,6 @@ import { openDB } from 'idb';
 import { useAppDispatch } from '@/hooks/store';
 import { updateMessage } from '@/store/message.slice';
 
-export const MsgContext = createContext([]);
 export default () => {
   const dispatch = useAppDispatch();
   const { Content } = Layout;

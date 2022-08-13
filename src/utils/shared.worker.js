@@ -7,9 +7,13 @@ import {
   ClientboundOnlineMemberPacket,
   ClientboundStrangerPacket,
   ServerboundMessagePacket,
+  ServerboundHistoryPacket,
+  ClientboundHistoryPacket
 } from '@cloud-courier/cloud-courier-lib';
 import { openDB } from 'idb/with-async-ittr';
 import { debounce } from 'lodash';
+import Long from 'long';
+
 // eslint-disable-next-line no-undef
 const instanceDB = openDB('cloudCourier', 1, {
   upgrade(db) {
@@ -35,6 +39,11 @@ broadcastChannel.onmessage = debounce(e => {
     cloudCourier.send(new ServerboundMessagePacket(id, message));
   }
 }, 100);
+
+setTimeout(() => {
+  cloudCourier.send(new ServerboundHistoryPacket('', Long.fromNumber(Date.now()), 100));
+}, 3000);
+
 cloudCourier
   .preAuth()
   .then(() => {
@@ -52,7 +61,12 @@ cloudCourier.addListener({
   packetReceived(event) {
     const session = event.session;
     const packet = event.packet;
+    console.log('pack', packet);
+    if (packet instanceof ClientboundHistoryPacket) {
+      console.log('历史消息', packet);
+    }
     if (packet instanceof ClientboundPongPacket) {
+      // 心跳包
       return;
     }
     if (packet instanceof ClientboundOnlineMemberPacket) {
@@ -129,6 +143,7 @@ cloudCourier.addListener({
       // },
       // });
     }
+    
   },
   packetSent({ packet }) {
     if (packet instanceof ServerboundMessagePacket) {
@@ -155,6 +170,8 @@ cloudCourier.addListener({
           });
         });
       });
+    } else if (packet instanceof ServerboundHistoryPacket) {
+      console.log('packetsent', packet);
     }
   },
   packetError(event) {

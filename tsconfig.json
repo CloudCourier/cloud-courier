@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "importsNotUsedAsValues": "error",
     "rootDir": "./src",
     "baseUrl": "./",
     "outDir": "./dist/",
-    "jsx": "react-jsx",
     "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
