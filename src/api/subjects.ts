@@ -20,3 +20,23 @@ export function getMembers(id: number) {
 export function joined() {
   return http('/subjects/joined');
 }
+export function invitations(page = 0, size = 20) {
+  return http({
+    url: '/subjects/invitations',
+    method: 'get',
+    params: {
+      page,
+      size,
+    },
+  });
+}
+export function reply(id: number, accept: string) {
+  return http({
+    url: `/subjects/invitations/${id}/reply`,
+    method: 'post',
+    params: {
+      id,
+      accept,
+    },
+  });
+}

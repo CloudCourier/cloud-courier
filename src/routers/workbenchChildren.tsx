@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import { WrapperRouteComponent } from './config';
 const WorkbenchDashboard = lazy(() => import('@/pages/workbench/dashboard'));
 const WorkbenchSubject = lazy(() => import('@/pages/workbench/subject'));
+const Workbenchinvitations = lazy(() => import('@/pages/workbench/Invitations'));
 const User = lazy(() => import('@/pages/workbench/user'));
 const workbenchChildren = [
   {
@@ -15,6 +16,10 @@ const workbenchChildren = [
   {
     path: 'user',
     element: <WrapperRouteComponent element={<User />} titleId="个人中心" auth />,
+  },
+  {
+    path: 'invitations',
+    element: <WrapperRouteComponent element={<Workbenchinvitations />} titleId="我的邀请" auth />,
   },
 ];
 export default workbenchChildren;

@@ -1,4 +1,4 @@
-import { LoginForm, RegisterForm } from '@/types/authForm';
+import type { LoginForm, RegisterForm } from '@/types/authForm';
 import http from '../utils/http';
 
 export function getInfo() {

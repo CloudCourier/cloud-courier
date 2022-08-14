@@ -1,7 +1,7 @@
 import { getInfo } from '@/api/user';
 import { Modal, Toast } from '@douyinfe/semi-ui';
-import { FormApi } from '@douyinfe/semi-ui/lib/es/form';
-import { Dispatch, SetStateAction } from 'react';
+import type { FormApi } from '@douyinfe/semi-ui/lib/es/form';
+import type { Dispatch, SetStateAction } from 'react';
 
 // 通用的正确弹窗
 export function ToastSuccess(content: string, duration = 4) {
