@@ -5,6 +5,7 @@ import menuList, { MenuItem } from '../../config';
 import { useLocation, useNavigate } from 'react-router';
 import { useLocale } from '@/locales';
 import { useAppSelector } from '@/hooks/store';
+import Logo from '@/assets/images/logo.png';
 
 const { Sider } = Layout;
 
@@ -84,8 +85,8 @@ const Index: FC = () => {
         onOpenChange={onOpenChange}
         style={{ maxWidth: 220, height: '100%' }}
         header={{
-          logo: <IconSemiLogo style={{ fontSize: 36 }} />,
-          text: 'cloud',
+          logo: <img src={Logo} />,
+          text: '云信客服',
         }}
         // footer={{
         // 	collapseButton: true
