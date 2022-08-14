@@ -87,7 +87,7 @@ export default function UploadImg({ avatarUrl, setAvatarUrl }: any) {
     </div>
   );
   return (
-    <>
+    <div>
       <Avatar hoverMask={hover} onClick={showModal} src={avatarUrl} size="large" />
       <Modal
         title={modalText}
@@ -96,9 +96,10 @@ export default function UploadImg({ avatarUrl, setAvatarUrl }: any) {
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
         width={390}
+        zIndex={99999}
       >
         {image ? <CropperCard imageUrl={image} ref={uploadRef} /> : uploadButton}
       </Modal>
-    </>
+    </div>
   );
 }

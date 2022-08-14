@@ -1,4 +1,4 @@
-import { TextArea } from '@douyinfe/semi-ui';
+import { SideSheet, TextArea } from '@douyinfe/semi-ui';
 import { Picker } from 'emoji-mart-virtualized';
 import dayjs from 'dayjs';
 import 'emoji-mart-virtualized/css/emoji-mart.css';
@@ -9,12 +9,14 @@ import { useState, useRef } from 'react';
 import i18 from './i18';
 import styles from './index.scss';
 import { useMemo, useEffect } from 'react';
+import GroupSettings from './components/GroupSettings';
 
 function Chat({ selectedUser }) {
   const [msg, setMsg] = useState('');
   const { key, message, appLogo, appName, clientVendor, name } = selectedUser;
   const scroll = useRef<HTMLDivElement>();
   const [showEmojiModal, setEmojiModal] = useState(false);
+  const [settingVisible, setSettingVisible] = useState(false);
   const InitList = useMemo(
     () =>
       message.map(item => (
@@ -67,7 +69,7 @@ function Chat({ selectedUser }) {
             {name}
           </div>
           <div className={styles.toolbarMenu}>
-            <IconMenu className={styles.iconMenu} />
+            <IconMenu className={styles.iconMenu} onClick={() => setSettingVisible(true)} />
           </div>
         </div>
       </div>
@@ -111,6 +113,15 @@ function Chat({ selectedUser }) {
           </div>
         </div>
       </div>
+      <SideSheet
+        title="群信息"
+        visible={settingVisible}
+        onCancel={() => setSettingVisible(false)}
+        placement="right"
+        width="100%"
+      >
+        <GroupSettings />
+      </SideSheet>
     </div>
   );
 }
