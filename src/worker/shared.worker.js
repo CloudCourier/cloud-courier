@@ -8,7 +8,7 @@ import {
   ClientboundStrangerPacket,
   ServerboundMessagePacket,
   ServerboundHistoryPacket,
-  ClientboundHistoryPacket
+  ClientboundHistoryPacket,
 } from '@cloud-courier/cloud-courier-lib';
 import { openDB } from 'idb/with-async-ittr';
 import { debounce } from 'lodash';
@@ -17,13 +17,13 @@ import Long from 'long';
 // eslint-disable-next-line no-undef
 const instanceDB = openDB('cloudCourier', 1, {
   upgrade(db) {
-    const Store = db.createObjectStore('userList', {
+    const store = db.createObjectStore('userList', {
       keyPath: 'id',
       autoIncrement: true,
     });
-    Store.createIndex('name', 'name');
-    Store.createIndex('target', 'target');
-    Store.createIndex('key', 'key');
+    store.createIndex('name', 'name');
+    store.createIndex('target', 'target');
+    store.createIndex('key', 'key');
   },
 });
 const cloudCourier = new CloudCourier({
@@ -40,9 +40,37 @@ broadcastChannel.onmessage = debounce(e => {
   }
 }, 100);
 
-setTimeout(() => {
-  cloudCourier.send(new ServerboundHistoryPacket('', Long.fromNumber(Date.now()), 100));
-}, 3000);
+function storeMsg(packet) {
+  let { content, source, target, timestamp } = packet;
+  // 将 Long 型的时间转换成 number
+  timestamp = timestamp.toNumber();
+  // 没有对象的时候先创建
+  instanceDB.then(async db => {
+    // TODO tx undefined
+
+    const tx = db.transaction('userList', 'readwrite');
+    const index = tx.store.index('key');
+    // 遍历 userID === source 的对象,将消息加进去
+    for await (const cursor of index.iterate(source)) {
+      const user = { ...cursor.value };
+      user.lastDate = timestamp;
+      user.message.push({
+        content,
+        timestamp,
+        target,
+      });
+      cursor.update(user);
+    }
+    await tx.done;
+
+    db.getAll('userList').then(message => {
+      broadcastChannel.postMessage({
+        type: 'message',
+        message,
+      });
+    });
+  });
+}
 
 cloudCourier
   .preAuth()
@@ -52,6 +80,9 @@ cloudCourier
   .then(() => {
     console.log('连接成功', cloudCourier.getState());
     broadcastChannel.postMessage({ type: 'WSState', state: cloudCourier.getState() });
+    setTimeout(() => {
+      cloudCourier.send(new ServerboundHistoryPacket('', Long.fromNumber(Date.now()), 100));
+    }, 1000);
   })
   .catch(e => {
     console.error('连接失败', e);
@@ -61,9 +92,11 @@ cloudCourier.addListener({
   packetReceived(event) {
     const session = event.session;
     const packet = event.packet;
-    console.log('pack', packet);
     if (packet instanceof ClientboundHistoryPacket) {
       console.log('历史消息', packet);
+      // packet.messages.forEach(historyPacket => {
+      //   storeMsg(historyPacket);
+      // });
     }
     if (packet instanceof ClientboundPongPacket) {
       // 心跳包
@@ -77,35 +110,10 @@ cloudCourier.addListener({
     } else if (packet instanceof ClientboundMessagePacket) {
       // 判断消息是不是自己的，如果是自己的就发送给主线程
       // TODO 其实好像并不用，因为使用就一个用户
-      let { content, source, target, timestamp } = packet;
-      // 将 Long 型的时间转换成 number
-      timestamp = timestamp.toNumber();
-      instanceDB.then(async db => {
-        // TODO tx undefined
-        const tx = db.transaction('userList', 'readwrite');
-        const index = tx.store.index('key');
-        // 遍历 userID === source 的对象,将消息加进去
-        for await (const cursor of index.iterate(source)) {
-          const user = { ...cursor.value };
-          user.lastDate = timestamp;
-          user.message.push({
-            content,
-            timestamp,
-            target,
-          });
-          cursor.update(user);
-        }
-        await tx.done;
-
-        db.getAll('userList').then(message => {
-          broadcastChannel.postMessage({
-            type: 'message',
-            message,
-          });
-        });
-      });
+      storeMsg(packet);
       // console.log('我收到消息 了 packet: ', packet);
     } else if (packet instanceof ClientboundStrangerPacket) {
+      console.log('来访客了',packet);
       /*
       来访客了
       appKey 群组 ID g:10
@@ -143,7 +151,6 @@ cloudCourier.addListener({
       // },
       // });
     }
-    
   },
   packetSent({ packet }) {
     if (packet instanceof ServerboundMessagePacket) {

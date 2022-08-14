@@ -89,7 +89,7 @@ const main = {
   },
 };
 const worker = {
-  entry: path.join(SRC_PATH, './utils/shared.worker.js'),
+  entry: path.join(SRC_PATH, './worker/shared.worker.js'),
   output: {
     chunkFilename: IS_DEV ? 'js/[name].chunk.js' : 'js/[name].[contenthash:8].chunk.js',
     filename: 'worker/shared.worker.js',
