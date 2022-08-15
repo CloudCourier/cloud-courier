@@ -4,16 +4,16 @@ import { useRoutes } from 'react-router-dom';
 import LoginPage from '@/pages/Unauthorized/Login';
 import RegisterPage from '@/pages/Unauthorized/Register';
 import LayoutPage from '@/components/Layout';
-import Empty from '@/components/Empty';
+import Empty from '@/components/Empty/index';
 import { WrapperRouteComponent, WrapperRouteWithOutLayoutComponent } from './config';
 import workbenchChildren from '@/routers/workbenchChildren';
 
-const CustomerChat = lazy(() => import('@/pages/Message'));
-const WorkBench = lazy(() => import('@/pages/Workbench'));
+const CustomerChat = lazy(() => import('@/pages/Message/index'));
+const WorkBench = lazy(() => import('@/pages/Workbench/index'));
 
-const Abnormal403 = lazy(() => import('@/pages/Abnormal/403'));
-const Abnormal404 = lazy(() => import('@/pages/Abnormal/404'));
-const Abnormal500 = lazy(() => import('@/pages/Abnormal/500'));
+const Abnormal403 = lazy(() => import('@/pages/Abnormal/403/index'));
+const Abnormal404 = lazy(() => import('@/pages/Abnormal/404/index'));
+const Abnormal500 = lazy(() => import('@/pages/Abnormal/500/index'));
 
 const routeList: RouteObject[] = [
   {
