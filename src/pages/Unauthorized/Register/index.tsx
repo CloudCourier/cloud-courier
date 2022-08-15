@@ -47,7 +47,7 @@ export default function Register() {
     register(regForm)
       .then(res => {
         if (res) {
-          ToastSuccess('注册成功,正在登录系统(oﾟ▽ﾟ)o', 5);
+          ToastSuccess('注册成功，正在登入系统(oﾟ▽ﾟ)o', 5);
           login({ login: form.account, password: form.password }).then(() => {
             ToastSuccess('欢迎回来 (oﾟ▽ﾟ)o', 5);
             navigate('/');

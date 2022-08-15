@@ -21,7 +21,6 @@ export default function Login() {
           navigate('/');
           return;
         }
-        console.log('res:', res);
       })
       .finally(() => {
         if (loading) {
