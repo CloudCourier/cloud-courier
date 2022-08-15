@@ -1,9 +1,9 @@
 import { lazy } from 'react';
 import { WrapperRouteComponent } from './config';
-const WorkbenchDashboard = lazy(() => import('@/pages/Workbench/Dashboard'));
-const WorkbenchSubject = lazy(() => import('@/pages/Workbench/Subject'));
-const Workbenchinvitations = lazy(() => import('@/pages/Workbench/Invitations'));
-const User = lazy(() => import('@/pages/Workbench/User'));
+const WorkbenchDashboard = lazy(() => import('@/pages/Workbench/Dashboard/index'));
+const WorkbenchSubject = lazy(() => import('@/pages/Workbench/Subject/index'));
+const Workbenchinvitations = lazy(() => import('@/pages/Workbench/Invitations/index'));
+const User = lazy(() => import('@/pages/Workbench/User/index'));
 const workbenchChildren = [
   {
     path: 'dashboard',
