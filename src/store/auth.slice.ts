@@ -1,7 +1,7 @@
-import { User } from '@/types/user';
+import type { User } from '@/types/user';
 import { createSlice } from '@reduxjs/toolkit';
-import { RegisterForm, LoginForm } from '@/types/authForm';
-import { AppDispatch, RootState } from '@/store/index';
+import type { RegisterForm, LoginForm } from '@/types/authForm';
+import type { AppDispatch, RootState } from '@/store/index';
 import * as auth from '@/api/user';
 
 interface State {

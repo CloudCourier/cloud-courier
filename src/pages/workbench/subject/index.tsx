@@ -1,24 +1,27 @@
-import { Button, Space, Table, Avatar, Tooltip, Popconfirm } from '@douyinfe/semi-ui';
+import {
+  Button,
+  Space,
+  Table,
+  Avatar,
+  Tooltip,
+  Popconfirm,
+  SideSheet,
+  Tag,
+} from '@douyinfe/semi-ui';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { delMySubject, getMembers, mySubjects } from '@/api/subjects';
+import { delMySubject, getMembers, joined } from '@/api/subjects';
 import { IconGlobe } from '@douyinfe/semi-icons';
 import { openProjectModal, setSubjectId, setToken } from '@/store/subject.slice';
 import { useAppDispatch, useAppSelector } from '@/hooks/store';
 import SubjectModal from './subjectModal';
-import { ToastError } from '@/utils/common';
+import { getUserInfo, ToastError } from '@/utils/common';
+import GroupSettings from '@/pages/message/chat/components/GroupSettings';
+import { useState } from 'react';
 
 function Tables() {
-  // TODO 网络请求
-  const queryClient = useQueryClient();
-  const { mutate } = useMutation((id: number) => delMySubject(id), {
-    onError: () => {
-      ToastError('删除失败');
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries('mySubjects');
-    },
-  });
-  const { data, isLoading } = useQuery('mySubjects', mySubjects);
+  const [settingVisible, setSettingVisible] = useState(false);
+  const { id: userId } = getUserInfo();
+  const { data, isLoading } = useQuery('joined', joined);
   // const [pagination, setpagination] = useState({
   //   current: 1,
   //   pageSize: 10,
@@ -32,25 +35,31 @@ function Tables() {
   // }
   const dispatch = useAppDispatch();
 
-  const editerModal = e => {
-    dispatch(setSubjectId(e.currentTarget.getAttribute('id')));
-    dispatch(setToken(e.currentTarget.getAttribute('attr-token')));
-    dispatch(openProjectModal('editer'));
-  };
-  const memberManage = e => {
-    dispatch(setSubjectId(e.currentTarget.getAttribute('id')));
-    dispatch(setToken(e.currentTarget.getAttribute('attr-token')));
-    dispatch(openProjectModal('memberManage'));
-  };
   const columns = [
+    {
+      title: '身份',
+      dataIndex: 'owner_id',
+      width: '20%',
+      render: (owner_id: number) =>
+        owner_id === userId ? (
+          <Tag size="large" color="orange">
+            创建者
+          </Tag>
+        ) : (
+          <Tag color="green" size="large">
+            组员
+          </Tag>
+        ),
+    },
     {
       title: '图标',
       dataIndex: 'logo',
       width: '20%',
       render: (logo: string) => <Avatar src={logo} />,
     },
+
     {
-      title: '名字',
+      title: '组织名',
       dataIndex: 'name',
       width: '20%',
     },
@@ -64,23 +73,9 @@ function Tables() {
       dataIndex: 'id',
       render: (id: number, object: { token: string }) => (
         <Space>
-          <Button onClick={editerModal} id={`${id}`} attr-token={object.token}>
+          <Button onClick={() => setSettingVisible(true)} id={`${id}`} attr-token={object.token}>
             详情
           </Button>
-          <Button onClick={memberManage} id={`${id}`} attr-token={object.token}>
-            成员管理
-          </Button>
-          <Popconfirm
-            title="真的要删除这个项目吗？"
-            content="此修改将不可逆"
-            onConfirm={() => mutate(id)}
-          >
-            <span style={{ display: 'inline-block' }}>
-              <Tooltip content={'删除项目'}>
-                <Button id={`${id}`}>删除</Button>
-              </Tooltip>
-            </span>
-          </Popconfirm>
         </Space>
       ),
     },
@@ -89,7 +84,7 @@ function Tables() {
   return (
     <>
       <Button type="primary" onClick={() => dispatch(openProjectModal('add'))} icon={<IconGlobe />}>
-        新建项目
+        新建组织
       </Button>
       <Table
         columns={columns}
@@ -100,6 +95,15 @@ function Tables() {
         // onChange={handleTableChange}
       />
       <SubjectModal />
+      <SideSheet
+        title="组织信息"
+        visible={settingVisible}
+        onCancel={() => setSettingVisible(false)}
+        placement="right"
+        width="100%"
+      >
+        <GroupSettings />
+      </SideSheet>
     </>
   );
 }

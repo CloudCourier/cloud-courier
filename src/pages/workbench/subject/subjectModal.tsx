@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/store';
 import { useQueryClient } from 'react-query';
 import { closeProjectModal } from '@/store/subject.slice';
 import { useEffect, useRef, useState } from 'react';
-import { BaseFormApi } from '@douyinfe/semi-foundation/lib/es/form/interface';
+import type { BaseFormApi } from '@douyinfe/semi-foundation/lib/es/form/interface';
 import Upload from '@/components/upload';
 // import { useEffect } from 'react';
 
@@ -103,16 +103,16 @@ export default () => {
       >
         <>
           <Form.Label
-            text="项目图标"
+            text="组织图标"
             required
             extra={<Upload setAvatarUrl={setLogo} avatarUrl={logo} field="logo" />}
           ></Form.Label>
           <Form.Input
             field="name"
             rules={[{ required: true, message: '请输入名称' }]}
-            label="项目名称"
+            label="组织名称"
             style={{ width: '100%' }}
-            placeholder="输入项目名称"
+            placeholder="输入组织名称"
           ></Form.Input>
           <Button htmlType="submit" type="tertiary" disabled={loading}>
             创建

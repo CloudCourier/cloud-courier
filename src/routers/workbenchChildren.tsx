@@ -11,7 +11,7 @@ const workbenchChildren = [
   },
   {
     path: 'subject',
-    element: <WrapperRouteComponent element={<WorkbenchSubject />} titleId="项目管理" auth />,
+    element: <WrapperRouteComponent element={<WorkbenchSubject />} titleId="组织管理" auth />,
   },
   {
     path: 'user',

@@ -114,7 +114,7 @@ function Chat({ selectedUser }) {
         </div>
       </div>
       <SideSheet
-        title="群信息"
+        title="组织信息"
         visible={settingVisible}
         onCancel={() => setSettingVisible(false)}
         placement="right"
