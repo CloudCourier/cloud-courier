@@ -1,7 +1,6 @@
 import { sendCode } from './utils';
 import { Button, Form, useFormApi } from '@douyinfe/semi-ui';
-import { Dispatch, MutableRefObject, SetStateAction, useState } from 'react';
-import Center from '@/pages/workbench/userser';
+import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import styles from './index.scss';
 
 interface ICUserCode {
@@ -13,7 +12,7 @@ interface ICUserCode {
   noLabel?: boolean;
 }
 
-export default function CUserCode(props: ICUserCode) {
+export default function UserCode(props: ICUserCode) {
   const formApi = useFormApi();
   return (
     <div className={styles.smsContain}>

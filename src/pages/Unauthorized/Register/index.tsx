@@ -1,14 +1,14 @@
 import { login, register } from '@/api/user';
-import CUserCode from '@/components/user/CUserCode';
+import CUserCode from '@/components/UserUtils/UserCode';
 import { randomString, ToastError, ToastSuccess } from '@/utils/common';
-import { BaseFormApi } from '@douyinfe/semi-foundation/lib/es/form/interface';
+import type { BaseFormApi } from '@douyinfe/semi-foundation/lib/es/form/interface';
 import { Button, Form } from '@douyinfe/semi-ui';
-import { ReactFieldError } from '@douyinfe/semi-ui/lib/es/form';
+import type { ReactFieldError } from '@douyinfe/semi-ui/lib/es/form';
 import { ValidateStatus } from '@douyinfe/semi-ui/lib/es/input';
 import { useEffect, useRef, useState } from 'react';
-import LoginRegisterBase from '../components/LoginRegisterBase/LoginRegisterBase';
+import LoginRegisterBase from '../components/LoginRegisterBase';
 import { useNavigate } from 'react-router-dom';
-import Validator from '@/utils/Validator';
+import Validator from '@/utils/validator';
 
 export default function Register() {
   const [loading, setLoading] = useState(false);

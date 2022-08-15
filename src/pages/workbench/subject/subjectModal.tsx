@@ -6,7 +6,7 @@ import { useQueryClient } from 'react-query';
 import { closeProjectModal } from '@/store/subject.slice';
 import { useEffect, useRef, useState } from 'react';
 import type { BaseFormApi } from '@douyinfe/semi-foundation/lib/es/form/interface';
-import Upload from '@/components/upload';
+import Upload from '@/components/Upload';
 // import { useEffect } from 'react';
 
 export default () => {

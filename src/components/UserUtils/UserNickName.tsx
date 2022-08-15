@@ -1,5 +1,5 @@
-import { randomNickname } from '@/util/UserUtil';
-import Validator from '@/util/Validator';
+import { randomString } from '@/utils/common';
+import Validator from '@/utils/validator';
 import { IconEmoji } from '@douyinfe/semi-icons';
 import { Form, Typography } from '@douyinfe/semi-ui';
 import { useFormApi } from '@douyinfe/semi-ui/lib/es/form';
@@ -8,7 +8,7 @@ interface ICUserNickName {
   disabled: boolean;
 }
 
-export default function CUserNickName(props: ICUserNickName) {
+export default function UserNickName(props: ICUserNickName) {
   const formApi = useFormApi();
 
   return (
@@ -23,7 +23,7 @@ export default function CUserNickName(props: ICUserNickName) {
             disabled={props.disabled}
             onClick={() => {
               if (props.disabled) return;
-              formApi.setValue('nickname', randomNickname());
+              formApi.setValue('nickname', randomString());
               formApi.validate(['nickname']);
             }}
           >

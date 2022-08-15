@@ -3,7 +3,7 @@ import authReducer from '@/store/auth.slice';
 import subjectReducer from './subject.slice';
 import sideReducer from './sidebar.slice';
 // import {connectionSlice} from "./connection.slice";
-import globalReducer from './common/global.slice';
+import globalReducer from './global.slice';
 import workbenchListReducer from './workbench.slice';
 import messageReducer from './message.slice';
 

@@ -1,4 +1,4 @@
-import forgotPasswordGetCodeByOpenApi from '@/api/user/forgotPasswordGetCodeByOpenApi';
+import { forgotPasswordGetCodeByOpenApi } from '@/api/user';
 import forgotPasswordUpdatePasswordByCodeApi from '@/api/user/forgotPasswordUpdatePasswordByCodeApi';
 import { getAppNav } from '@/App';
 import IUpdatePasswordByCodeForm from '@/model/form/user/IUpdatePasswordByCodeForm';
@@ -6,10 +6,10 @@ import { useAppSelector } from '@/store';
 import { ToastSuccess } from '@/util/CommonUtil';
 import { getQueryVariable } from '@/util/UrlUtil';
 import { passwordRSAEncrypt, RSAEncryptPro } from '@/util/UserUtil';
-import Validator from '@/util/Validator';
+import Validator from '@/util/validator';
 import { Button, Form } from '@douyinfe/semi-ui';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import LoginRegisterBase from '../../components/LoginRegisterBase/LoginRegisterBase';
+import LoginRegisterBase from '../components/LoginRegisterBase';
 
 export default function ForgotPassword() {
   const [loading, setLoading] = useState(false);

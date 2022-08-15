@@ -1,5 +1,5 @@
 import { register } from '@/api/user';
-import { Dispatch, MutableRefObject, SetStateAction } from 'react';
+import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { ToastSuccess } from '@/utils/common';
 
 const sendCodeDisableNumber = 60;

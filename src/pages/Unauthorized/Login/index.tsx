@@ -3,7 +3,7 @@ import { ToastSuccess } from '@/utils/common';
 import { Button, Form, Typography } from '@douyinfe/semi-ui';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LoginRegisterBase from '../components/LoginRegisterBase/LoginRegisterBase';
+import LoginRegisterBase from '../components/LoginRegisterBase';
 import styles from './index.scss';
 
 export default function Login() {

@@ -1,9 +1,9 @@
 import { updatePassword } from '@/api/user';
-import CUserCode from '@/components/user/CUserCode';
+import CUserCode from '@/components/UserUtils/UserCode';
 import { onModalCancel, ToastError, ToastSuccess } from '@/utils/common';
-import Validator from '@/utils/Validator';
+import Validator from '@/utils/validator';
 import { Button, Form, Modal } from '@douyinfe/semi-ui';
-import { FormApi, ReactFieldError } from '@douyinfe/semi-ui/lib/es/form';
+import type { FormApi, ReactFieldError } from '@douyinfe/semi-ui/lib/es/form';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
 interface IUpdateEmail {

@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import type { FC } from 'react';
 import { Navigate } from 'react-router-dom';
 import { RouteProps, useLocation } from 'react-router';
-import Empty from '@/components/empty';
+import Empty from '@/components/Empty';
 // import useStore from '@src/stores/user'
 
 const PrivateRoute: FC<RouteProps> = props => {

@@ -2,7 +2,7 @@ import { Layout } from '@douyinfe/semi-ui';
 import Sider from './components/sider';
 import { Suspense, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import SuspendFallbackLoading from '../fallback-loading';
+import SuspendFallbackLoading from '../SuspendFallback';
 import { openDB } from 'idb';
 import { useAppDispatch } from '@/hooks/store';
 import { updateMessage } from '@/store/message.slice';

@@ -4,9 +4,9 @@ import { Button, List, Typography } from '@douyinfe/semi-ui';
 import { useState } from 'react';
 import DelAccount from '../DelAccount/DelAccount';
 import LoginRecord from '../LoginRecord/LoginRecord';
-import UpdateEmail from '../../../workbench/user/components/UpdateEmail/UpdateEmail';
+import UpdateEmail from '../../../Workbench/User/components/UpdateEmail';
 import UpdatePassword from '../UpdatePassword/UpdatePassword';
-
+//TODO: 带完善
 export default function AccountSettings() {
   const [delAccountModalVisible, setDelAccountModalVisible] = useState(false); // 账号注销
   const [updatePasswordModalVisible, setUpdatePasswordModalVisible] = useState(false); // 修改密码

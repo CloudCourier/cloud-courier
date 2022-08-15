@@ -1,4 +1,4 @@
-import UserBaseInfo from './components/UserBaseInfo/UserBaseInfo';
+import UserBaseInfo from './components/UserBaseInfo';
 import styles from './index.scss';
 
 export default function Center() {

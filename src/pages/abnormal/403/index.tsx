@@ -1,8 +1,8 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Empty } from '@douyinfe/semi-ui';
 import { IllustrationNoAccess, IllustrationNoAccessDark } from '@douyinfe/semi-illustrations';
 
-const Index: React.FC = () => {
+const Index: FC = () => {
   return (
     <Empty
       title={'403'}

@@ -5,7 +5,7 @@ import { ToastSuccess } from '@/util/CommonUtil';
 import Validator from '@/util/Validator';
 import { Button, Form } from '@douyinfe/semi-ui';
 import { Dispatch, SetStateAction, useState } from 'react';
-import LoginRegisterBase from '../../components/LoginRegisterBase/LoginRegisterBase';
+import LoginRegisterBase from '../../components/LoginRegisterBase';
 
 export default function ForgotPasswordSend() {
   const [loading, setLoading] = useState(false);

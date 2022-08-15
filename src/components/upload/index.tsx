@@ -3,7 +3,7 @@ import { getUserInfo, ToastError, ToastSuccess } from '@/utils/common';
 import { useRef, useState } from 'react';
 import { updateAvatar } from '@/api/user';
 import { upload } from './utils';
-import { CropperCard } from './cropper';
+import { CropperCard } from './Cropper';
 import { IconCloud, IconCamera } from '@douyinfe/semi-icons';
 import styles from './index.scss';
 import { useEffect } from 'react';

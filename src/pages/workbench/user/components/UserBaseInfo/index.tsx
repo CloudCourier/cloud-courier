@@ -1,11 +1,11 @@
 import { getUserInfo } from '@/utils/common';
 import { Button, Card, List } from '@douyinfe/semi-ui';
 import { useEffect, useState } from 'react';
-import UpdateEmail from '../UpdateEmail/UpdateEmail';
-import UpdatePassword from '../UpdatePassword/UpdatePassword';
-import Upload from '@/components/upload';
+import UpdateEmail from '../UpdateEmail';
+import UpdatePassword from '../UpdatePassword';
+import Upload from '@/components/Upload';
 import Meta from '@douyinfe/semi-ui/lib/es/card/meta';
-import UpdateName from '../updateName';
+import UpdateName from '../UpdateName';
 
 export default function AccountSettings() {
   const [updateNameModalVisible, setUpdateNameModalVisible] = useState(false); // 修改邮箱

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Empty, Button } from '@douyinfe/semi-ui';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -6,13 +6,13 @@ import {
   IllustrationConstruction,
 } from '@douyinfe/semi-illustrations/lib/es/index';
 
-interface Iprops {
+interface ResultProps {
   title?: string;
   description?: string;
   type: '404' | '403';
 }
 
-const Result: FC<Iprops> = ({ title, description, type }) => {
+const Result: FC<ResultProps> = ({ title, description, type }) => {
   const navigate = useNavigate();
   return (
     <Empty

@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
-import Chat from './chat';
-import UserMsgList from './userMsgList';
+import Chat from './Chat';
+import UserMsgList from './UserMsgList';
 import styles from './index.scss';
 import { Empty } from '@douyinfe/semi-ui';
 import { IllustrationNoContent, IllustrationNoContentDark } from '@douyinfe/semi-illustrations';

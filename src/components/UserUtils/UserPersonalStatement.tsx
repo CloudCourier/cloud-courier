@@ -1,6 +1,6 @@
 import { Form } from '@douyinfe/semi-ui';
 
-export default function CUserPersonalStatement() {
+export default function UserPersonalStatement() {
   return (
     <Form.TextArea
       field="personalStatement"

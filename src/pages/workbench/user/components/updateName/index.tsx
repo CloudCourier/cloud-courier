@@ -1,7 +1,7 @@
 import { updateUsername } from '@/api/user';
 import { getUserInfo, onModalCancel, ToastError, ToastSuccess } from '@/utils/common';
 import { Form, Modal } from '@douyinfe/semi-ui';
-import { FormApi } from '@douyinfe/semi-ui/lib/es/form';
+import type { FormApi } from '@douyinfe/semi-ui/lib/es/form';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
 
 interface IUpdateName {

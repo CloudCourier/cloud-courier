@@ -1,4 +1,4 @@
-import Upload from '@/components/upload';
+import Upload from '@/components/Upload';
 import { getUserInfo } from '@/utils/common';
 import { Avatar, Button, Card, Col, Input, Row, Space } from '@douyinfe/semi-ui';
 import Meta from '@douyinfe/semi-ui/lib/es/card/meta';
@@ -141,9 +141,9 @@ const GroupSettings = () => {
       </div>
       <InviteModal
         visible={modalVisible}
-        onCancel={()=>setModalVisible(false)}
+        onCancel={() => setModalVisible(false)}
         footer={
-          <Button type="primary" onClick={()=>setModalVisible(false)}>
+          <Button type="primary" onClick={() => setModalVisible(false)}>
             返回
           </Button>
         }
