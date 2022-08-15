@@ -52,3 +52,12 @@ export function updateUsername(username: string) {
     },
   });
 }
+export function queryMembers(keyword: string) {
+  return http({
+    url: '/members/query',
+    method: 'get',
+    params: {
+      keyword,
+    },
+  });
+}

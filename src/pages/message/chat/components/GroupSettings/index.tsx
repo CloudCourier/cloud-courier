@@ -4,11 +4,15 @@ import { Avatar, Button, Card, Col, Input, Row, Space } from '@douyinfe/semi-ui'
 import Meta from '@douyinfe/semi-ui/lib/es/card/meta';
 import { useEffect, useState } from 'react';
 import { IconSearch } from '@douyinfe/semi-icons';
+import InviteModal from '../InviteModal';
 import styles from './index.scss';
 
 const GroupSettings = () => {
   const [avatarUrl, setAvatarUrl] = useState(''); // 头像
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const modalClose = () => {
+    console.log('close');
+  };
   useEffect(() => {
     const user = getUserInfo();
     if (!user.avatar) {
@@ -35,13 +39,13 @@ const GroupSettings = () => {
         <div className={styles.groupHeader}>
           <div className={styles.groupNum}>群成员 (2)</div>
           <div className={styles.inviteMember}>
-            <Button>添加群成员</Button>
+            <Button onClick={() => setModalVisible(true)}>添加群成员</Button>
           </div>
         </div>
         <div className={styles.membersListContiner}>
           <div className={styles.membersList}>
             <Input prefix={<IconSearch />} placeholder="搜索群成员" showClear></Input>
-            <Row  gutter={[16,16]} style={{marginTop:'20px'}}>
+            <Row gutter={[16, 16]} style={{ marginTop: '20px' }}>
               <Col span={8}>
                 <Card
                   shadows="hover"
@@ -135,6 +139,15 @@ const GroupSettings = () => {
           </div>
         </div>
       </div>
+      <InviteModal
+        visible={modalVisible}
+        onCancel={()=>setModalVisible(false)}
+        footer={
+          <Button type="primary" onClick={()=>setModalVisible(false)}>
+            返回
+          </Button>
+        }
+      />
     </div>
   );
 };
