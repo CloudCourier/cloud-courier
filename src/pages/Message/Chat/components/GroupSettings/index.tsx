@@ -1,19 +1,27 @@
 import Upload from '@/components/Upload';
-import { getUserInfo } from '@/utils/common';
+import { getUserInfo, ToastSuccess } from '@/utils/common';
 import { Avatar, Button, Card, Col, Input, Row, Space } from '@douyinfe/semi-ui';
 import Meta from '@douyinfe/semi-ui/lib/es/card/meta';
-import { useEffect, useState } from 'react';
-import { IconSearch } from '@douyinfe/semi-icons';
+import { FC, useEffect, useState } from 'react';
+import { IconSearch, IconExit } from '@douyinfe/semi-icons';
 import InviteModal from '../InviteModal';
+import { exitSubject, deleteSubject } from '@/api/subjects';
 import styles from './index.scss';
 
-const GroupSettings = () => {
+interface GroupSettingsProps {
+  groupId: number;
+}
+
+const GroupSettings: FC<GroupSettingsProps> = ({ groupId }) => {
   const [avatarUrl, setAvatarUrl] = useState(''); // 头像
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const modalClose = () => {
     console.log('close');
   };
   useEffect(() => {
+    console.log('groupId', groupId);
+
     const user = getUserInfo();
     if (!user.avatar) {
       user.then(data => {
@@ -23,6 +31,19 @@ const GroupSettings = () => {
     }
     setAvatarUrl(user.avatar);
   });
+  const exit = () => {
+    setLoading(true);
+    // TODO 判断是退群还是删除 根据 owner_id
+    deleteSubject(groupId)
+      .then(() => {
+        ToastSuccess('操作成功');
+        // TODO: 待优化
+        window.location.reload();
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
   return (
     <div className={styles.settingContainer}>
       <Space className={styles.groupInfoContainer}>
@@ -139,6 +160,9 @@ const GroupSettings = () => {
           </div>
         </div>
       </div>
+      <Button icon={<IconExit />} loading={loading} type="danger" block onClick={exit}>
+        退出组织
+      </Button>
       <InviteModal
         visible={modalVisible}
         onCancel={() => setModalVisible(false)}

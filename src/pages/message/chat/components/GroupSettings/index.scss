@@ -29,18 +29,18 @@
       }
     }
     .membersListContiner {
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        border-radius: 2px;
-        padding: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 2px;
+      padding: 10px;
     }
-    .membersList{
-        display: flex;
-        flex-direction: column;
-        :global{
-            .semi-input-wrapper{
-                margin: 0;
-            }
+    .membersList {
+      display: flex;
+      flex-direction: column;
+      :global {
+        .semi-input-wrapper {
+          margin: 0;
         }
+      }
     }
   }
 }

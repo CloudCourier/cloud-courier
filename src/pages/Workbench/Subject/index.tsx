@@ -22,6 +22,7 @@ function Tables() {
   const [settingVisible, setSettingVisible] = useState(false);
   const { id: userId } = getUserInfo();
   const { data, isLoading } = useQuery('joined', joined);
+  const [groupId, setGroupId] = useState(-1);
   // const [pagination, setpagination] = useState({
   //   current: 1,
   //   pageSize: 10,
@@ -34,7 +35,10 @@ function Tables() {
 
   // }
   const dispatch = useAppDispatch();
-
+  const goGroupSettings = (id: number) => {
+    setGroupId(id);
+    setSettingVisible(true);
+  };
   const columns = [
     {
       title: '身份',
@@ -71,11 +75,9 @@ function Tables() {
     {
       title: '操作',
       dataIndex: 'id',
-      render: (id: number, object: { token: string }) => (
+      render: (id: number) => (
         <Space>
-          <Button onClick={() => setSettingVisible(true)} id={`${id}`} attr-token={object.token}>
-            详情
-          </Button>
+          <Button onClick={() => goGroupSettings(id)}>详情</Button>
         </Space>
       ),
     },
@@ -102,7 +104,7 @@ function Tables() {
         placement="right"
         width="100%"
       >
-        <GroupSettings />
+        <GroupSettings groupId={groupId} />
       </SideSheet>
     </>
   );

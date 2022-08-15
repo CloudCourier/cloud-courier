@@ -16,16 +16,9 @@ export default function AccountSettings() {
 
   useEffect(() => {
     const user = getUserInfo();
-    if (!user.avatar) {
-      user.then(data => {
-        setAvatarUrl(data.avatar);
-        setUserName(data.username);
-      });
-      return;
-    }
     setAvatarUrl(user.avatar);
     setUserName(user.username);
-  });
+  }, []);
 
   return (
     <div style={{ margin: '20px' }}>

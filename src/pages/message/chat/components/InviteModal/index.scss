@@ -1,22 +1,21 @@
-.searchContainer{
+.searchContainer {
+  display: flex;
+  flex-direction: column;
+  .searchBar {
+    margin-top: 20px;
+    width: 80%;
     display: flex;
-    flex-direction: column;
-    .searchBar{
-        margin-top: 20px;
-        width: 80%;
-        display: flex;
-        :global{
-            .semi-button {
-                margin: 10px;
-            }
-        }
+    :global {
+      .semi-button {
+        margin: 10px;
+      }
     }
-
+  }
 }
-.memberCard{
-    :global{
-        .semi-card-body{
-            display: none;
-        }
+.memberCard {
+  :global {
+    .semi-card-body {
+      display: none;
     }
+  }
 }

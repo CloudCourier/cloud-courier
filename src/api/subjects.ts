@@ -40,7 +40,7 @@ export function reply(id: number, accept: string) {
     },
   });
 }
-export function invite(id: number, member: number){
+export function invite(id: number, member: number) {
   return http({
     url: `/subjects/mine/${id}/invite`,
     method: 'post',
@@ -48,5 +48,17 @@ export function invite(id: number, member: number){
       id,
       member,
     },
+  });
+}
+export function exitSubject(id: number) {
+  return http({
+    url: `/subjects/joined/${id}`,
+    method: 'delete',
+  });
+}
+export function deleteSubject(id: number) {
+  return http({
+    url: `/subjects/mine/${id}`,
+    method: 'delete',
   });
 }
