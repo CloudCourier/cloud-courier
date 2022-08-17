@@ -19,5 +19,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': 0,
     'no-mixed-spaces-and-tabs': 0,
     'no-empty': 0,
+    '@typescript-eslint/ban-ts-comment': 0,
+    '@typescript-eslint/no-this-alias': 0,
   },
 };

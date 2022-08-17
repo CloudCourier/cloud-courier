@@ -1,11 +1,12 @@
 import { Modal, Button, Avatar } from '@douyinfe/semi-ui';
-import { getUserInfo, ToastError, ToastSuccess } from '@/utils/common';
+import { getUserInfo, ToastError, ToastInfo, ToastSuccess, ToastWaring } from '@/utils/common';
 import { useRef, useState } from 'react';
 import { updateAvatar } from '@/api/user';
 import { upload } from './utils';
 import { CropperCard } from './Cropper';
 import { IconCloud, IconCamera } from '@douyinfe/semi-icons';
 import styles from './index.scss';
+import { STORGENAME, UPLOAD_SIZE } from '@/utils/const';
 import { useEffect } from 'react';
 
 export default function UploadImg({ avatarUrl, setAvatarUrl }: any) {
@@ -49,13 +50,25 @@ export default function UploadImg({ avatarUrl, setAvatarUrl }: any) {
     setConfirmLoading(true);
     // 通过获取子组件的方法获取裁剪后的图片blob
     uploadRef.current.upload().then(async blob => {
+      // 经过裁剪后，图片体积会变大，详情见 https://github.com/react-cropper/react-cropper/issues/24
+      if (blob.size > UPLOAD_SIZE) {
+        setVisible(false);
+        setImage('');
+        ToastWaring('超出最大图片体积限制');
+        ToastInfo(
+          '理论上来说，只要选择 1MB 一下的图片，都可以上传通过。实际上这是一个BUG，上传的图片在剪裁后体积会变大，根据图片质量，变大的倍数不可控，我们正在积极跟进这个问题！',
+        );
+        setConfirmLoading(false);
+        setModalText('上传图片');
+        return;
+      }
       const url = (await upload(blob)) as string;
       updateAvatar(url).then(() => {
         ToastSuccess('修改成功');
         setAvatarUrl(url);
         const user = getUserInfo();
         user.avatar = url;
-        localStorage.setItem('userInfo', JSON.stringify(user));
+        localStorage.setItem(STORGENAME, JSON.stringify(user));
         setVisible(false);
         setImage('');
         setConfirmLoading(false);

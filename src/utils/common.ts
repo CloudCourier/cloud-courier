@@ -2,6 +2,7 @@ import { getInfo } from '@/api/user';
 import { Modal, Toast } from '@douyinfe/semi-ui';
 import type { FormApi } from '@douyinfe/semi-ui/lib/es/form';
 import type { Dispatch, SetStateAction } from 'react';
+import { STORGENAME } from './const';
 
 // 通用的正确弹窗
 export function ToastSuccess(content: string, duration = 4) {
@@ -26,6 +27,14 @@ export function ToastInfo(content: string, duration = 3, icon?: React.ReactNode)
 export function ToastError(content: string, duration = 4) {
   return Toast.error({
     content: content || 'Error',
+    duration,
+    showClose: false,
+  });
+}
+// 通用的警告弹窗
+export function ToastWaring(content: string, duration = 4) {
+  return Toast.warning({
+    content: content || 'Warning',
     duration,
     showClose: false,
   });
@@ -112,10 +121,10 @@ export function randomString(length = 6) {
 
 export function getUserInfo() {
   return (
-    JSON.parse(localStorage.getItem('userInfo')) ||
+    JSON.parse(localStorage.getItem(STORGENAME)) ||
     new Promise((resolve, reject) => {
       getInfo().then(res => {
-        localStorage.setItem('userInfo', JSON.stringify(res.data));
+        localStorage.setItem(STORGENAME, JSON.stringify(res.data));
         resolve(res.data);
       }); // Error 拦截器情况自动提示
     })

@@ -46,7 +46,7 @@ export function Md5File(file: Blob): Promise<string> {
 
 export async function getFormData(md5: any) {
   if (!md5 || !/[0-9a-f]{32}/gi.test(md5)) {
-    alert('md5 未计算正确');
+    console.log('md5 未计算正确');
     return undefined;
   }
   const url = `files/${md5}/params`;

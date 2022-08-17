@@ -4,6 +4,8 @@ import { Button, Form, Typography } from '@douyinfe/semi-ui';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginRegisterBase from '../components/LoginRegisterBase';
+import { STORGENAME } from '@/utils/const';
+
 import styles from './index.scss';
 
 export default function Login() {
@@ -16,7 +18,7 @@ export default function Login() {
       .then(res => {
         if (res.status === 200) {
           ToastSuccess('欢迎回来 (oﾟ▽ﾟ)o', 5);
-          localStorage.setItem('userInfo', JSON.stringify(res.data));
+          localStorage.setItem(STORGENAME, JSON.stringify(res.data));
           setLoading(false);
           navigate('/');
           return;

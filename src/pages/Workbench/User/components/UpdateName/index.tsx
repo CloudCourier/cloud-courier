@@ -2,6 +2,7 @@ import { updateUsername } from '@/api/user';
 import { getUserInfo, onModalCancel, ToastError, ToastSuccess } from '@/utils/common';
 import { Form, Modal } from '@douyinfe/semi-ui';
 import type { FormApi } from '@douyinfe/semi-ui/lib/es/form';
+import { STORGENAME } from '@/utils/const';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
 
 interface IUpdateName {
@@ -59,7 +60,9 @@ function modalSubmitClick(
       setModalVisible(false);
       const user = getUserInfo();
       user.username = form.username;
-      localStorage.setItem('userInfo', JSON.stringify(user));
+      localStorage.setItem(STORGENAME, JSON.stringify(user));
+      // TODO: 待优化
+      window.location.reload();
     })
     .finally(() => {
       setConfirmLoading(false);

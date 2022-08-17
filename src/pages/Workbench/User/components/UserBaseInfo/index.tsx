@@ -14,10 +14,13 @@ export default function AccountSettings() {
   const [avatarUrl, setAvatarUrl] = useState(''); // 头像
   const [userName, setUserName] = useState(''); // 用户名
 
-  useEffect(() => {
+  function initCard() {
     const user = getUserInfo();
     setAvatarUrl(user.avatar);
     setUserName(user.username);
+  }
+  useEffect(() => {
+    initCard();
   }, []);
 
   return (
