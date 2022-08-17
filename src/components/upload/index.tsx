@@ -56,7 +56,7 @@ export default function UploadImg({ avatarUrl, setAvatarUrl }: any) {
         setImage('');
         ToastWaring('超出最大图片体积限制');
         ToastInfo(
-          '理论上来说，只要选择 1MB 一下的图片，都可以上传通过。实际上这是一个BUG，上传的图片在剪裁后体积会变大，根据图片质量，变大的倍数不可控，我们正在积极跟进这个问题！',
+          '理论上来说，只要选择 1MB 以下的图片，都可以上传通过。实际上这是一个BUG，上传的图片在剪裁后体积会变大，根据图片质量，变大的倍数不可控，我们正在积极跟进这个问题！',
         );
         setConfirmLoading(false);
         setModalText('上传图片');
