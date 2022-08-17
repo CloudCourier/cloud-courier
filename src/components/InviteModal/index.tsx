@@ -2,15 +2,17 @@ import { Button, Input, Modal, Space, Spin } from '@douyinfe/semi-ui';
 import { IconSearch } from '@douyinfe/semi-icons';
 import { IllustrationConstruction } from '@douyinfe/semi-illustrations';
 import { debounce } from 'lodash';
-import { useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { queryMembers } from '@/api/user';
 import { invite as inviteApi } from '@/api/subjects';
 import { IllustrationConstructionDark } from '@douyinfe/semi-illustrations';
 import { Card, Empty, Skeleton, Avatar, Typography } from '@douyinfe/semi-ui';
 import styles from './index.scss';
-import { ToastSuccess } from '@/utils/common';
+import { ToastSuccess, ToastWaring } from '@/utils/common';
+import { AcceptStatus } from '@/pages/Workbench/Invitations/types';
 
 const InviteModal = props => {
+  const { groupId } = props;
   const [searchValue, setSearchValue] = useState('');
   const [searchMember, setSearchMember] = useState(null);
   const { Meta } = Card;
@@ -21,12 +23,15 @@ const InviteModal = props => {
 
   const search = () => {
     setLoading(true);
-    setSearchMember('');
+    setSearchMember(''); // 打开骨架屏
     queryMembers(searchValue)
       .then(data => {
         if (data.data) {
           setSearchMember(data.data);
         }
+      })
+      .catch(() => {
+        setSearchMember(null);
       })
       .finally(() => {
         setLoading(false);
@@ -34,16 +39,22 @@ const InviteModal = props => {
   };
   const invite = (id, member) => {
     setInviteLoading(true);
-    // TODO：动态填写群🆔
     inviteApi(id, member)
-      .then(() => {
-        ToastSuccess('邀请成功，但是群🆔是写死的');
+      .then(data => {
+        if (data.data.status !== AcceptStatus.UNHANDLED) {
+          ToastWaring('已是组织成员，请勿重复邀请');
+        } else {
+          ToastSuccess('邀请成功');
+        }
       })
       .finally(() => {
         setInviteLoading(false);
       });
   };
   const renderOption = item => {
+    if (item.error) {
+      return <>{item.message}</>;
+    }
     return (
       <Card
         className={styles.memberCard}
@@ -73,7 +84,7 @@ const InviteModal = props => {
         }
         headerExtraContent={
           <Skeleton style={{ width: 50 }} placeholder={<Paragraph rows={1} />} loading={loading}>
-            <Button loading={inviteLoading} onClick={() => invite(8, item.id)}>
+            <Button loading={inviteLoading} onClick={() => invite(groupId, item.id)}>
               邀请
             </Button>
           </Skeleton>

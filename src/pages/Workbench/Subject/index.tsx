@@ -15,7 +15,7 @@ import { openProjectModal, setSubjectId, setToken } from '@/store/subject.slice'
 import { useAppDispatch, useAppSelector } from '@/hooks/store';
 import SubjectModal from './subjectModal';
 import { getUserInfo, ToastError } from '@/utils/common';
-import GroupSettings from '@/pages/Message/Chat/components/GroupSettings';
+import GroupSettings from '@/components/GroupSettings';
 import { useState } from 'react';
 
 function Tables() {

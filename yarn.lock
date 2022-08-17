@@ -1005,8 +1005,8 @@
 
 "@cloud-courier/cloud-courier-lib@^0.0.6":
   version "0.0.6"
-  resolved "https://nexus.sunxinao.cn/repository/npm-group/@cloud-courier/cloud-courier-lib/-/cloud-courier-lib-0.0.6.tgz#f020a7032f50f3daff4941012b99d9465494835a"
-  integrity sha512-P2mCc0aj0mkCotrgMxe/jkDz8VYaMkYLnfAuK6D4Hvc0NbgJbwqdE/c0EuwWqKYZeEWBHPTQXPvloElRPez0Bw==
+  resolved "https://nexus.sunxinao.cn/repository/npm-group/@cloud-courier/cloud-courier-lib/-/cloud-courier-lib-0.0.6.tgz#d53c76aa5c30782eafa06cfce2df1d50b3bf3a56"
+  integrity sha512-NAwEpupE3XVJa1PKKZpUQWSQkxIcPL0XcRwOuOav8xtvmwtWGScqaiYTqRgskFG3rsDNjKxbH0ocO3H1Apj2aQ==
   dependencies:
     axios "^0.26.0"
     long "^5.2.0"

@@ -14,9 +14,6 @@ export function delMySubject(id: number) {
   return http.delete(`/subjects/mine/${id}`);
 }
 
-export function getMembers(id: number) {
-  return http(`/subjects/joined/${id}/members`);
-}
 export function joined() {
   return http('/subjects/joined');
 }
@@ -60,5 +57,10 @@ export function deleteSubject(id: number) {
   return http({
     url: `/subjects/mine/${id}`,
     method: 'delete',
+  });
+}
+export function subjectDetail(id: number) {
+  return http({
+    url: `subjects/joined/${id}/detail`,
   });
 }

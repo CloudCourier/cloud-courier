@@ -1,4 +1,5 @@
 import { getInfo } from '@/api/user';
+import type { User } from '@/types/user';
 import { Modal, Toast } from '@douyinfe/semi-ui';
 import type { FormApi } from '@douyinfe/semi-ui/lib/es/form';
 import type { Dispatch, SetStateAction } from 'react';
@@ -119,7 +120,7 @@ export function randomString(length = 6) {
   return resStr;
 }
 
-export function getUserInfo() {
+export function getUserInfo(): User {
   return (
     JSON.parse(localStorage.getItem(STORGENAME)) ||
     new Promise((resolve, reject) => {

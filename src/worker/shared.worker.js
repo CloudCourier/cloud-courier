@@ -9,6 +9,7 @@ import {
   ServerboundMessagePacket,
   ServerboundHistoryPacket,
   ClientboundHistoryPacket,
+  ClientboundDisconnectPacket,
 } from '@cloud-courier/cloud-courier-lib';
 import { openDB } from 'idb/with-async-ittr';
 import { debounce } from 'lodash';
@@ -113,7 +114,7 @@ cloudCourier.addListener({
       storeMsg(packet);
       // console.log('我收到消息 了 packet: ', packet);
     } else if (packet instanceof ClientboundStrangerPacket) {
-      console.log('来访客了',packet);
+      console.log('来访客了', packet);
       /*
       来访客了
       appKey 群组 ID g:10
@@ -150,6 +151,8 @@ cloudCourier.addListener({
       // target,
       // },
       // });
+    } else if (packet instanceof ClientboundDisconnectPacket) {
+      console.log('断开链接packet', packet);
     }
   },
   packetSent({ packet }) {

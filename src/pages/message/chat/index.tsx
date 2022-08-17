@@ -9,7 +9,7 @@ import { useState, useRef } from 'react';
 import i18 from './i18';
 import styles from './index.scss';
 import { useMemo, useEffect } from 'react';
-import GroupSettings from './components/GroupSettings';
+import GroupSettings from '@/components/GroupSettings';
 
 function Chat({ selectedUser }) {
   const [msg, setMsg] = useState('');
@@ -120,6 +120,7 @@ function Chat({ selectedUser }) {
         placement="right"
         width="100%"
       >
+        // TODO:
         <GroupSettings />
       </SideSheet>
     </div>
