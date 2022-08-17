@@ -18,6 +18,7 @@ const GroupSettings: FC<GroupSettingsProps> = ({ groupId }) => {
   const [avatarUrl, setAvatarUrl] = useState(''); // 头像
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState(null);
   const modalClose = () => {
     console.log('close');
   };
@@ -59,8 +60,39 @@ const GroupSettings: FC<GroupSettingsProps> = ({ groupId }) => {
         });
     }
   };
-  console.log('data.data.members', data.data.members);
-
+  function MemberCardList(members: User[]) {
+    if (search) {
+      members = members.filter(item => item.name.indexOf(search) > -1);
+    }
+    return members.map((item: User) => (
+      <Col span={8}>
+        {/* TODO：个人 card 预览 */}
+        <Card
+          shadows="hover"
+          style={{ maxWidth: 360 }}
+          bodyStyle={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Meta
+            title={item.name}
+            avatar={<Avatar alt={item.name} size="default" src={item.logo} />}
+          />
+          {item.id === data.data.owner_id ? (
+            <Tag size="large" color="orange">
+              创建者
+            </Tag>
+          ) : (
+            <Button theme="light" type="danger">
+              移除
+            </Button>
+          )}
+        </Card>
+      </Col>
+    ));
+  }
   return (
     <div className={styles.settingContainer}>
       <Space className={styles.groupInfoContainer}>
@@ -75,43 +107,21 @@ const GroupSettings: FC<GroupSettingsProps> = ({ groupId }) => {
       <div>会话设置</div>
       <div className={styles.groupMembers}>
         <div className={styles.groupHeader}>
-          <div className={styles.groupNum}>群成员 (2)</div>
+          <div className={styles.groupNum}>群成员 ({data.data.members.length})</div>
           <div className={styles.inviteMember}>
             <Button onClick={() => setModalVisible(true)}>添加群成员</Button>
           </div>
         </div>
         <div className={styles.membersListContiner}>
           <div className={styles.membersList}>
-            <Input prefix={<IconSearch />} placeholder="搜索群成员" showClear></Input>
+            <Input
+              prefix={<IconSearch />}
+              placeholder="搜索群成员"
+              showClear
+              onChange={setSearch}
+            ></Input>
             <Row gutter={[16, 16]} style={{ marginTop: '20px' }}>
-              {data.data.members.map((item: User) => (
-                <Col span={8}>
-                  {/* TODO：个人 card 预览 */}
-                  <Card
-                    shadows="hover"
-                    style={{ maxWidth: 360 }}
-                    bodyStyle={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Meta
-                      title={item.name}
-                      avatar={<Avatar alt={item.name} size="default" src={item.logo} />}
-                    />
-                    {item.id === data.data.owner_id ? (
-                      <Tag size="large" color="orange">
-                        创建者
-                      </Tag>
-                    ) : (
-                      <Button theme="light" type="danger">
-                        移除
-                      </Button>
-                    )}
-                  </Card>
-                </Col>
-              ))}
+              {MemberCardList(data.data.members)}
             </Row>
           </div>
         </div>
