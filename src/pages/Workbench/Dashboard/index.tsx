@@ -6,6 +6,7 @@ import { setActiveKey } from '@/store/workbench.slice';
 import { choiceIdEle } from '@/utils/common';
 import { useAppDispatch } from '@/hooks/store';
 import { useNavigate } from 'react-router';
+import { IconBell, IconUserCircle, IconGlobe, IconPuzzle } from '@douyinfe/semi-icons';
 import styles from './index.scss';
 
 export default () => {
@@ -33,11 +34,15 @@ export default () => {
           <Meta
             title={item.name}
             avatar={
-              <Avatar
-                alt="Card meta img"
-                size="default"
-                src="https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/card-meta-avatar-docs-demo.jpg"
-              />
+              item.name === '组织管理' ? (
+                <IconGlobe />
+              ) : item.name === '个人中心' ? (
+                <IconUserCircle />
+              ) : item.name === '我的邀请' ? (
+                <IconBell />
+              ) : (
+                <IconPuzzle />
+              )
             }
           />
         </Card>

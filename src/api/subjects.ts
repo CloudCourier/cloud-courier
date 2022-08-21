@@ -1,3 +1,4 @@
+import type { Subject } from '@/types/subject';
 import http from '@/utils/http';
 
 export function addSubjects(data: { name: string; logo: string }) {
@@ -62,5 +63,17 @@ export function deleteSubject(id: number) {
 export function subjectDetail(id: number) {
   return http({
     url: `subjects/joined/${id}/detail`,
+  });
+}
+
+export function updateSubject(params: Subject) {
+  return http({
+    url: `/subjects/mine/${params.id}`,
+    method: 'post',
+    data: {
+      name: params.name,
+      description: params.description,
+      logo: params.logo,
+    },
   });
 }

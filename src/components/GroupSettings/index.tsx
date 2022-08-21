@@ -1,38 +1,60 @@
 import Upload from '@/components/Upload';
 import { getUserInfo, ToastSuccess } from '@/utils/common';
-import { Avatar, Button, Card, Col, Input, Row, Space, Spin, Tag } from '@douyinfe/semi-ui';
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  Empty,
+  Input,
+  List,
+  Row,
+  Space,
+  Spin,
+  Switch,
+  TabPane,
+  Tabs,
+  Tag,
+  Divider,
+} from '@douyinfe/semi-ui';
 import Meta from '@douyinfe/semi-ui/lib/es/card/meta';
 import { FC, useEffect, useState } from 'react';
-import { IconSearch, IconExit } from '@douyinfe/semi-icons';
-import InviteModal from '../InviteModal';
-import { exitSubject, deleteSubject, subjectDetail } from '@/api/subjects';
+import { IconSearch, IconExit, IconEdit } from '@douyinfe/semi-icons';
+import InviteModal from './InviteModal';
+import EditModal from './EditModal';
+import { exitSubject, deleteSubject, subjectDetail, updateSubject } from '@/api/subjects';
 import styles from './index.scss';
 import { useQuery } from 'react-query';
 import type { User } from '@/types/user';
-
+import { IllustrationNoResultDark, IllustrationNoResult } from '@douyinfe/semi-illustrations';
 interface GroupSettingsProps {
   groupId: number;
 }
 
 const GroupSettings: FC<GroupSettingsProps> = ({ groupId }) => {
   const [avatarUrl, setAvatarUrl] = useState(''); // 头像
-  const [modalVisible, setModalVisible] = useState(false);
+  const [groupInfo, setGroupInfo] = useState({
+    name: '',
+    description: '',
+  }); // 头像
+  const [inviteModalVisible, setInviteModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
   const [search, setSearch] = useState(null);
-  const modalClose = () => {
-    console.log('close');
-  };
-  const { data, isLoading } = useQuery('invitations', () => subjectDetail(groupId));
+  const { data, isLoading, refetch } = useQuery('subjectDetail', () => subjectDetail(groupId));
   const user = getUserInfo();
+
   useEffect(() => {
     if (data) {
-      setAvatarUrl(data.data.logo);
+      const { logo, name, description } = data.data;
+      setAvatarUrl(logo);
+      setGroupInfo(() => ({
+        name,
+        description,
+      }));
     }
   }, [data]);
-
-  if (isLoading) {
-    return <Spin>loading</Spin>;
-  }
 
   const exit = () => {
     setLoading(true);
@@ -60,38 +82,68 @@ const GroupSettings: FC<GroupSettingsProps> = ({ groupId }) => {
         });
     }
   };
+  const editHandle = () => {
+    setEditLoading(true);
+    updateSubject({ ...groupInfo, id: groupId })
+      .then(data => {
+        if (!data.data.error) {
+          ToastSuccess('修改成功🚀');
+          refetch();
+        }
+      })
+      .finally(() => {
+        setEditModalVisible(false);
+        setEditLoading(false);
+      });
+  };
+  if (isLoading) {
+    return <Spin>loading</Spin>;
+  }
   function MemberCardList(members: User[]) {
     if (search) {
-      members = members.filter(item => item.name.indexOf(search) > -1);
+      members = members.filter(item => item.username.indexOf(search) > -1);
     }
-    return members.map((item: User) => (
-      <Col span={8}>
-        {/* TODO：个人 card 预览 */}
-        <Card
-          shadows="hover"
-          style={{ maxWidth: 360 }}
-          bodyStyle={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Meta
-            title={item.name}
-            avatar={<Avatar alt={item.name} size="default" src={item.logo} />}
-          />
-          {item.id === data.data.owner_id ? (
-            <Tag size="large" color="orange">
-              创建者
-            </Tag>
-          ) : (
-            <Button theme="light" type="danger">
-              移除
-            </Button>
-          )}
-        </Card>
-      </Col>
-    ));
+    if (members && members.length === 0) {
+      return (
+        <Empty
+          image={<IllustrationNoResult style={{ width: 150, height: 150 }} />}
+          darkModeImage={<IllustrationNoResultDark style={{ width: 150, height: 150 }} />}
+          description={'搜索无结果'}
+        />
+      );
+    }
+
+    return (
+      members &&
+      members.map((item: User) => (
+        <Col span={8} key={item.id}>
+          {/* TODO：个人 card 预览 */}
+          <Card
+            shadows="hover"
+            style={{ maxWidth: 360 }}
+            bodyStyle={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Meta
+              title={item.username}
+              avatar={<Avatar alt={item.username} size="default" src={item.avatar} />}
+            />
+            {item.id === data.data.owner_id ? (
+              <Tag size="large" color="orange">
+                创建者
+              </Tag>
+            ) : (
+              <Button theme="light" type="danger">
+                移除
+              </Button>
+            )}
+          </Card>
+        </Col>
+      ))
+    );
   }
   return (
     <div className={styles.settingContainer}>
@@ -100,16 +152,38 @@ const GroupSettings: FC<GroupSettingsProps> = ({ groupId }) => {
           <Meta avatar={<Upload setAvatarUrl={setAvatarUrl} avatarUrl={avatarUrl} />} />
         </div>
         <div className={styles.groupInfos}>
-          <div className={styles.groupName}>{data.data.name}</div>
-          <div className={styles.groupDes}>暂无群描述</div>
+          <div className={styles.groupName}>
+            {data.data && data.data.name}
+            <Button
+              type="primary"
+              icon={<IconEdit />}
+              aria-label="修改"
+              onClick={() => setEditModalVisible(true)}
+            />
+          </div>
+          <div className={styles.groupDes}>{data.data.description || '这个人很懒～'} </div>
         </div>
       </Space>
-      <div>会话设置</div>
+      <Tabs type="line" style={{ marginTop: '20px' }}>
+        <TabPane tab="会话设置" itemKey="1">
+          <List>
+            <List.Item
+              header={<h4 style={{ fontWeight: 600 }}>置顶</h4>}
+              extra={
+                <Switch onChange={(v, e) => console.log(v)} aria-label="a switch for demo"></Switch>
+              }
+            />
+          </List>
+          <Divider margin="12px" />
+        </TabPane>
+      </Tabs>
       <div className={styles.groupMembers}>
         <div className={styles.groupHeader}>
-          <div className={styles.groupNum}>群成员 ({data.data.members.length})</div>
+          <div className={styles.groupNum}>
+            群成员 ({data.data.members && data.data.members.length})
+          </div>
           <div className={styles.inviteMember}>
-            <Button onClick={() => setModalVisible(true)}>添加群成员</Button>
+            <Button onClick={() => setInviteModalVisible(true)}>添加群成员</Button>
           </div>
         </div>
         <div className={styles.membersListContiner}>
@@ -121,23 +195,31 @@ const GroupSettings: FC<GroupSettingsProps> = ({ groupId }) => {
               onChange={setSearch}
             ></Input>
             <Row gutter={[16, 16]} style={{ marginTop: '20px' }}>
-              {MemberCardList(data.data.members)}
+              {data.data && MemberCardList(data.data.members)}
             </Row>
           </div>
         </div>
       </div>
       <Button icon={<IconExit />} loading={loading} type="danger" block onClick={exit}>
-        {user.id === data.data.owner_id ? '解散组织' : '退出组织'}
+        {data.data && user.id === data.data.owner_id ? '解散组织' : '退出组织'}
       </Button>
       <InviteModal
-        visible={modalVisible}
+        visible={inviteModalVisible}
         groupId={groupId}
-        onCancel={() => setModalVisible(false)}
+        onCancel={() => setInviteModalVisible(false)}
         footer={
-          <Button type="primary" onClick={() => setModalVisible(false)}>
+          <Button type="primary" onClick={() => setInviteModalVisible(false)}>
             返回
           </Button>
         }
+      />
+      <EditModal
+        visible={editModalVisible}
+        onCancel={() => setEditModalVisible(false)}
+        onOk={editHandle}
+        groupInfo={groupInfo}
+        setGroupInfo={setGroupInfo}
+        confirmLoading={editLoading}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 export interface User {
   id: number;
-  name: string;
-  logo: string;
+  username: string;
+  avatar: string;
   key: string;
   email?: string;
   phone?: string;

@@ -17,7 +17,6 @@ import { useState } from 'react';
 import { AcceptStatus } from './types';
 
 function Tables() {
-  // TODO 网络请求
   const { data, isLoading } = useQuery('invitations', () => invitations(0, 20));
   const [btnLoading, setBtnLoading] = useState(false);
   const reply = (id: number, accept: any) => {
