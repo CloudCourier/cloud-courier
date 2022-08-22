@@ -16,17 +16,25 @@ import {
   Tabs,
   Tag,
   Divider,
+  Modal,
 } from '@douyinfe/semi-ui';
 import Meta from '@douyinfe/semi-ui/lib/es/card/meta';
 import { FC, useEffect, useState } from 'react';
 import { IconSearch, IconExit, IconEdit } from '@douyinfe/semi-icons';
 import InviteModal from './InviteModal';
 import EditModal from './EditModal';
-import { exitSubject, deleteSubject, subjectDetail, updateSubject } from '@/api/subjects';
+import {
+  exitSubject,
+  deleteSubject,
+  subjectDetail,
+  updateSubject,
+  removeMember,
+} from '@/api/subjects';
 import styles from './index.scss';
 import { useQuery } from 'react-query';
 import type { User } from '@/types/user';
 import { IllustrationNoResultDark, IllustrationNoResult } from '@douyinfe/semi-illustrations';
+import RemoveModal from './RemoveModal';
 interface GroupSettingsProps {
   groupId: number;
 }
@@ -41,7 +49,12 @@ const GroupSettings: FC<GroupSettingsProps> = ({ groupId }) => {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editLoading, setEditLoading] = useState(false);
+  const [removeLoading, setRemoveLoading] = useState(false);
   const [search, setSearch] = useState(null);
+  const [removeModalVisible, setRemoveModalVisible] = useState(false);
+  const [removeUsername, setRemoveUserName] = useState('');
+  const [removeUserId, setRemoveUserId] = useState(-1);
+
   const { data, isLoading, refetch } = useQuery('subjectDetail', () => subjectDetail(groupId));
   const user = getUserInfo();
 
@@ -81,6 +94,20 @@ const GroupSettings: FC<GroupSettingsProps> = ({ groupId }) => {
           setLoading(false);
         });
     }
+  };
+  const removeHandle = () => {
+    setRemoveLoading(true);
+    removeMember(groupId, removeUserId)
+      .then(data => {
+        if (!data.data.error) {
+          ToastSuccess(`移除${removeUsername}成功`);
+          refetch();
+        }
+      })
+      .finally(() => {
+        setRemoveModalVisible(false);
+        setRemoveLoading(false);
+      });
   };
   const editHandle = () => {
     setEditLoading(true);
@@ -136,7 +163,14 @@ const GroupSettings: FC<GroupSettingsProps> = ({ groupId }) => {
                 创建者
               </Tag>
             ) : (
-              <Button theme="light" type="danger">
+              <Button
+                theme="light"
+                type="danger"
+                onClick={() => {
+                  setRemoveModalVisible(true), setRemoveUserName(item.username);
+                  setRemoveUserId(item.id);
+                }}
+              >
                 移除
               </Button>
             )}
@@ -220,6 +254,13 @@ const GroupSettings: FC<GroupSettingsProps> = ({ groupId }) => {
         groupInfo={groupInfo}
         setGroupInfo={setGroupInfo}
         confirmLoading={editLoading}
+      />
+      <RemoveModal
+        visible={removeModalVisible}
+        onCancel={() => setRemoveModalVisible(false)}
+        onOk={removeHandle}
+        username={removeUsername}
+        confirmLoading={removeLoading}
       />
     </div>
   );

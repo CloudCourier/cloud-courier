@@ -67,13 +67,21 @@ export function subjectDetail(id: number) {
 }
 
 export function updateSubject(params: Subject) {
+  const { name, description, logo } = params;
   return http({
     url: `/subjects/mine/${params.id}`,
     method: 'post',
     data: {
-      name: params.name,
-      description: params.description,
-      logo: params.logo,
+      name,
+      description,
+      logo,
     },
+  });
+}
+
+export function removeMember(id: number, member_id: number) {
+  return http({
+    url: `/subjects/mine/${id}/${member_id}`,
+    method: 'delete',
   });
 }

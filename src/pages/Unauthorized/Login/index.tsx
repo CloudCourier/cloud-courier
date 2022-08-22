@@ -16,7 +16,7 @@ export default function Login() {
     setLoading(true);
     login(form)
       .then(res => {
-        if (res.status === 200) {
+        if (res && res?.status === 200) {
           ToastSuccess('欢迎回来 (oﾟ▽ﾟ)o', 5);
           localStorage.setItem(STORGENAME, JSON.stringify(res.data));
           setLoading(false);
@@ -25,9 +25,7 @@ export default function Login() {
         }
       })
       .finally(() => {
-        if (loading) {
-          setLoading(false);
-        }
+        setLoading(false);
       });
   }
   return (

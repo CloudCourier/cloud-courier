@@ -47,6 +47,9 @@ const InviteModal = props => {
           ToastSuccess('邀请成功');
         }
       })
+      .catch(err => {
+        console.log('err', err);
+      })
       .finally(() => {
         setInviteLoading(false);
       });
@@ -63,7 +66,7 @@ const InviteModal = props => {
           <Meta
             title={
               <Skeleton style={{ width: 80 }} placeholder={<Title />} loading={loading}>
-                <Typography.Title heading={5}>{item.name}</Typography.Title>
+                <Typography.Title heading={5}>{item.username}</Typography.Title>
               </Skeleton>
             }
             description={
@@ -77,7 +80,7 @@ const InviteModal = props => {
             }
             avatar={
               <Skeleton placeholder={<Skeleton.Avatar />} loading={loading}>
-                <Avatar alt="Card meta img" size="default" src={item.logo} />
+                <Avatar alt="Card meta img" size="default" src={item.avatar} />
               </Skeleton>
             }
           />

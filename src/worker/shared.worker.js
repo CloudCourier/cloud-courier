@@ -14,7 +14,6 @@ import {
 import { openDB } from 'idb/with-async-ittr';
 import { debounce } from 'lodash';
 import Long from 'long';
-
 // eslint-disable-next-line no-undef
 const instanceDB = openDB('cloudCourier', 1, {
   upgrade(db) {
@@ -82,7 +81,8 @@ cloudCourier
     console.log('连接成功', cloudCourier.getState());
     broadcastChannel.postMessage({ type: 'WSState', state: cloudCourier.getState() });
     setTimeout(() => {
-      cloudCourier.send(new ServerboundHistoryPacket('', Long.fromNumber(Date.now()), 100));
+      // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
+      cloudCourier.send(new ServerboundHistoryPacket('', Long.fromNumber(Date.now()), 2147483647));
     }, 1000);
   })
   .catch(e => {
