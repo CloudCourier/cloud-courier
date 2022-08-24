@@ -6,12 +6,14 @@ import SuspendFallbackLoading from '../SuspendFallback';
 import { openDB } from 'idb';
 import { useAppDispatch } from '@/hooks/store';
 import { updateMessage } from '@/store/message.slice';
+import { getInfo } from '@/api/user';
 
 export default () => {
   const dispatch = useAppDispatch();
   const { Content } = Layout;
   useEffect(() => {
-    const sharedWorker = new SharedWorker(`${process.env.API_LOCAL}/shared.worker.js`);
+    getInfo(); //判断是否登录
+    new SharedWorker(`${process.env.API_LOCAL}/shared.worker.js`);
     let webSocketState = WebSocket.CONNECTING;
     const broadcastChannel = new BroadcastChannel('WebSocketChannel');
     broadcastChannel.addEventListener('message', event => {

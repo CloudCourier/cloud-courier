@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useState } from 'react';
-import { Layout, Nav } from '@douyinfe/semi-ui';
-import { IconSemiLogo } from '@douyinfe/semi-icons';
+import { Layout, Nav, Tooltip } from '@douyinfe/semi-ui';
+import { IconExit } from '@douyinfe/semi-icons';
 import menuList, { MenuItem } from '../../config';
 import { useLocation, useNavigate } from 'react-router';
 import { useLocale } from '@/locales';
@@ -88,9 +88,14 @@ const Index: FC = () => {
           logo: <img src={Logo} />,
           text: '云信客服',
         }}
-        // footer={{
-        // 	collapseButton: true
-        // }}
+        footer={
+          <Tooltip content={'重新登录'} position="right">
+            <IconExit
+              style={{ cursor: 'pointer' }}
+              onClick={() => (window.location.href = '#/login')}
+            />
+          </Tooltip>
+        }
       />
     </Sider>
   );

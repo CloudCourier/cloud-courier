@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ToastError } from '@/utils/common';
+import { ToastError, ToastInfo, ToastWaring } from '@/utils/common';
 
 const http = axios.create({
   baseURL: 'https://cccs.sunxinao.cn',
@@ -19,6 +19,11 @@ http.interceptors.response.use(
   response => response,
   err => {
     const { response } = err;
+    if (response.status === 401 && response.data.path !== '/members/login') {
+      ToastInfo('请登录');
+      window.location.href = '#/login';
+    }
+
     ToastError(response.data.message);
   },
 );
