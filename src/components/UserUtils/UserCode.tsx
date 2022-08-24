@@ -23,6 +23,7 @@ export default function UserCode(props: ICUserCode) {
         noLabel={props.noLabel}
         rules={[{ required: true, message: '请输入验证码' }]}
         noErrorMessage
+        autoComplete="off"
       />
       <Button
         block
