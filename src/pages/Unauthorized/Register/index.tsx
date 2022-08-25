@@ -1,5 +1,5 @@
 import { login, register } from '@/api/user';
-import CUserCode from '@/components/UserUtils/UserCode';
+import UserCode from '@/components/UserUtils/UserCode';
 import { randomString, ToastError, ToastSuccess } from '@/utils/common';
 import type { BaseFormApi } from '@douyinfe/semi-foundation/lib/es/form/interface';
 import { Button, Form } from '@douyinfe/semi-ui';
@@ -91,6 +91,7 @@ export default function Register() {
               style={{ width: 220 }}
               showClear
               validate={Validator['phoneValidate']}
+              autoComplete="off"
             />
           ) : (
             <Form.Input
@@ -98,6 +99,7 @@ export default function Register() {
               style={{ width: 220 }}
               showClear
               validate={Validator['emailValidate']}
+              autoComplete="off"
             />
           )}
         </Form.InputGroup>
@@ -110,15 +112,16 @@ export default function Register() {
           style={{ width: 300 }}
           mode="password"
           rules={[{ required: true, message: '请输入密码' }]}
+          autoComplete="off"
         />
-        <CUserCode
+        <UserCode
           noLabel
           setCodeText={setCodeText}
           timer={timer}
           clearTimer={clearTimer}
           codeText={codeText}
           loading={loading}
-        ></CUserCode>
+        />
         <Button
           block
           type="warning"

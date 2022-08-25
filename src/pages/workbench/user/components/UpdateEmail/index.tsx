@@ -1,5 +1,5 @@
 import { updatePassword } from '@/api/user';
-import CUserCode from '@/components/UserUtils/UserCode';
+import UserCode from '@/components/UserUtils/UserCode';
 import { onModalCancel, ToastError, ToastSuccess } from '@/utils/common';
 import Validator from '@/utils/validator';
 import { Button, Form, Modal } from '@douyinfe/semi-ui';
@@ -73,13 +73,14 @@ export default function UpdateEmail(props: IUpdateEmail) {
           validate={Validator['emailValidate']}
           showClear
         />
-        <CUserCode
+        <UserCode
+          noLabel
           setCodeText={setCodeText}
           timer={timer}
           clearTimer={clearTimer}
           codeText={codeText}
           loading={confirmLoading}
-        ></CUserCode>
+        />
       </Form>
     </Modal>
   );

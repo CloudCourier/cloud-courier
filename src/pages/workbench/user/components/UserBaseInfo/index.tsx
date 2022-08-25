@@ -78,6 +78,7 @@ export default function AccountSettings() {
                 onClick={() => {
                   setUpdateEmailModalVisible(true);
                 }}
+                disabled={true}
               >
                 修改手机
               </Button>
@@ -93,6 +94,7 @@ export default function AccountSettings() {
             extra={
               <Button
                 theme="borderless"
+                disabled={true}
                 onClick={() => {
                   setUpdateEmailModalVisible(true);
                 }}
