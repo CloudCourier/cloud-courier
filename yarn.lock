@@ -1003,10 +1003,10 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
-"@cloud-courier/cloud-courier-lib@^0.0.6":
-  version "0.0.6"
-  resolved "https://nexus.sunxinao.cn/repository/npm-group/@cloud-courier/cloud-courier-lib/-/cloud-courier-lib-0.0.6.tgz#ebbd017acf65ab456cbcbfd2617579e39ebb4113"
-  integrity sha512-x3OE8NFyPIM9qR/sok4JW+D1tUvUkwMsz+TcXB7BGWl2UCqX29k6qGt4mKKpUev3NP5xH6RROokKq+g4dbuxbQ==
+"@cloud-courier/cloud-courier-lib@^0.0.7":
+  version "0.0.7"
+  resolved "https://nexus.sunxinao.cn/repository/npm-group/@cloud-courier/cloud-courier-lib/-/cloud-courier-lib-0.0.7.tgz#1095b6939ef39a1159471caa6d7d80df3f1d5957"
+  integrity sha512-cqG8toKnNjGKvZSgOZ4FKCy012pIj6HN/p6M5OMvOaItQepTyPbrVtgilfWBuBgeR9VCJYgnpN+W44ykauNE+A==
   dependencies:
     axios "^0.26.0"
     long "^5.2.0"

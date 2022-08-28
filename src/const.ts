@@ -1,0 +1,1 @@
+export const MESSAGE_MAX_COUNT = 2147483647;

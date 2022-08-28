@@ -1,40 +1,15 @@
-import {
-  Button,
-  Space,
-  Table,
-  Avatar,
-  Tooltip,
-  Popconfirm,
-  SideSheet,
-  Tag,
-} from '@douyinfe/semi-ui';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { delMySubject, getMembers, joined } from '@/api/subjects';
-import { IconGlobe } from '@douyinfe/semi-icons';
-import { openProjectModal, setSubjectId, setToken } from '@/store/subject.slice';
-import { useAppDispatch, useAppSelector } from '@/hooks/store';
-import SubjectModal from './subjectModal';
-import { getUserInfo, ToastError } from '@/utils/common';
+import { Button, Space, Table, Avatar, SideSheet, Tag, Spin } from '@douyinfe/semi-ui';
+import { useQuery } from 'react-query';
+import { joined } from '@/api/subjects';
+import { getUserInfo } from '@/utils/common';
 import GroupSettings from '@/components/GroupSettings';
 import { useState } from 'react';
 
 function Tables() {
   const [settingVisible, setSettingVisible] = useState(false);
   const { id: userId } = getUserInfo();
-  const { data, isLoading } = useQuery('joined', joined);
+  const { data, isLoading, refetch } = useQuery('joined', joined);
   const [groupId, setGroupId] = useState(-1);
-  // const [pagination, setpagination] = useState({
-  //   current: 1,
-  //   pageSize: 10,
-  //   total: 10,
-  // })
-  // const handleTableChange = (pagination: any, filters: any, sorter: any) => {
-  //   userList(pagination.current, pagination.pageSize)
-  // }
-  // const userList = (current: number, pageSize: number) => {
-
-  // }
-  const dispatch = useAppDispatch();
   const goGroupSettings = (id: number) => {
     setGroupId(id);
     setSettingVisible(true);
@@ -83,11 +58,11 @@ function Tables() {
     },
   ];
 
+  if (isLoading) {
+    return <Spin>loading</Spin>;
+  }
   return (
     <>
-      <Button type="primary" onClick={() => dispatch(openProjectModal('add'))} icon={<IconGlobe />}>
-        新建组织
-      </Button>
       <Table
         columns={columns}
         rowKey={(record: any) => record.id}
@@ -96,7 +71,6 @@ function Tables() {
         loading={isLoading}
         // onChange={handleTableChange}
       />
-      <SubjectModal />
       <SideSheet
         title="组织信息"
         visible={settingVisible}

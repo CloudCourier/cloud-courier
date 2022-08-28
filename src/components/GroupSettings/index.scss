@@ -1,45 +1,23 @@
-.settingContainer {
+.infoContainer {
   display: flex;
   flex-direction: column;
-  .groupInfoContainer {
+
+  .visitorInfoContainer {
     display: flex;
-    .groupInfos {
+
+    .visitorInfos {
       display: flex;
       flex-direction: column;
-      .groupName {
+
+      .visitorName {
         font-weight: 600;
         font-size: 20px;
       }
-      .groupDes {
+
+      .visitorDes {
         font-size: 14px;
         color: rgba(0, 0, 0, 0.5);
         margin-top: 10px;
-      }
-    }
-  }
-  .groupMembers {
-    margin: 20px 0;
-    .groupHeader {
-      display: flex;
-      justify-content: space-between;
-      margin: 10px 0;
-      .groupNum {
-        font-size: 18px;
-        font-weight: 600;
-      }
-    }
-    .membersListContiner {
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      border-radius: 2px;
-      padding: 10px;
-    }
-    .membersList {
-      display: flex;
-      flex-direction: column;
-      :global {
-        .semi-input-wrapper {
-          margin: 0;
-        }
       }
     }
   }

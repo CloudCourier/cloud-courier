@@ -73,7 +73,7 @@
     "@babel/plugin-proposal-decorators": "^7.17.2",
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-typescript": "^7.16.7",
-    "@cloud-courier/cloud-courier-lib": "^0.0.6",
+    "@cloud-courier/cloud-courier-lib": "^0.0.7",
     "@douyinfe/semi-ui": "^2.17.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
     "@reduxjs/toolkit": "^1.8.1",

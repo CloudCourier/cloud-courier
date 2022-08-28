@@ -1,7 +1,8 @@
 import { lazy } from 'react';
 import { WrapperRouteComponent } from './config';
 const WorkbenchDashboard = lazy(() => import('@/pages/Workbench/Dashboard/index'));
-const WorkbenchSubject = lazy(() => import('@/pages/Workbench/Subject/index'));
+const WorkbenchMySubject = lazy(() => import('@/pages/Workbench/MySubject/index'));
+const WorkbenchJoinedSubject = lazy(() => import('@/pages/Workbench/JoinedSubject/index'));
 const Workbenchinvitations = lazy(() => import('@/pages/Workbench/Invitations/index'));
 const User = lazy(() => import('@/pages/Workbench/User/index'));
 const workbenchChildren = [
@@ -10,8 +11,12 @@ const workbenchChildren = [
     element: <WrapperRouteComponent element={<WorkbenchDashboard />} titleId="工作台" auth />,
   },
   {
-    path: 'subject',
-    element: <WrapperRouteComponent element={<WorkbenchSubject />} titleId="组织管理" auth />,
+    path: 'mysubject',
+    element: <WrapperRouteComponent element={<WorkbenchMySubject />} titleId="我的组织" auth />,
+  },
+  {
+    path: 'joinedsubject',
+    element: <WrapperRouteComponent element={<WorkbenchJoinedSubject />} titleId="组织列表" auth />,
   },
   {
     path: 'user',
