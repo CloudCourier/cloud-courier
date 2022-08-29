@@ -1,0 +1,24 @@
+.workContain {
+  display: flex;
+  flex-direction: column;
+  // background-color: #e6e9eb;
+  // background-image: url('@/assets/images/backgroundPic.jpg');
+  background-repeat: repeat;
+  height: 100vh;
+
+  .workHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    height: 60px;
+    box-shadow: 0 4px 10px 0 rgb(0 0 0 / 5%);
+    background-color: var(--semi-color-bg-0);
+    font-weight: 600;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .cardListContain {
+    padding: 10px;
+  }
+}

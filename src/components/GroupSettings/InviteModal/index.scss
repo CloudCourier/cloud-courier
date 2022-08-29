@@ -1,0 +1,21 @@
+.searchContainer {
+  display: flex;
+  flex-direction: column;
+  .searchBar {
+    margin-top: 20px;
+    width: 80%;
+    display: flex;
+    :global {
+      .semi-button {
+        margin-left: 10px;
+      }
+    }
+  }
+}
+.memberCard {
+  :global {
+    .semi-card-body {
+      display: none;
+    }
+  }
+}

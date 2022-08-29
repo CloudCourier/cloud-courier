@@ -1,0 +1,24 @@
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+
+  .visitorInfoContainer {
+    display: flex;
+
+    .visitorInfos {
+      display: flex;
+      flex-direction: column;
+
+      .visitorName {
+        font-weight: 600;
+        font-size: 20px;
+      }
+
+      .visitorDes {
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.5);
+        margin-top: 10px;
+      }
+    }
+  }
+}

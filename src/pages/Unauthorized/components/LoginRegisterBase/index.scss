@@ -1,0 +1,29 @@
+.pureTop {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pureTop::after {
+  content: '';
+  width: 120%;
+  height: 200px;
+  position: absolute;
+  left: -10%; // 椭圆左边隐藏10%，右边隐藏10%
+  top: 0;
+  border-radius: 0 0 50% 50%; // 左上角，右上角，右下角，左下角
+  background: #1496f1;
+}
+
+.cardH2 {
+  display: flex;
+  width: 300px;
+  justify-content: space-between;
+  align-items: stretch;
+}
