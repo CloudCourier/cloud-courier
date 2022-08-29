@@ -127,6 +127,8 @@ function Chat({ selectedUser }) {
             visitorKey={key}
             broadcastChannel={broadcastChannel}
             preferences={preferences}
+            appLogo={appLogo}
+            name={name}
           />
         </SideSheet>
       ) : (

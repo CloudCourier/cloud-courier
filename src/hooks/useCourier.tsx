@@ -162,8 +162,7 @@ export default function useCourier(
                * loaction 位置
                * name 访客名字
                */
-              const { appKey, appLogo, appName, avatar, clientVendor, key, location, name } =
-                packet;
+              const { appKey, avatar, clientVendor, key, location, name } = packet;
               // Add an user:
               instanceDB.then(e => {
                 e.getAllFromIndex('userList', 'key', key).then(data => {
@@ -171,8 +170,6 @@ export default function useCourier(
                     // 如果没查询到该用户把他储存到DB中
                     e.add('userList', {
                       appKey,
-                      appLogo,
-                      appName,
                       avatar,
                       clientVendor,
                       key,

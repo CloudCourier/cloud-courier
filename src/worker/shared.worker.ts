@@ -42,7 +42,7 @@ const instanceDB = openDB('cloudCourier', 1, {
     userStore.createIndex('target', 'target');
     userStore.createIndex('key', 'key');
 
-    const subjectStore = db.createObjectStore('subjetList', {
+    const subjectStore = db.createObjectStore('subjectList', {
       keyPath: 'id',
       autoIncrement: true,
     });
@@ -62,7 +62,8 @@ broadcastChannel.onmessage = debounce(e => {
     case 'sendRequest':
       cloudCourier.send(new ServerboundMessagePacket(key, message));
       break;
-    case 'ClientboundStrangerPacket':
+    case 'ServerboundQueryServiceHistoryPacket':
+      // 查询历史服务
       cloudCourier.send(
         new ServerboundQueryServiceHistoryPacket(
           Long.fromNumber(0),
@@ -144,8 +145,8 @@ function storeUser(packet: ClientboundStrangerPacket) {
   const { appKey, avatar, clientVendor, key, location, name } = packet;
   // Add an user:
   instanceDB.then(async e => {
-    const subjetList = await e.getAll('subjetList');
-    const userSubject = subjetList.filter(
+    const subjectList = await e.getAll('subjectList');
+    const userSubject = subjectList.filter(
       item => item.subjectId === Number(appKey.split(':')[1]),
     )[0];
     if (userSubject) {
@@ -187,10 +188,10 @@ function init(packet: ClientboundSyncSubjectsPacket) {
     const _ownerId = Number(ownerId);
     // Add an subject:
     instanceDB.then(e => {
-      e.getAllFromIndex('subjetList', 'subjectId', _subjectId).then(data => {
+      e.getAllFromIndex('subjectList', 'subjectId', _subjectId).then(data => {
         if (data.length === 0) {
           // 如果没查询到该用户把他储存到 DB 中
-          e.add('subjetList', {
+          e.add('subjectList', {
             subjectId: _subjectId,
             subjectName,
             subjectLogo,
@@ -288,7 +289,10 @@ cloudCourier.addListener({
       // 查询历史服务
       broadcastChannel.postMessage({
         type: 'ClientboundServiceHistoryPacket',
-        serviceHistory: packet.strangers,
+        serviceHistory: packet.strangers.map(item => ({
+          ...item,
+          firstVisitTime: Number(item.firstVisitTime),
+        })),
       });
     } else if (packet instanceof ClientboundRecentChatListPacket) {
       // 页面初始化时 初始化个性化配置

@@ -23,29 +23,51 @@ import { FC, useEffect, useState } from 'react';
 import { IconEdit } from '@douyinfe/semi-icons';
 
 import styles from './index.scss';
+import { openDB } from 'idb';
+import dayjs from 'dayjs';
 
 interface GroupSettingsProps {
   visitorKey: number;
   broadcastChannel: BroadcastChannel;
   preferences: any;
+  appLogo: string;
+  name: string;
 }
 
-const VisitorInfo: FC<GroupSettingsProps> = ({ visitorKey, broadcastChannel, preferences }) => {
-  const [avatarUrl, setAvatarUrl] = useState(''); // 头像
-  const [groupInfo, setGroupInfo] = useState({
-    name: '',
-    description: '',
-  }); // 头像
+const VisitorInfo: FC<GroupSettingsProps> = ({
+  visitorKey,
+  broadcastChannel,
+  preferences,
+  appLogo,
+  name,
+}) => {
   const [serviceHistory, setServiceHistory] = useState([]);
   useEffect(() => {
+    // 查询历史服务
     broadcastChannel.postMessage({
-      type: 'ClientboundStrangerPacket',
+      type: 'ServerboundQueryServiceHistoryPacket',
       key: visitorKey,
     });
     broadcastChannel.addEventListener('message', (event: MessageEvent<any>) => {
-      const { serviceHistory, type } = event.data;
+      let { serviceHistory, type } = event.data;
       if (type === 'ClientboundServiceHistoryPacket') {
-        setServiceHistory(serviceHistory);
+        openDB('cloudCourier').then(db => {
+          db.getAll('subjectList')
+            .then(res => {
+              return Promise.resolve(res);
+            })
+            .then(subjectList => {
+              const _serviceHistory = serviceHistory.map(history => {
+                const subjectId = Number(history.appKey.split(':')[1]);
+                const result = subjectList.filter(item => item.subjectId === subjectId)[0];
+                return {
+                  ...history,
+                  ...result,
+                };
+              });
+              setServiceHistory(_serviceHistory);
+            });
+        });
       }
     });
   }, []);
@@ -60,20 +82,8 @@ const VisitorInfo: FC<GroupSettingsProps> = ({ visitorKey, broadcastChannel, pre
     <div className={styles.infoContainer}>
       <Space className={styles.visitorInfoContainer}>
         <div className={styles.visitorLogo}>
-          <Meta avatar={<Upload setAvatarUrl={setAvatarUrl} avatarUrl={avatarUrl} />} />
+          <Meta avatar={<Avatar src={appLogo} />} title={name} />
         </div>
-        {/* <div className={styles.visitorInfos}>
-                    <div className={styles.visitorName}>
-                        {data.data && data.data.name}
-                        <Button
-                            type="primary"
-                            icon={<IconEdit />}
-                            aria-label="修改"
-                            onClick={() => setEditModalVisible(true)}
-                        />
-                    </div>
-                    <div className={styles.visitorDes}>{data.data.description || '这个人很懒～'} </div>
-                </div> */}
       </Space>
       <Tabs type="line" style={{ marginTop: '20px' }}>
         <TabPane tab="会话设置" itemKey="1">
@@ -97,7 +107,13 @@ const VisitorInfo: FC<GroupSettingsProps> = ({ visitorKey, broadcastChannel, pre
             dataSource={serviceHistory}
             renderItem={item => (
               <List.Item
-                header={<Avatar>SE</Avatar>}
+                header={
+                  <>
+                    <Avatar src={item.subjectLogo} />
+                    <h2>{item.subjectName}</h2>
+                  </>
+                }
+                key={item.key}
                 main={
                   <div>
                     <span style={{ color: 'var(--semi-color-text-0)', fontWeight: 500 }}>
@@ -110,7 +126,8 @@ const VisitorInfo: FC<GroupSettingsProps> = ({ visitorKey, broadcastChannel, pre
                       {item.clientVendor}
                     </p>
                     <p style={{ color: 'var(--semi-color-text-2)', margin: '4px 0' }}>
-                      {Number(item.firstVisitTime)}
+                      {/* FIXME NAN */}
+                      {dayjs(item.firstVisitTime).format('YYYY-MM-DD HH:mm:ss')}
                     </p>
                   </div>
                 }
