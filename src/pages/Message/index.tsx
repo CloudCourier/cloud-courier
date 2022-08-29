@@ -46,7 +46,7 @@ function Message() {
     // 搜索用户，更新选中的用户
     if (search === '') return;
     const index = userMessage.findIndex(item => item.name === search);
-    const searchEleArray = srollRef.current.children[0].children[1].children;
+    const searchEleArray = srollRef.current.children[0].children[3].children;
     Array.prototype.map.call(searchEleArray, item => {
       item.className = item.className.replace('active', '');
     });
