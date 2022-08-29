@@ -82,7 +82,7 @@ const VisitorInfo: FC<GroupSettingsProps> = ({ visitorKey, broadcastChannel, pre
               header={<h4 style={{ fontWeight: 600 }}>置顶</h4>}
               extra={
                 <Switch
-                  defaultChecked={preferences?.top}
+                  defaultChecked={Boolean(preferences?.top)}
                   onChange={changeTOP}
                   aria-label="a switch for demo"
                 ></Switch>

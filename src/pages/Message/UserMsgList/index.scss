@@ -120,16 +120,27 @@
     height: 52px;
   }
 
+  #messageList {
+    position: relative;
+  }
+
   .messageList {
     flex: 1;
   }
 }
 
 .topList {
-  display: grid;
-  padding: 10px;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 60px;
+  .topListContainer {
+    display: grid;
+    padding: 10px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 60px;
+  }
+
+  #topList {
+    position: relative;
+    height: 0;
+  }
 
   .feedCardAvatar {
     width: 32px;
@@ -137,6 +148,8 @@
     position: relative;
 
     .avatar {
+      position: relative;
+
       > img {
         width: 100%;
         height: 100%;
@@ -149,7 +162,7 @@
       .name {
         height: 14px;
         margin: 4px -2px 0;
-        font-size: 10px;
+        font-size: 12px;
         transform: scale(0.84);
         color: #8f959e;
         text-align: center;

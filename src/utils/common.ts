@@ -151,3 +151,23 @@ export const choiceIdEle = e => {
   }
   return e;
 };
+
+export const choiceIdEle2 = e => {
+  let first = true;
+  while (first === true ? !e.getAttribute('id') : !e.getAttribute('id')) {
+    // 当第一次点击，且没有获取到ID的时候
+    if (first) {
+      // 第一次循环
+      e = e.parentNode;
+      first = false;
+    } else {
+      // 除了第一次循环，其他循环
+      e = e.parentNode;
+    }
+  }
+  if (first) {
+    // 当第一次点击，就获取到ID的时候
+    e = e;
+  }
+  return e;
+};

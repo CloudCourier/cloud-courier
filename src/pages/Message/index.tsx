@@ -19,7 +19,10 @@ function Message() {
     // TODO: 定义 user 的 ts
     setSelectedUser(tempUser[0]);
     const index = userMessage.findIndex(item => item[attribute] === condition);
-    const EleArray = srollRef.current.children[0].children[3].children;
+    const EleArray = Array.prototype.slice.call(
+      srollRef.current.children[0].children[3].children,
+      1,
+    );
 
     Array.prototype.map.call(EleArray, item => {
       item.className = item.className.replace('active', '');
