@@ -11,14 +11,15 @@ import styles from './index.scss';
 import { useMemo, useEffect } from 'react';
 import GroupSettings from '@/components/GroupSettings';
 import VisitorInfo from '@/components/VisitorInfo';
+import { BROAD_CAST_CHANNEL } from '@/const';
 
 function Chat({ selectedUser }) {
   const [msg, setMsg] = useState('');
-  const { key, message, appLogo, appName, clientVendor, name } = selectedUser;
+  const { key, message, appLogo, appName, clientVendor, name, preferences } = selectedUser;
   const scroll = useRef<HTMLDivElement>();
   const [showEmojiModal, setEmojiModal] = useState(false);
   const [settingVisible, setSettingVisible] = useState(false);
-  const broadcastChannel = new BroadcastChannel('WebSocketChannel');
+  const broadcastChannel = new BroadcastChannel(BROAD_CAST_CHANNEL);
   const InitList = useMemo(
     () =>
       message.map(item => (
@@ -122,7 +123,11 @@ function Chat({ selectedUser }) {
           placement="right"
           width="100%"
         >
-          <VisitorInfo visitorKey={key} broadcastChannel={broadcastChannel} />
+          <VisitorInfo
+            visitorKey={key}
+            broadcastChannel={broadcastChannel}
+            preferences={preferences}
+          />
         </SideSheet>
       ) : (
         <SideSheet

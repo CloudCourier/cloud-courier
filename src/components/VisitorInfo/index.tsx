@@ -27,22 +27,35 @@ import styles from './index.scss';
 interface GroupSettingsProps {
   visitorKey: number;
   broadcastChannel: BroadcastChannel;
+  preferences: any;
 }
 
-const VisitorInfo: FC<GroupSettingsProps> = ({ visitorKey, broadcastChannel }) => {
+const VisitorInfo: FC<GroupSettingsProps> = ({ visitorKey, broadcastChannel, preferences }) => {
   const [avatarUrl, setAvatarUrl] = useState(''); // 头像
   const [groupInfo, setGroupInfo] = useState({
     name: '',
     description: '',
   }); // 头像
-
+  const [serviceHistory, setServiceHistory] = useState([]);
   useEffect(() => {
     broadcastChannel.postMessage({
       type: 'ClientboundStrangerPacket',
       key: visitorKey,
     });
+    broadcastChannel.addEventListener('message', (event: MessageEvent<any>) => {
+      const { serviceHistory, type } = event.data;
+      if (type === 'ClientboundServiceHistoryPacket') {
+        setServiceHistory(serviceHistory);
+      }
+    });
   }, []);
-
+  const changeTOP = checked => {
+    broadcastChannel.postMessage({
+      type: 'ServerboundAddChatListPacket',
+      key: visitorKey,
+      message: checked ? JSON.stringify({ top: Date.now() }) : JSON.stringify({ top: false }),
+    });
+  };
   return (
     <div className={styles.infoContainer}>
       <Space className={styles.visitorInfoContainer}>
@@ -68,11 +81,42 @@ const VisitorInfo: FC<GroupSettingsProps> = ({ visitorKey, broadcastChannel }) =
             <List.Item
               header={<h4 style={{ fontWeight: 600 }}>置顶</h4>}
               extra={
-                <Switch onChange={(v, e) => console.log(v)} aria-label="a switch for demo"></Switch>
+                <Switch
+                  defaultChecked={preferences?.top}
+                  onChange={changeTOP}
+                  aria-label="a switch for demo"
+                ></Switch>
               }
             />
           </List>
-          <Divider margin="12px" />
+        </TabPane>
+      </Tabs>
+      <Tabs type="line">
+        <TabPane tab="访问历史" itemKey="1">
+          <List
+            dataSource={serviceHistory}
+            renderItem={item => (
+              <List.Item
+                header={<Avatar>SE</Avatar>}
+                main={
+                  <div>
+                    <span style={{ color: 'var(--semi-color-text-0)', fontWeight: 500 }}>
+                      {item.name}
+                    </span>
+                    <p style={{ color: 'var(--semi-color-text-2)', margin: '4px 0' }}>
+                      {item.location}
+                    </p>
+                    <p style={{ color: 'var(--semi-color-text-2)', margin: '4px 0' }}>
+                      {item.clientVendor}
+                    </p>
+                    <p style={{ color: 'var(--semi-color-text-2)', margin: '4px 0' }}>
+                      {Number(item.firstVisitTime)}
+                    </p>
+                  </div>
+                }
+              />
+            )}
+          />
         </TabPane>
       </Tabs>
     </div>

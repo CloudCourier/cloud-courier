@@ -23,17 +23,20 @@ import {
   DisconnectedEvent,
   PacketSentEvent,
   ClientboundSyncSubjectsPacket,
+  ClientboundServiceHistoryPacket,
+  ServerboundDeleteChatListPacket,
+  ClientboundChatListPacket,
+  ClientboundRecentChatListPacket,
 } from '@cloud-courier/cloud-courier-lib';
 import { openDB } from 'idb/with-async-ittr';
 import { debounce } from 'lodash';
 import Long from 'long';
-import { MESSAGE_MAX_COUNT } from '../const';
+import { BROAD_CAST_CHANNEL, MESSAGE_MAX_COUNT } from '../const';
 
 const instanceDB = openDB('cloudCourier', 1, {
   upgrade(db) {
     const userStore = db.createObjectStore('userList', {
-      keyPath: 'id',
-      autoIncrement: true,
+      keyPath: 'key',
     });
     userStore.createIndex('name', 'name');
     userStore.createIndex('target', 'target');
@@ -52,32 +55,59 @@ const cloudCourier = new CloudCourier({
   keepAliveInterval: 20, // 心跳间隔 s
 });
 
-const broadcastChannel = new BroadcastChannel('WebSocketChannel');
+const broadcastChannel = new BroadcastChannel(BROAD_CAST_CHANNEL);
 broadcastChannel.onmessage = debounce(e => {
   const { type, key, message } = e.data;
-  if (type === 'sendRequest') {
-    cloudCourier.send(new ServerboundMessagePacket(key, message));
-  } else if (type === 'ClientboundStrangerPacket') {
-    cloudCourier.send(
-      new ServerboundQueryServiceHistoryPacket(
-        Long.fromNumber(0),
-        key,
-        Long.fromNumber(Date.now()),
-        MESSAGE_MAX_COUNT,
-      ),
-    );
+  switch (type) {
+    case 'sendRequest':
+      cloudCourier.send(new ServerboundMessagePacket(key, message));
+      break;
+    case 'ClientboundStrangerPacket':
+      cloudCourier.send(
+        new ServerboundQueryServiceHistoryPacket(
+          Long.fromNumber(0),
+          key,
+          Long.fromNumber(Date.now()),
+          MESSAGE_MAX_COUNT,
+        ),
+      );
+      break;
+    case 'ServerboundDeleteChatListPacket':
+      cloudCourier.send(new ServerboundDeleteChatListPacket(key));
+      break;
+    case 'ServerboundAddChatListPacket':
+      cloudCourier.send(new ServerboundAddChatListPacket(key, message));
+      // 乐观更新个性化配置
+      // FIXME 为啥两次才能过
+      instanceDB.then(async db => {
+        const tx = db.transaction('userList', 'readwrite');
+        const index = tx.store.index('key');
+        // 遍历 userID === source 的对象,将消息加进去
+        for await (const cursor of index.iterate(key)) {
+          const user = { ...cursor.value };
+          user.preferences = { ...user.preferences, ...JSON.parse(message) };
+          cursor.update(user);
+        }
+        await tx.done;
+        db.getAll('userList').then(message => {
+          broadcastChannel.postMessage({
+            type: 'message',
+            message,
+          });
+        });
+      });
+      break;
+    default:
+      break;
   }
 }, 100);
 
 function storeMsg(packet: ClientboundMessagePacket) {
   let { content, source, target, timestamp } = packet;
   // 将 Long 型的时间转换成 number
-  // @ts-igonre next-line
   const _timestamp = timestamp.toNumber();
   // 没有对象的时候先创建
   instanceDB.then(async db => {
-    // TODO tx undefined
-
     const tx = db.transaction('userList', 'readwrite');
     const index = tx.store.index('key');
     // 遍历 userID === source 的对象,将消息加进去
@@ -113,8 +143,6 @@ function storeUser(packet: ClientboundStrangerPacket) {
   // , appLogo, appName,
   const { appKey, avatar, clientVendor, key, location, name } = packet;
   // Add an user:
-  console.log('storeUser_____', packet);
-
   instanceDB.then(async e => {
     const subjetList = await e.getAll('subjetList');
     const userSubject = subjetList.filter(
@@ -122,7 +150,6 @@ function storeUser(packet: ClientboundStrangerPacket) {
     )[0];
     if (userSubject) {
       e.getAllFromIndex('userList', 'key', key).then(data => {
-        console.log('data', data);
         if (data.length === 0) {
           // 如果没查询到该用户把他储存到 DB 中
           e.add('userList', {
@@ -140,7 +167,6 @@ function storeUser(packet: ClientboundStrangerPacket) {
       });
     }
   });
-  cloudCourier.send(new ServerboundAddChatListPacket(key, JSON.stringify({})));
 }
 
 function init(packet: ClientboundSyncSubjectsPacket) {
@@ -170,7 +196,7 @@ function init(packet: ClientboundSyncSubjectsPacket) {
             subjectLogo,
             subjectDescription,
             createTime: _createTime,
-            _ownerId: ownerId,
+            ownerId: _ownerId,
           });
         }
       });
@@ -188,6 +214,10 @@ function init(packet: ClientboundSyncSubjectsPacket) {
         // 收到用户列表后发送历史消息包
         cloudCourier.send(
           new ServerboundHistoryPacket('', Long.fromNumber(Date.now()), MESSAGE_MAX_COUNT),
+        );
+        // 获取个性化配置
+        cloudCourier.send(
+          new ServerboundRefreshChatListPacket(Long.fromNumber(Date.now()), MESSAGE_MAX_COUNT),
         );
       }
     },
@@ -252,7 +282,55 @@ cloudCourier.addListener({
       // 收到群组的包，开始初始化
       init(packet);
     } else if (packet instanceof ClientboundStrangerPacket) {
+      // 来访客了
       storeUser(packet);
+    } else if (packet instanceof ClientboundServiceHistoryPacket) {
+      // 查询历史服务
+      broadcastChannel.postMessage({
+        type: 'ClientboundServiceHistoryPacket',
+        serviceHistory: packet.strangers,
+      });
+    } else if (packet instanceof ClientboundRecentChatListPacket) {
+      // 页面初始化时 初始化个性化配置
+      const { chatList } = packet;
+      instanceDB.then(async db => {
+        const tx = db.transaction('userList', 'readwrite');
+        const index = tx.store.index('key');
+        chatList.forEach(async item => {
+          // 遍历 userID === source 的对象,将消息加进去
+          for await (const cursor of index.iterate(item.key)) {
+            const user = { ...cursor.value };
+            user.preferences = { ...user.preferences, ...JSON.parse(item.preferences) };
+            cursor.update(user);
+          }
+        });
+        await tx.done;
+        db.getAll('userList').then(message => {
+          broadcastChannel.postMessage({
+            type: 'message',
+            message,
+          });
+        });
+      });
+    } else if (packet instanceof ClientboundChatListPacket) {
+      const { key, preferences } = packet;
+      instanceDB.then(async db => {
+        const tx = db.transaction('userList', 'readwrite');
+        const index = tx.store.index('key');
+        // 遍历 userID === source 的对象,将消息加进去
+        for await (const cursor of index.iterate(key)) {
+          const user = { ...cursor.value };
+          user.preferences = { ...user.preferences, ...JSON.parse(preferences) };
+          cursor.update(user);
+        }
+        await tx.done;
+        db.getAll('userList').then(message => {
+          broadcastChannel.postMessage({
+            type: 'message',
+            message,
+          });
+        });
+      });
     } else if (packet instanceof ClientboundDisconnectPacket) {
       console.log('断开链接packet', packet);
     }
@@ -265,8 +343,8 @@ cloudCourier.addListener({
       const { content, target } = packet;
       const timestamp = Date.now();
       instanceDB.then(async e => {
-        const tx = e.transaction('userList', 'readwrite');
-        const index = tx.store.index('key');
+        const ts = e.transaction('userList', 'readwrite');
+        const index = ts.store.index('key');
         // 遍历 userID === source 的对象,将消息加进去
         for await (const cursor of index.iterate(target)) {
           const user = { ...cursor.value };
@@ -277,7 +355,7 @@ cloudCourier.addListener({
           });
           cursor.update(user);
         }
-        await tx.done;
+        await ts.done;
         e.getAll('userList').then(message => {
           broadcastChannel.postMessage({
             type: 'message',
@@ -285,8 +363,18 @@ cloudCourier.addListener({
           });
         });
       });
-    } else if (packet instanceof ServerboundHistoryPacket) {
-      console.log('packetsent', packet);
+    } else if (packet instanceof ServerboundDeleteChatListPacket) {
+      // 删除消息列 表
+      // const { key } = packet
+      // instanceDB.then(async (e) => {
+      //   // e.put('userList', {}, key)
+      //   e.delete
+      // })
+      broadcastChannel.postMessage({
+        type: 'ServerboundDeleteChatListPacket_send',
+        key: packet.key,
+      });
+    } else if (packet instanceof ServerboundAddChatListPacket) {
     }
   },
   packetError(event: PacketErrorEvent) {
