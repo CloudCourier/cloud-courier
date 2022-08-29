@@ -45,17 +45,21 @@ function Message() {
   useEffect(() => {
     // 搜索用户，更新选中的用户
     if (search === '') return;
-    const index = userMessage.findIndex(item => item.name === search);
+    console.log('search', search);
+    console.log('userMessage', userMessage);
+
+    const index = userMessage.findIndex(item => item.key === search);
     const searchEleArray = srollRef.current.children[0].children[3].children;
+    const _searchEleArray = Array.prototype.slice.call(searchEleArray, 1);
     Array.prototype.map.call(searchEleArray, item => {
       item.className = item.className.replace('active', '');
     });
-    searchEleArray[index].className = `${searchEleArray[index].className} active`;
+    _searchEleArray[index].className = `${_searchEleArray[index].className} active`;
     srollRef.current.scrollTo({
       top: index * 60,
       behavior: 'smooth',
     });
-    setUserId(searchEleArray[index].getAttribute('id'));
+    setUserId(_searchEleArray[index].getAttribute('id'));
   }, [search]);
 
   const emptyStyle = {

@@ -9,6 +9,7 @@ import { debounce } from 'lodash';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
 import { useRef } from 'react';
+import type { AutoCompleteItems } from '@douyinfe/semi-ui/lib/es/autoComplete';
 
 export default ({ setSearch }) => {
   const [data, setData] = useState([]);
@@ -38,13 +39,13 @@ export default ({ setSearch }) => {
 
   const renderOption = item => {
     return (
-      <>
+      <div onClick={() => setSearch(item.key)} style={{ display: 'flex' }}>
         <Avatar src={item.appLogo} size="small" />
         <div style={{ marginLeft: 4 }}>
           <div style={{ fontSize: 14, marginLeft: 4 }}>{item.name}</div>
           <div style={{ marginLeft: 4 }}>{dayjs(item.timestamp).format('HH:mm:ss')}</div>
         </div>
-      </>
+      </div>
     );
   };
 
@@ -52,7 +53,7 @@ export default ({ setSearch }) => {
     <AutoComplete
       data={data}
       prefix={<IconSearch />}
-      style={{ width: '204px', position: 'fixed', zIndex: 999, backgroundColor: 'white' }}
+      style={{ width: '210px', position: 'fixed', zIndex: 999, backgroundColor: 'white' }}
       renderSelectedItem={option => option.name}
       renderItem={renderOption}
       onSearch={search}
@@ -65,7 +66,10 @@ export default ({ setSearch }) => {
           description={'暂无内容'}
         />
       }
-      onSelect={v => setSearch(v)}
+      // onSelect={(v: AutoCompleteItems) => {
+
+      //   // setSearch(v)
+      // }}
     ></AutoComplete>
   );
 };
