@@ -7,6 +7,7 @@ import { openDB } from 'idb';
 import { useAppDispatch } from '@/hooks/store';
 import { updateMessage } from '@/store/message.slice';
 import { getInfo } from '@/api/user';
+import { BROAD_CAST_CHANNEL } from '@/const';
 
 export default () => {
   const dispatch = useAppDispatch();
@@ -15,11 +16,13 @@ export default () => {
     getInfo(); //判断是否登录
     new SharedWorker(`${process.env.API_LOCAL}/shared.worker.js`);
     let webSocketState = WebSocket.CONNECTING;
-    const broadcastChannel = new BroadcastChannel('WebSocketChannel');
+    const broadcastChannel = new BroadcastChannel(BROAD_CAST_CHANNEL);
     broadcastChannel.addEventListener('message', event => {
-      switch (event.data.type) {
+      const { type, key } = event.data;
+      switch (type) {
         case 'WSState':
           webSocketState = event.data.state;
+          // TODO: 放到worker操作返回
           openDB('cloudCourier').then(db => {
             db.getAll('userList').then(res => {
               dispatch(updateMessage(res));
@@ -32,6 +35,10 @@ export default () => {
         case 'instance':
           // 监听新消息的时间，来判断是否去传递新的消息
           console.log(event.data.instance);
+          break;
+        case 'ServerboundDeleteChatListPacket_send':
+          console.log(key);
+
           break;
         default:
           break;

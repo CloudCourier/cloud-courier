@@ -10,13 +10,16 @@ import i18 from './i18';
 import styles from './index.scss';
 import { useMemo, useEffect } from 'react';
 import GroupSettings from '@/components/GroupSettings';
+import VisitorInfo from '@/components/VisitorInfo';
+import { BROAD_CAST_CHANNEL } from '@/const';
 
 function Chat({ selectedUser }) {
   const [msg, setMsg] = useState('');
-  const { key, message, appLogo, appName, clientVendor, name } = selectedUser;
+  const { key, message, appLogo, appName, clientVendor, name, preferences } = selectedUser;
   const scroll = useRef<HTMLDivElement>();
   const [showEmojiModal, setEmojiModal] = useState(false);
   const [settingVisible, setSettingVisible] = useState(false);
+  const broadcastChannel = new BroadcastChannel(BROAD_CAST_CHANNEL);
   const InitList = useMemo(
     () =>
       message.map(item => (
@@ -41,10 +44,9 @@ function Chat({ selectedUser }) {
       setMsg('');
       return;
     }
-    const broadcastChannel = new BroadcastChannel('WebSocketChannel');
     broadcastChannel.postMessage({
       type: 'sendRequest',
-      id: key,
+      key: key,
       message: msg,
     });
     setMsg('');
@@ -113,16 +115,31 @@ function Chat({ selectedUser }) {
           </div>
         </div>
       </div>
-      <SideSheet
-        title="组织信息"
-        visible={settingVisible}
-        onCancel={() => setSettingVisible(false)}
-        placement="right"
-        width="100%"
-      >
-        // TODO:
-        <GroupSettings />
-      </SideSheet>
+      {key.substring(0, 1) === 's' ? (
+        <SideSheet
+          title="游客信息"
+          visible={settingVisible}
+          onCancel={() => setSettingVisible(false)}
+          placement="right"
+          width="100%"
+        >
+          <VisitorInfo
+            visitorKey={key}
+            broadcastChannel={broadcastChannel}
+            preferences={preferences}
+          />
+        </SideSheet>
+      ) : (
+        <SideSheet
+          title="组织信息"
+          visible={settingVisible}
+          onCancel={() => setSettingVisible(false)}
+          placement="right"
+          width="100%"
+        >
+          <GroupSettings groupId={key} />
+        </SideSheet>
+      )}
     </div>
   );
 }

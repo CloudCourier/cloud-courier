@@ -13,11 +13,28 @@ function Message() {
   const srollRef = useRef<HTMLDivElement>();
   const [search, setSearch] = useState('');
 
+  const locateUser = (attribute: string, condition) => {
+    const tempUser = userMessage.filter(item => item[attribute] === condition);
+    // 将选择用户的消息列表传递给组件，进行展示
+    // TODO: 定义 user 的 ts
+    setSelectedUser(tempUser[0]);
+    const index = userMessage.findIndex(item => item[attribute] === condition);
+    const EleArray = srollRef.current.children[0].children[3].children;
+
+    Array.prototype.map.call(EleArray, item => {
+      item.className = item.className.replace('active', '');
+    });
+    EleArray[index].className = `${EleArray[index].className} active`;
+    srollRef.current.scrollTo({
+      top: index * 60,
+      behavior: 'smooth',
+    });
+  };
+
   useEffect(() => {
     if (userId !== '') {
-      const tempUser = userMessage.filter(item => item.key === userId);
-      // 将选择用户的消息列表传递给组件，进行展示
-      setSelectedUser(tempUser[0]);
+      setSearch('');
+      locateUser('key', userId);
     }
     // 通过监听消息列表的变化和用户的切换，来更新消息列表
   }, [userMessage, userId]);
@@ -37,6 +54,7 @@ function Message() {
     });
     setUserId(searchEleArray[index].getAttribute('id'));
   }, [search]);
+
   const emptyStyle = {
     height: '100%',
     width: '100%',

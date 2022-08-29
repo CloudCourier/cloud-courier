@@ -1,5 +1,6 @@
 import SparkMD5 from 'spark-md5';
 import http from '@/utils/http';
+import { ToastError } from '@/utils/common';
 
 /**
  * 计算文件 md5
@@ -51,9 +52,13 @@ export async function getFormData(md5: any) {
   }
   const url = `files/${md5}/params`;
   try {
-    const code = (await http.get(url)).data;
-    // eslint-disable-next-line no-eval
-    return eval(code);
+    const data = (await http.get(url)).data;
+    const dataEntries = Object.entries(data) as [string, string][];
+    const formData = new FormData();
+    for (let [key, value] of dataEntries) {
+      formData.set(key, value);
+    }
+    return formData;
   } catch (e) {
     console.error(e);
     return undefined;
@@ -76,12 +81,13 @@ export async function DoUpload(url: string, md5Code: any, ImgFile: any) {
   if (exist) {
     console.log('已存在', url);
     return url;
-    // eslint-disable-next-line no-else-return
   } else {
     // 第一次上传
     const form = await getFormData(md5Code);
     if (form === undefined) {
       // 上传失败
+      ToastError('上传失败');
+      return;
     }
     form.append('file', ImgFile);
     return new Promise((resolve, reject) => {
