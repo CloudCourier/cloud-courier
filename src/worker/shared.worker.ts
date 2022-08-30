@@ -28,10 +28,10 @@ import {
   ClientboundChatListPacket,
   ClientboundRecentChatListPacket,
 } from '@cloud-courier/cloud-courier-lib';
-import { openDB } from 'idb/with-async-ittr';
+import { IDBPDatabase, openDB } from 'idb/with-async-ittr';
 import { debounce } from 'lodash';
 import Long from 'long';
-import { BROAD_CAST_CHANNEL, MESSAGE_MAX_COUNT } from '../const';
+import { BROAD_CAST_CHANNEL, MESSAGE_MAX_COUNT } from '../consts';
 
 const instanceDB = openDB('cloudCourier', 1, {
   upgrade(db) {
@@ -55,8 +55,17 @@ const cloudCourier = new CloudCourier({
   keepAliveInterval: 20, // 心跳间隔 s
 });
 
-const broadcastChannel = new BroadcastChannel(BROAD_CAST_CHANNEL);
-broadcastChannel.onmessage = debounce(e => {
+const broadCastMyMessage = (db: IDBPDatabase) => {
+  db.getAll('userList').then(message => {
+    broadCastChannel.postMessage({
+      type: 'message',
+      message,
+    });
+  });
+};
+
+const broadCastChannel = new BroadcastChannel(BROAD_CAST_CHANNEL);
+broadCastChannel.onmessage = debounce(e => {
   const { type, key, message } = e.data;
   switch (type) {
     case 'sendRequest':
@@ -90,12 +99,7 @@ broadcastChannel.onmessage = debounce(e => {
           cursor.update(user);
         }
         await tx.done;
-        db.getAll('userList').then(message => {
-          broadcastChannel.postMessage({
-            type: 'message',
-            message,
-          });
-        });
+        broadCastMyMessage(db);
       });
       break;
     default:
@@ -124,12 +128,7 @@ function storeMsg(packet: ClientboundMessagePacket) {
     }
     await tx.done;
 
-    db.getAll('userList').then(message => {
-      broadcastChannel.postMessage({
-        type: 'message',
-        message,
-      });
-    });
+    broadCastMyMessage(db);
   });
 }
 
@@ -228,6 +227,8 @@ function init(packet: ClientboundSyncSubjectsPacket) {
       const { packet } = event;
       if (packet instanceof ClientboundHistoryPacket) {
         // 历史消息
+        console.log('packet.messages', packet);
+
         packet.messages.forEach(historyPacket => {
           storeMsg(historyPacket);
         });
@@ -254,7 +255,7 @@ cloudCourier
   })
   .then(() => {
     console.log('连接成功', cloudCourier.getState());
-    broadcastChannel.postMessage({ type: 'WSState', state: cloudCourier.getState() });
+    broadCastChannel.postMessage({ type: 'WSState', state: cloudCourier.getState() });
   })
   .catch(e => {
     console.error('连接失败', e);
@@ -287,7 +288,7 @@ cloudCourier.addListener({
       storeUser(packet);
     } else if (packet instanceof ClientboundServiceHistoryPacket) {
       // 查询历史服务
-      broadcastChannel.postMessage({
+      broadCastChannel.postMessage({
         type: 'ClientboundServiceHistoryPacket',
         serviceHistory: packet.strangers.map(item => ({
           ...item,
@@ -309,12 +310,7 @@ cloudCourier.addListener({
           }
         });
         await tx.done;
-        db.getAll('userList').then(message => {
-          broadcastChannel.postMessage({
-            type: 'message',
-            message,
-          });
-        });
+        broadCastMyMessage(db);
       });
     } else if (packet instanceof ClientboundChatListPacket) {
       const { key, preferences } = packet;
@@ -328,12 +324,7 @@ cloudCourier.addListener({
           cursor.update(user);
         }
         await tx.done;
-        db.getAll('userList').then(message => {
-          broadcastChannel.postMessage({
-            type: 'message',
-            message,
-          });
-        });
+        broadCastMyMessage(db);
       });
     } else if (packet instanceof ClientboundDisconnectPacket) {
       console.log('断开链接packet', packet);
@@ -360,12 +351,7 @@ cloudCourier.addListener({
           cursor.update(user);
         }
         await ts.done;
-        e.getAll('userList').then(message => {
-          broadcastChannel.postMessage({
-            type: 'message',
-            message,
-          });
-        });
+        broadCastMyMessage(e);
       });
     } else if (packet instanceof ServerboundDeleteChatListPacket) {
       // 删除消息列 表
@@ -374,7 +360,7 @@ cloudCourier.addListener({
       //   // e.put('userList', {}, key)
       //   e.delete
       // })
-      broadcastChannel.postMessage({
+      broadCastChannel.postMessage({
         type: 'ServerboundDeleteChatListPacket_send',
         key: packet.key,
       });

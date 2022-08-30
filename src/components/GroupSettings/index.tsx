@@ -30,11 +30,11 @@ import {
   updateSubject,
   removeMember,
 } from '@/api/subjects';
-import styles from './index.scss';
 import { useQuery } from 'react-query';
 import type { User } from '@/types/user';
 import { IllustrationNoResultDark, IllustrationNoResult } from '@douyinfe/semi-illustrations';
 import RemoveModal from './RemoveModal';
+import styles from './index.scss';
 interface GroupSettingsProps {
   groupId: number;
 }

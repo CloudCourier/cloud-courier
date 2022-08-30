@@ -3,7 +3,7 @@ import { useAppSelector } from '@/hooks/store';
 import { choiceIdEle, choiceIdEle2 } from '@/utils/common';
 import { Divider, Dropdown, Tooltip } from '@douyinfe/semi-ui';
 import { IconTick } from '@douyinfe/semi-icons';
-import { BROAD_CAST_CHANNEL } from '@/const';
+import { BROAD_CAST_CHANNEL } from '@/consts';
 import styles from './index.scss';
 import React, { useState } from 'react';
 

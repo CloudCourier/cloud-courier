@@ -7,7 +7,7 @@ import { openDB } from 'idb';
 import { useAppDispatch } from '@/hooks/store';
 import { updateMessage } from '@/store/message.slice';
 import { getInfo } from '@/api/user';
-import { BROAD_CAST_CHANNEL } from '@/const';
+import { BROAD_CAST_CHANNEL } from '@/consts';
 
 export default () => {
   const dispatch = useAppDispatch();

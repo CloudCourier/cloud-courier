@@ -11,7 +11,7 @@ import styles from './index.scss';
 import { useMemo, useEffect } from 'react';
 import GroupSettings from '@/components/GroupSettings';
 import VisitorInfo from '@/components/VisitorInfo';
-import { BROAD_CAST_CHANNEL } from '@/const';
+import { BROAD_CAST_CHANNEL } from '@/consts';
 
 function Chat({ selectedUser }) {
   const [msg, setMsg] = useState('');

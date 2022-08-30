@@ -8,12 +8,15 @@ import SubjectModal from './subjectModal';
 import { getUserInfo, ToastError } from '@/utils/common';
 import GroupSettings from '@/components/GroupSettings';
 import { useState } from 'react';
+import DeployModal from './deployModal';
 
 function Tables() {
   const [settingVisible, setSettingVisible] = useState(false);
+  const [deployModalVisible, setDeployModalVisible] = useState(false);
   const { id: userId } = getUserInfo();
-  const { data, isLoading, refetch } = useQuery('mySubjects', mySubjects);
+  const { data, isLoading } = useQuery('mySubjects', mySubjects);
   const [groupId, setGroupId] = useState(-1);
+  const [token, setToken] = useState(null);
   const dispatch = useAppDispatch();
   const goGroupSettings = (id: number) => {
     setGroupId(id);
@@ -55,10 +58,20 @@ function Tables() {
     {
       title: '操作',
       dataIndex: 'id',
-      render: (id: number) => (
-        <Space>
-          <Button onClick={() => goGroupSettings(id)}>详情</Button>
-        </Space>
+      render: (id: number, record) => (
+        <>
+          <Space>
+            <Button onClick={() => goGroupSettings(id)}>详情</Button>
+            <Button
+              onClick={() => {
+                setDeployModalVisible(true);
+                setToken(record.token);
+              }}
+            >
+              部署
+            </Button>
+          </Space>
+        </>
       ),
     },
   ];
@@ -89,6 +102,13 @@ function Tables() {
       >
         <GroupSettings groupId={groupId} />
       </SideSheet>
+      <DeployModal
+        token={token}
+        width={800}
+        height={700}
+        onCancel={() => setDeployModalVisible(false)}
+        visible={deployModalVisible}
+      />
     </>
   );
 }
