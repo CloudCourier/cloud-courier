@@ -2,14 +2,13 @@ import { useState } from 'react';
 import { AutoComplete, Avatar, Empty } from '@douyinfe/semi-ui';
 import { IconSearch } from '@douyinfe/semi-icons';
 import { IllustrationConstruction } from '@douyinfe/semi-illustrations';
-import './style.scss';
+import styles from './search.scss';
 import { useAppSelector } from '@/hooks/store';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
 import { useRef } from 'react';
-import type { AutoCompleteItems } from '@douyinfe/semi-ui/lib/es/autoComplete';
 
 export default ({ setSearch }) => {
   const [data, setData] = useState([]);
@@ -51,6 +50,7 @@ export default ({ setSearch }) => {
 
   return (
     <AutoComplete
+      className={styles.msgSearch}
       data={data}
       prefix={<IconSearch />}
       style={{ width: '210px', position: 'fixed', zIndex: 999, backgroundColor: 'white' }}

@@ -10,6 +10,7 @@ import workbenchChildren from '@/routers/workbenchChildren';
 
 const CustomerChat = lazy(() => import('@/pages/Message/index'));
 const WorkBench = lazy(() => import('@/pages/Workbench/index'));
+const KnowLedgeRelease = lazy(() => import('@/pages/Workbench/Knowledge/Release'));
 
 const Abnormal403 = lazy(() => import('@/pages/Abnormal/403/index'));
 const Abnormal404 = lazy(() => import('@/pages/Abnormal/404/index'));
@@ -29,7 +30,6 @@ const routeList: RouteObject[] = [
         element: <WrapperRouteComponent element={<WorkBench />} titleId="工作台" auth />,
         children: workbenchChildren,
       },
-
       {
         path: 'abnormal/403',
         element: <WrapperRouteComponent element={<Abnormal403 />} titleId="403" auth />,
@@ -43,6 +43,12 @@ const routeList: RouteObject[] = [
         element: <WrapperRouteComponent element={<Abnormal500 />} titleId="500" auth />,
       },
     ],
+  },
+  {
+    path: 'workbench/knowledge/release/:id',
+    element: (
+      <WrapperRouteWithOutLayoutComponent element={<KnowLedgeRelease />} titleId="撰写文章" auth />
+    ),
   },
   {
     path: 'login',

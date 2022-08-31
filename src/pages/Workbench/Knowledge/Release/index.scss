@@ -1,0 +1,26 @@
+.releaseContainer {
+  margin: 10px;
+
+  :global {
+    .ProseMirror {
+      min-height: 100vh;
+      padding: 16px;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      color: var(--semi-color-text-0);
+      background-color: var(--semi-color-fill-0);
+    }
+
+    .ProseMirror p {
+      margin: 0;
+    }
+
+    .ProseMirror:focus {
+      outline: none;
+    }
+
+    .syl-placeholder {
+      color: #aaa;
+    }
+  }
+}

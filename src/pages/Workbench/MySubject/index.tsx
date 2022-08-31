@@ -8,7 +8,7 @@ import SubjectModal from './subjectModal';
 import { getUserInfo, ToastError } from '@/utils/common';
 import GroupSettings from '@/components/GroupSettings';
 import { useState } from 'react';
-import DeployModal from './deployModal';
+import DeployModal from './DeployModal';
 
 function Tables() {
   const [settingVisible, setSettingVisible] = useState(false);

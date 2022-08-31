@@ -26,6 +26,8 @@
 
 [x] input 发送消息后 未清除干净
 
+[x] 新开的标签页没有消息页
+
 # TODO
 
 visitorInfo 信息完善
