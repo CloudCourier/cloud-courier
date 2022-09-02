@@ -108,7 +108,7 @@ broadCastChannel.onmessage = debounce(e => {
 }, 100);
 
 function storeMsg(packet: ClientboundMessagePacket) {
-  let { content, source, target, timestamp } = packet;
+  const { content, source, target, timestamp } = packet;
   // 将 Long 型的时间转换成 number
   const _timestamp = timestamp.toNumber();
   // 没有对象的时候先创建
@@ -203,7 +203,7 @@ function init(packet: ClientboundSyncSubjectsPacket) {
     });
   });
 
-  let strangerListener: SessionListener = {
+  const strangerListener: SessionListener = {
     packetReceived(event: PacketReceivedEvent) {
       const { packet } = event;
       if (packet instanceof ClientboundRecentServicesPacket) {
@@ -222,7 +222,7 @@ function init(packet: ClientboundSyncSubjectsPacket) {
       }
     },
   };
-  let historyListener: SessionListener = {
+  const historyListener: SessionListener = {
     packetReceived(event: PacketReceivedEvent) {
       const { packet } = event;
       if (packet instanceof ClientboundHistoryPacket) {
@@ -313,6 +313,7 @@ cloudCourier.addListener({
         broadCastMyMessage(db);
       });
     } else if (packet instanceof ClientboundChatListPacket) {
+      // 个性化配置
       const { key, preferences } = packet;
       instanceDB.then(async db => {
         const tx = db.transaction('userList', 'readwrite');

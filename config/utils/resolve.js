@@ -13,4 +13,7 @@ module.exports = {
     '@images': path.resolve(SRC_PATH, 'assets/images'),
     websocket: path.resolve(SRC_PATH, 'utils/fakeWebsocket'),
   },
+  fallback: {
+    tty: require.resolve('tty-browserify'),
+  },
 };
