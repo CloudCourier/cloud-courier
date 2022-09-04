@@ -183,7 +183,9 @@ const GroupSettings: FC<GroupSettingsProps> = ({ groupId }) => {
     <div className={styles.settingContainer}>
       <Space className={styles.groupInfoContainer}>
         <div className={styles.groupLogo}>
-          <Meta avatar={<Upload setAvatarUrl={setAvatarUrl} avatarUrl={avatarUrl} />} />
+          <Meta
+            avatar={<Upload id={data.data.id} setAvatarUrl={setAvatarUrl} avatarUrl={avatarUrl} />}
+          />
         </div>
         <div className={styles.groupInfos}>
           <div className={styles.groupName}>

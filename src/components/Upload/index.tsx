@@ -1,15 +1,21 @@
 import { Modal, Button, Avatar } from '@douyinfe/semi-ui';
 import { getUserInfo, ToastError, ToastInfo, ToastSuccess, ToastWaring } from '@/utils/common';
-import { useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { updateAvatar } from '@/api/user';
 import { upload } from './utils';
 import { CropperCard } from './Cropper';
 import { IconCloud, IconCamera } from '@douyinfe/semi-icons';
 import styles from './index.scss';
 import { STORGENAME, UPLOAD_SIZE } from '@/utils/const';
-import { useEffect } from 'react';
+import { updateSubject } from '@/api/subjects';
 
-export default function UploadImg({ avatarUrl, setAvatarUrl }: any) {
+interface UplodaImgProps {
+  avatarUrl: string;
+  setAvatarUrl: React.Dispatch<React.SetStateAction<string>>;
+  id?: number;
+}
+
+const UploadImg: FC<UplodaImgProps> = ({ avatarUrl, setAvatarUrl, id }) => {
   // TODO: 图片上传，添加旋转功能
   const [image, setImage] = useState(''); // 图片初始值
   const inputR = useRef<HTMLInputElement>(null);
@@ -63,17 +69,32 @@ export default function UploadImg({ avatarUrl, setAvatarUrl }: any) {
         return;
       }
       const url = (await upload(blob)) as string;
-      updateAvatar(url).then(() => {
-        ToastSuccess('修改成功');
-        setAvatarUrl(url);
-        const user = getUserInfo();
-        user.avatar = url;
-        localStorage.setItem(STORGENAME, JSON.stringify(user));
-        setVisible(false);
-        setImage('');
-        setConfirmLoading(false);
-        setModalText('上传图片');
-      });
+      console.log('id: ', id);
+
+      if (id === undefined) {
+        console.log('111');
+
+        updateAvatar(url).then(() => {
+          ToastSuccess('修改成功');
+          setAvatarUrl(url);
+          const user = getUserInfo();
+          user.avatar = url;
+          localStorage.setItem(STORGENAME, JSON.stringify(user));
+          setVisible(false);
+          setImage('');
+          setConfirmLoading(false);
+          setModalText('上传图片');
+        });
+      } else {
+        updateSubject({ id, logo: url }).then(() => {
+          ToastSuccess('修改成功');
+          setAvatarUrl(url);
+          setVisible(false);
+          setImage('');
+          setConfirmLoading(false);
+          setModalText('上传图片');
+        });
+      }
     });
   };
 
@@ -115,4 +136,6 @@ export default function UploadImg({ avatarUrl, setAvatarUrl }: any) {
       </Modal>
     </div>
   );
-}
+};
+
+export default UploadImg;

@@ -55,7 +55,7 @@ export async function getFormData(md5: any) {
     const data = (await http.get(url)).data;
     const dataEntries = Object.entries(data) as [string, string][];
     const formData = new FormData();
-    for (let [key, value] of dataEntries) {
+    for (const [key, value] of dataEntries) {
       formData.set(key, value);
     }
     return formData;
