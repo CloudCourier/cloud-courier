@@ -10,9 +10,7 @@ import {
   ServerboundHistoryPacket,
   ClientboundHistoryPacket,
   ClientboundDisconnectPacket,
-  ServerboundHandshakePacket,
   ServerboundAddChatListPacket,
-  ServerboundQueryChatListPacket,
   ServerboundQueryServiceHistoryPacket,
   ServerboundQueryStrangerListPacket,
   ServerboundRefreshChatListPacket,
@@ -260,6 +258,13 @@ cloudCourier
   .catch(e => {
     console.error('连接失败', e);
   });
+
+// @ts-ignore
+self.onconnect = e => {
+  if (e.type === 'connect' && cloudCourier.getState() === 1) {
+    broadCastChannel.postMessage({ type: 'NEWWS' });
+  }
+};
 
 cloudCourier.addListener({
   packetReceived(event: PacketReceivedEvent) {

@@ -1,6 +1,6 @@
 # 云信客服
 
-# Feature
+# TODOLIST
 
 [x] react query + 乐观更新
 
@@ -25,8 +25,6 @@
 [x] 完成后删除本地，或者云端删除
 
 [x] input 发送消息后 未清除干净
-
-[x] 新开的标签页没有消息页
 
 # TODO
 

@@ -4,17 +4,27 @@ import { Suspense, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import SuspendFallbackLoading from '../SuspendFallback';
 import { openDB } from 'idb';
-import { useAppDispatch } from '@/hooks/store';
-import { updateMessage } from '@/store/message.slice';
+import { useAppDispatch, useAppSelector } from '@/hooks/store';
+import messageSlice, { updateMessage } from '@/store/message.slice';
 import { getInfo } from '@/api/user';
 import { BROAD_CAST_CHANNEL } from '@/consts';
 
 export default () => {
   const dispatch = useAppDispatch();
+  const userMessage = useAppSelector(state => state.message.message);
+
   const { Content } = Layout;
+  const initMsg = () => {
+    openDB('cloudCourier').then(db => {
+      db.getAll('userList').then(res => {
+        dispatch(updateMessage(res));
+      });
+    });
+  };
   useEffect(() => {
     getInfo(); //判断是否登录
-    new SharedWorker(`${process.env.API_LOCAL}/shared.worker.js`);
+    const sharedworker = new SharedWorker(`${process.env.API_LOCAL}/shared.worker.js`);
+    sharedworker.port.start();
     let webSocketState = WebSocket.CONNECTING;
     const broadcastChannel = new BroadcastChannel(BROAD_CAST_CHANNEL);
     broadcastChannel.addEventListener('message', event => {
@@ -22,12 +32,7 @@ export default () => {
       switch (type) {
         case 'WSState':
           webSocketState = event.data.state;
-          // TODO: 放到worker操作返回
-          openDB('cloudCourier').then(db => {
-            db.getAll('userList').then(res => {
-              dispatch(updateMessage(res));
-            });
-          });
+          initMsg();
           break;
         case 'message':
           dispatch(updateMessage(event.data.message));
@@ -38,7 +43,11 @@ export default () => {
           break;
         case 'ServerboundDeleteChatListPacket_send':
           console.log(key);
-
+          break;
+        case 'NEWWS':
+          if (userMessage.length === 0) {
+            initMsg();
+          }
           break;
         default:
           break;
@@ -46,6 +55,7 @@ export default () => {
     });
     // 只用请求一次，防止请求两次导致WS连接失败
   }, []);
+
   return (
     <Layout>
       <Sider />
