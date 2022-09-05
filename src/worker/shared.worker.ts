@@ -31,6 +31,12 @@ import { debounce } from 'lodash';
 import Long from 'long';
 import { BROAD_CAST_CHANNEL, MESSAGE_MAX_COUNT } from '../consts';
 
+const reconnectLimit = 3;
+let reconnectTimer;
+let reconnectTimes = 0;
+let cloudCourierInstance: CloudCourier;
+const reconnectInterval = 3 * 1000;
+
 const instanceDB = openDB('cloudCourier', 1, {
   upgrade(db) {
     const userStore = db.createObjectStore('userList', {
@@ -113,13 +119,16 @@ function storeMsg(packet: ClientboundMessagePacket) {
   instanceDB.then(async db => {
     const tx = db.transaction('userList', 'readwrite');
     const index = tx.store.index('key');
-    // 遍历 userID === source 的对象,将消息加进去
+    // 遍历 userID === source 的对象,将消息加进去,
     for await (const cursor of index.iterate(source)) {
+      const message = cursor.value.message;
+      // 判断该消息是否已经存在
+      if (message.find(e => e.timestamp === _timestamp)) return;
       const user = { ...cursor.value };
       user.lastDate = _timestamp;
       user.message.push({
         content,
-        _timestamp,
+        timestamp: _timestamp,
         target,
       });
       cursor.update(user);
@@ -246,139 +255,172 @@ function init(packet: ClientboundSyncSubjectsPacket) {
   );
 }
 
-cloudCourier
-  .preAuth()
-  .then(() => {
-    cloudCourier.connect();
-  })
-  .then(() => {
-    console.log('连接成功', cloudCourier.getState());
-    broadCastChannel.postMessage({ type: 'WSState', state: cloudCourier.getState() });
-  })
-  .catch(e => {
-    console.error('连接失败', e);
-  });
+/**
+ * @description 初始化Websocket实例
+ */
+const connectWs = () => {
+  cloudCourier
+    .preAuth()
+    .then(() => {
+      cloudCourier.connect();
+    })
+    .then(() => {
+      console.log('连接成功', cloudCourier.getState());
+      broadCastChannel.postMessage({ type: 'WSState', state: cloudCourier.getState() });
+      cloudCourierInstance = cloudCourier;
+    })
+    .catch(e => {
+      console.error('连接失败', e);
+    });
 
-// @ts-ignore
-self.onconnect = e => {
-  if (e.type === 'connect' && cloudCourier.getState() === 1) {
-    broadCastChannel.postMessage({ type: 'NEWWS' });
+  // @ts-ignore
+  self.onconnect = e => {
+    if (e.type === 'connect' && cloudCourier.getState() === 1) {
+      broadCastChannel.postMessage({ type: 'newWs' });
+    }
+  };
+
+  cloudCourier.addListener({
+    packetReceived(event: PacketReceivedEvent) {
+      const { session, packet } = event;
+      if (packet instanceof ClientboundPongPacket) {
+        // 心跳包
+        return;
+      }
+      console.log('packet', packet);
+
+      if (packet instanceof ClientboundOnlineMemberPacket) {
+        return;
+      }
+      if (packet instanceof ClientboundWelcomePacket) {
+        session.setState(ProtocolState.MESSAGING);
+      } else if (packet instanceof ClientboundMessagePacket) {
+        // 判断消息是不是自己的，如果是自己的就发送给主线程
+        // TODO 其实好像并不用，因为使用就一个用户
+        storeMsg(packet);
+        // console.log('我收到消息 了 packet: ', packet);
+      } else if (packet instanceof ClientboundSyncSubjectsPacket) {
+        // 收到群组的包，开始初始化
+        init(packet);
+      } else if (packet instanceof ClientboundStrangerPacket) {
+        // 来访客了
+        storeUser(packet);
+      } else if (packet instanceof ClientboundServiceHistoryPacket) {
+        // 查询历史服务
+        broadCastChannel.postMessage({
+          type: 'ClientboundServiceHistoryPacket',
+          serviceHistory: packet.strangers.map(item => ({
+            ...item,
+            firstVisitTime: Number(item.firstVisitTime),
+          })),
+        });
+      } else if (packet instanceof ClientboundRecentChatListPacket) {
+        // 页面初始化时 初始化个性化配置
+        const { chatList } = packet;
+        instanceDB.then(async db => {
+          const tx = db.transaction('userList', 'readwrite');
+          const index = tx.store.index('key');
+          chatList.forEach(async item => {
+            // 遍历 userID === source 的对象,将消息加进去
+            for await (const cursor of index.iterate(item.key)) {
+              const user = { ...cursor.value };
+              user.preferences = { ...user.preferences, ...JSON.parse(item.preferences) };
+              cursor.update(user);
+            }
+          });
+          await tx.done;
+          broadCastMyMessage(db);
+        });
+      } else if (packet instanceof ClientboundChatListPacket) {
+        // 个性化配置
+        const { key, preferences } = packet;
+        instanceDB.then(async db => {
+          const tx = db.transaction('userList', 'readwrite');
+          const index = tx.store.index('key');
+          // 遍历 userID === source 的对象,将消息加进去
+          for await (const cursor of index.iterate(key)) {
+            const user = { ...cursor.value };
+            user.preferences = { ...user.preferences, ...JSON.parse(preferences) };
+            cursor.update(user);
+          }
+          await tx.done;
+          broadCastMyMessage(db);
+        });
+      } else if (packet instanceof ClientboundDisconnectPacket) {
+        console.log('断开链接packet', packet);
+        reconnect();
+      }
+    },
+    packetSent(event: PacketSentEvent) {
+      const { packet } = event;
+      console.log('我发出去的packet', packet);
+      if (packet instanceof ServerboundMessagePacket) {
+        // TODO: 乐观更新
+        const { content, target } = packet;
+        const timestamp = Date.now();
+        instanceDB.then(async e => {
+          const ts = e.transaction('userList', 'readwrite');
+          const index = ts.store.index('key');
+          // 遍历 userID === source 的对象,将消息加进去
+          for await (const cursor of index.iterate(target)) {
+            const user = { ...cursor.value };
+            user.message.push({
+              content,
+              timestamp,
+              target,
+            });
+            cursor.update(user);
+          }
+          await ts.done;
+          broadCastMyMessage(e);
+        });
+      } else if (packet instanceof ServerboundDeleteChatListPacket) {
+        // 删除消息列 表
+        // const { key } = packet
+        // instanceDB.then(async (e) => {
+        //   // e.put('userList', {}, key)
+        //   e.delete
+        // })
+        broadCastChannel.postMessage({
+          type: 'ServerboundDeleteChatListPacket_send',
+          key: packet.key,
+        });
+      } else if (packet instanceof ServerboundAddChatListPacket) {
+      }
+    },
+    packetError(event: PacketErrorEvent) {
+      if (!event.supress) {
+        console.error('解析包失败: ', event.cause);
+      }
+    },
+    disconnected(event: DisconnectedEvent) {
+      console.error('断开连接', event.reason, event.cause);
+    },
+  });
+};
+
+/**
+ * @description 重连
+ */
+const reconnect = () => {
+  if (
+    reconnectTimes < reconnectLimit &&
+    cloudCourierInstance.getState() !== ProtocolState.MESSAGING
+  ) {
+    if (reconnectTimer) {
+      clearTimeout(reconnectTimer);
+    }
+    reconnectTimer = setTimeout(() => {
+      connectWs();
+      reconnectTimes++;
+      broadCastChannel.postMessage({ type: 'reconnect', message: reconnectTimes });
+    }, reconnectInterval);
   }
 };
 
-cloudCourier.addListener({
-  packetReceived(event: PacketReceivedEvent) {
-    const { session, packet } = event;
-    if (packet instanceof ClientboundPongPacket) {
-      // 心跳包
-      return;
-    }
-    console.log('packet', packet);
+const connect = () => {
+  reconnectTimes = 0;
+  return connectWs();
+};
 
-    if (packet instanceof ClientboundOnlineMemberPacket) {
-      return;
-    }
-    if (packet instanceof ClientboundWelcomePacket) {
-      session.setState(ProtocolState.MESSAGING);
-    } else if (packet instanceof ClientboundMessagePacket) {
-      // 判断消息是不是自己的，如果是自己的就发送给主线程
-      // TODO 其实好像并不用，因为使用就一个用户
-      storeMsg(packet);
-      // console.log('我收到消息 了 packet: ', packet);
-    } else if (packet instanceof ClientboundSyncSubjectsPacket) {
-      // 收到群组的包，开始初始化
-      init(packet);
-    } else if (packet instanceof ClientboundStrangerPacket) {
-      // 来访客了
-      storeUser(packet);
-    } else if (packet instanceof ClientboundServiceHistoryPacket) {
-      // 查询历史服务
-      broadCastChannel.postMessage({
-        type: 'ClientboundServiceHistoryPacket',
-        serviceHistory: packet.strangers.map(item => ({
-          ...item,
-          firstVisitTime: Number(item.firstVisitTime),
-        })),
-      });
-    } else if (packet instanceof ClientboundRecentChatListPacket) {
-      // 页面初始化时 初始化个性化配置
-      const { chatList } = packet;
-      instanceDB.then(async db => {
-        const tx = db.transaction('userList', 'readwrite');
-        const index = tx.store.index('key');
-        chatList.forEach(async item => {
-          // 遍历 userID === source 的对象,将消息加进去
-          for await (const cursor of index.iterate(item.key)) {
-            const user = { ...cursor.value };
-            user.preferences = { ...user.preferences, ...JSON.parse(item.preferences) };
-            cursor.update(user);
-          }
-        });
-        await tx.done;
-        broadCastMyMessage(db);
-      });
-    } else if (packet instanceof ClientboundChatListPacket) {
-      // 个性化配置
-      const { key, preferences } = packet;
-      instanceDB.then(async db => {
-        const tx = db.transaction('userList', 'readwrite');
-        const index = tx.store.index('key');
-        // 遍历 userID === source 的对象,将消息加进去
-        for await (const cursor of index.iterate(key)) {
-          const user = { ...cursor.value };
-          user.preferences = { ...user.preferences, ...JSON.parse(preferences) };
-          cursor.update(user);
-        }
-        await tx.done;
-        broadCastMyMessage(db);
-      });
-    } else if (packet instanceof ClientboundDisconnectPacket) {
-      console.log('断开链接packet', packet);
-    }
-  },
-  packetSent(event: PacketSentEvent) {
-    const { packet } = event;
-    console.log('我发出去的packet', packet);
-    if (packet instanceof ServerboundMessagePacket) {
-      // TODO: 乐观更新
-      const { content, target } = packet;
-      const timestamp = Date.now();
-      instanceDB.then(async e => {
-        const ts = e.transaction('userList', 'readwrite');
-        const index = ts.store.index('key');
-        // 遍历 userID === source 的对象,将消息加进去
-        for await (const cursor of index.iterate(target)) {
-          const user = { ...cursor.value };
-          user.message.push({
-            content,
-            timestamp,
-            target,
-          });
-          cursor.update(user);
-        }
-        await ts.done;
-        broadCastMyMessage(e);
-      });
-    } else if (packet instanceof ServerboundDeleteChatListPacket) {
-      // 删除消息列 表
-      // const { key } = packet
-      // instanceDB.then(async (e) => {
-      //   // e.put('userList', {}, key)
-      //   e.delete
-      // })
-      broadCastChannel.postMessage({
-        type: 'ServerboundDeleteChatListPacket_send',
-        key: packet.key,
-      });
-    } else if (packet instanceof ServerboundAddChatListPacket) {
-    }
-  },
-  packetError(event: PacketErrorEvent) {
-    if (!event.supress) {
-      console.error('解析包失败: ', event.cause);
-    }
-  },
-  disconnected(event: DisconnectedEvent) {
-    console.error('断开连接', event.reason, event.cause);
-  },
-});
+connect();

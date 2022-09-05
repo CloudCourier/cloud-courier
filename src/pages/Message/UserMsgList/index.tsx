@@ -131,7 +131,11 @@ function userMsgList({ setSearch, setUserId }) {
       <div className={styles.searchContain}>
         <Search setSearch={setSearch} />
       </div>
-      <div className={styles.topList} onContextMenu={cancelTopContextMenuHandle}>
+      <div
+        className={styles.topList}
+        style={{ display: TopList().length !== 0 ? 'block' : 'none' }}
+        onContextMenu={cancelTopContextMenuHandle}
+      >
         <p id="topList">
           <Dropdown
             trigger={'custom'}
@@ -159,6 +163,7 @@ function userMsgList({ setSearch, setUserId }) {
         </p>
         <div className={styles.topListContainer}>{TopList()}</div>
       </div>
+
       <Divider />
       <div className={styles.messageList} onContextMenu={topContextMenuHandle}>
         <p id="messageList">
