@@ -17,15 +17,15 @@ interface UplodaImgProps {
 
 const UploadImg: FC<UplodaImgProps> = ({ avatarUrl, setAvatarUrl, id }) => {
   // TODO: 图片上传，添加旋转功能
-  const [image, setImage] = useState(''); // 图片初始值
+  const [image, setImage] = useState(null); // 图片初始值
   const inputR = useRef<HTMLInputElement>(null);
-  const uploadRef = useRef<any>('');
+  const uploadRef = useRef(null);
   const choiceImg = () => {
     inputR.current?.click();
   };
 
   // 原始图片选择器
-  const imgChange = (e: any) => {
+  const imgChange = e => {
     e.preventDefault();
     let files;
     if (e.dataTransfer) {
@@ -33,9 +33,13 @@ const UploadImg: FC<UplodaImgProps> = ({ avatarUrl, setAvatarUrl, id }) => {
     } else if (e.target) {
       files = e.target.files;
     }
+    if (files[0].size > UPLOAD_SIZE * 10) {
+      // 先限制一下过大的文件，在合理范围内走压缩
+      ToastWaring('超出最大图片体积限制');
+    }
     const reader = new FileReader();
     reader.onload = () => {
-      setImage(reader.result as any);
+      setImage(reader.result);
     };
     reader.readAsDataURL(files[0]);
   };
@@ -69,11 +73,8 @@ const UploadImg: FC<UplodaImgProps> = ({ avatarUrl, setAvatarUrl, id }) => {
         return;
       }
       const url = (await upload(blob)) as string;
-      console.log('id: ', id);
 
       if (id === undefined) {
-        console.log('111');
-
         updateAvatar(url).then(() => {
           ToastSuccess('修改成功');
           setAvatarUrl(url);
@@ -112,6 +113,7 @@ const UploadImg: FC<UplodaImgProps> = ({ avatarUrl, setAvatarUrl, id }) => {
         name="file"
         id="file"
         onChange={imgChange}
+        accept="image/*"
       />
     </div>
   );

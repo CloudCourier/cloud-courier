@@ -1,7 +1,8 @@
-import { useState, useImperativeHandle, useRef, forwardRef } from 'react';
+import { useState, useImperativeHandle, forwardRef } from 'react';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import styles from './index.scss';
+import { compress } from '@/utils/compressor';
 
 export const CropperCard = forwardRef(({ imageUrl }: any, uploadRef) => {
   const [cropper, setCropper] = useState<any>();
@@ -12,8 +13,9 @@ export const CropperCard = forwardRef(({ imageUrl }: any, uploadRef) => {
   const getCropData = () => {
     if (typeof cropper !== 'undefined') {
       return new Promise(resolve => {
-        cropper.getCroppedCanvas().toBlob((blob: Blob) => {
-          resolve(blob);
+        cropper.getCroppedCanvas().toBlob(async (blob: Blob) => {
+          const result = await compress(blob);
+          resolve(result);
         });
       });
     }
