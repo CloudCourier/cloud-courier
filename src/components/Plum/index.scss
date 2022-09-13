@@ -1,0 +1,24 @@
+@keyframes fade-up-header {
+  0% {
+    opacity: 0;
+    transform: translateY(10%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mask_image {
+  position: fixed;
+  mask-image: radial-gradient(circle, transparent, black);
+  --webkit-mask-image: radial-gradient(circle, transparent, black);
+  z-index: 1;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  position: fixed;
+  pointer-events: none;
+}

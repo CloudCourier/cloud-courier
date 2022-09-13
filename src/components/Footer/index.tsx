@@ -11,8 +11,7 @@ export default function CFooter() {
         icon={<IconExternalOpen />}
         link={{ href: 'https://beian.miit.gov.cn', target: '_blank' }}
       >
-        {/* 渝ICP备2022000851号-1 */}
-        豫xxxxxxxxxxxxxxxx
+        豫ICP备2020029001号-5
       </Typography.Text>
     </div>
   );

@@ -19,12 +19,11 @@ http.interceptors.response.use(
   response => response,
   err => {
     const { response } = err;
-    if (response.status === 401 && response.data.path !== '/members/login') {
-      ToastInfo('请登录');
+    if (response?.status === 401 && response.data.path !== '/members/login') {
       window.location.href = '#/login';
     }
 
-    ToastError(response.data.message);
+    ToastError(response?.data.message);
   },
 );
 export default http;
