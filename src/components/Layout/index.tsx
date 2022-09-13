@@ -29,7 +29,7 @@ export default () => {
   };
   useEffect(() => {
     getInfo(); //判断是否登录
-    if (!window.SharedWorker) {
+    if (!('SharedWorker' in window)) {
       setNoWorker(true);
       return;
     }
