@@ -10,6 +10,7 @@ const { IS_DEV, SRC_PATH, IS_PRO, DIST_PATH } = variable;
 const main = {
   entry: {
     index: path.join(SRC_PATH, 'index.tsx'),
+    deployscript: path.join(SRC_PATH, './utils/deploy.scripts.js'),
   },
   output: {
     path: DIST_PATH,

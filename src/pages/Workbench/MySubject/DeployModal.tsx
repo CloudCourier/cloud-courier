@@ -1,4 +1,4 @@
-import { WINDOW_PROJECT_TOKEN } from '@/consts';
+import { DOMAINNAME, WINDOW_PROJECT_TOKEN } from '@/consts';
 import { Button, Modal, Typography } from '@douyinfe/semi-ui';
 import type { ModalReactProps } from '@douyinfe/semi-ui/lib/es/modal';
 import type { FC } from 'react';
@@ -18,12 +18,12 @@ const DeployModal: FC<DeployModalIF> = props => {
       div.style.setProperty('bottom', '0', 'important');
       let body = document.querySelector('body');
       body.appendChild(div);
-      window.${WINDOW_PROJECT_TOKEN} = ${token}
+      window.${WINDOW_PROJECT_TOKEN} = '${token}';
       var s1 = document.createElement('script'),
         s0 = document.getElementsByTagName('script')[0];
       s1.async = true;
       s1.src =
-        'https://www.zhangbaolin001.cn/upload/2022/05/cloudcourierinit.js';
+        '${DOMAINNAME}/js/deployscript.bundle.js';
       s1.charset = 'UTF-8';
       s1.setAttribute('crossorigin', '*');
       s0.parentNode.insertBefore(s1, s0);
