@@ -10,7 +10,6 @@ const { IS_DEV, SRC_PATH, IS_PRO, DIST_PATH } = variable;
 const main = {
   entry: {
     index: path.join(SRC_PATH, 'index.tsx'),
-    deployscript: path.join(SRC_PATH, './utils/deploy.scripts.js'),
   },
   output: {
     path: DIST_PATH,
@@ -20,13 +19,15 @@ const main = {
     chunkFilename: IS_DEV ? 'js/[name].chunk.js' : 'js/[name].[contenthash:8].chunk.js',
     assetModuleFilename: 'assets/[hash][ext][query]',
   },
-  cache: { type: 'memory' },
+  cache: {
+    type: 'memory',
+  },
   module: {
     rules: [
       {
         test: /\.(tsx?|js|jsx)$/,
         include: [SRC_PATH],
-        exclude: [/node_modules/, /public/, /(.|_)min\.js$/, /\.worker\.(js|ts)$/],
+        exclude: [/node_modules/, /public/, /(.|_)min\.js$/, /\.worker|.script\.(js|ts)$/],
         use: [
           {
             loader: 'thread-loader',
@@ -93,8 +94,8 @@ const worker = {
   entry: path.join(SRC_PATH, './worker/shared.worker.ts'),
   output: {
     chunkFilename: IS_DEV ? 'js/[name].chunk.js' : 'js/[name].[contenthash:8].chunk.js',
-    filename: 'worker/shared.worker.js',
-    path: DIST_PATH,
+    filename: 'shared.worker.js',
+    path: `${DIST_PATH}/worker`,
     clean: true,
   },
   target: 'webworker',
@@ -125,4 +126,24 @@ const worker = {
     ],
   },
 };
-module.exports = [main, worker];
+const script = {
+  entry: path.join(SRC_PATH, './scripts/deploy.script.js'),
+  output: {
+    filename: 'deployscript.js',
+    path: `${DIST_PATH}/scripts`,
+    clean: true,
+  },
+  stats: 'errors-only',
+  mode: 'production',
+  module: {
+    rules: [
+      {
+        test: /\.script\.(js|ts)$/,
+        include: [SRC_PATH],
+        exclude: [/node_modules/, /public/, /(.|_)min\.js$/],
+        use: ['babel-loader?cacheDirectory=true'],
+      },
+    ],
+  },
+};
+module.exports = [main, worker, script];

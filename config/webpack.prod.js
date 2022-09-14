@@ -6,7 +6,12 @@ const baseConfig = require('./webpack.base');
 
 const config = {
   mode: 'production',
-  cache: { type: 'filesystem', buildDependencies: { config: [__filename] } }, // 使用文件缓存
+  cache: {
+    type: 'filesystem',
+    buildDependencies: {
+      config: [__filename],
+    },
+  }, // 使用文件缓存
   output: {
     pathinfo: false, // 优化
   },
@@ -38,4 +43,4 @@ const config = {
   },
 };
 const mergedConfig = webpackMerge.merge(baseConfig[0], config);
-module.exports = [baseConfig[1],mergedConfig];
+module.exports = [baseConfig[2], baseConfig[1], mergedConfig];

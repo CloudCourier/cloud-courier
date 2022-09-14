@@ -36,7 +36,7 @@ const getPlugins = () => {
   });
   const webpackBar = new WebpackBar({});
   const cleanWebpackPlugin = new CleanWebpackPlugin({
-    cleanOnceBeforeBuildPatterns: ['**/*', '!worker/**'],
+    cleanOnceBeforeBuildPatterns: ['**/*', '!worker/**', '!scripts/**'],
   });
   return [
     miniCssExtractPlugin,
