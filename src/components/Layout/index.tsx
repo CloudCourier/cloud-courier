@@ -9,7 +9,7 @@ import { Outlet } from 'react-router-dom';
 import SuspendFallbackLoading from '../SuspendFallback';
 import { openDB } from 'idb';
 import { useAppDispatch, useAppSelector } from '@/hooks/store';
-import messageSlice, { updateMessage } from '@/store/message.slice';
+import messageSlice, { updateMessage, updateLastMessageTime } from '@/store/message.slice';
 import { getInfo } from '@/api/user';
 import { BROAD_CAST_CHANNEL } from '@/consts';
 
@@ -46,6 +46,7 @@ export default () => {
           break;
         case 'message':
           dispatch(updateMessage(event.data.message));
+          dispatch(updateLastMessageTime(Date.now()));
           break;
         case 'instance':
           // 监听新消息的时间，来判断是否去传递新的消息

@@ -54,7 +54,6 @@ export default function useCourier(
   // 初始化数据库实例
   const instanceDB = openDB('cloudCourier', 1, {
     upgrade(db) {
-      console.log('db :', db);
       const Store = db.createObjectStore('userList', {
         keyPath: 'id',
         autoIncrement: true,

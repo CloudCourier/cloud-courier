@@ -103,7 +103,6 @@ function Tables() {
       title: '操作',
       dataIndex: 'invite_id',
       render: (id: number, record) => {
-        console.log('record', record);
         if (record.accept_status !== AcceptStatus.UNHANDLED) {
           return (
             <Space>

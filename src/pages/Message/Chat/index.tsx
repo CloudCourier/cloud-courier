@@ -56,6 +56,13 @@ function Chat({ selectedUser }) {
     setMsg(!_.isEmpty(msg) ? msg + emojis.native : emojis.native);
   };
 
+  const readMessage = () => {
+    broadcastChannel.postMessage({
+      type: 'ServerboundAddChatListPacket',
+      key,
+      message: JSON.stringify({ lastTime: Date.now() }),
+    });
+  };
   useEffect(() => {
     scroll.current.scrollTop = scroll.current.scrollHeight;
   }, [message]);
@@ -85,13 +92,14 @@ function Chat({ selectedUser }) {
           <div className={styles.sendTextarea}>
             <TextArea
               onChange={v => setMsg(v)}
-              placeholder="请留言"
+              placeholder="请输入消息"
               className={styles.Textarea}
               value={msg}
               rows={1}
               autosize
               showClear
               onEnterPress={() => sendMsg()}
+              onClick={readMessage}
             />
           </div>
           <div className={styles.funcContainer}>

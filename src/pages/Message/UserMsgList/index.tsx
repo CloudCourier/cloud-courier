@@ -1,11 +1,13 @@
 import Search from './search';
 import { useAppSelector } from '@/hooks/store';
 import { choiceIdEle, choiceIdEle2 } from '@/utils/common';
-import { Divider, Dropdown, Tooltip } from '@douyinfe/semi-ui';
+import { Avatar, Badge, Divider, Dropdown, Tooltip } from '@douyinfe/semi-ui';
 import { IconTick } from '@douyinfe/semi-icons';
 import { BROAD_CAST_CHANNEL } from '@/consts';
 import styles from './index.scss';
 import React, { useState } from 'react';
+import type { UserMessage } from '@/types/user';
+import dayjs from 'dayjs';
 
 function userMsgList({ setSearch, setUserId }) {
   const [topDropdownVisible, setTopDropdownVisible] = useState(false);
@@ -16,7 +18,7 @@ function userMsgList({ setSearch, setUserId }) {
   });
   const [topKey, setTopKey] = useState(-1);
   const broadCastChannel = new BroadcastChannel(BROAD_CAST_CHANNEL);
-  const message = useAppSelector(state => state.message.message);
+  const message = useAppSelector<UserMessage[]>(state => state.message.message);
   const choiceUser = e => {
     const ele = choiceIdEle(e);
     // Array.prototype.map.call(ele.parentElement.children, item => {
@@ -84,7 +86,12 @@ function userMsgList({ setSearch, setUserId }) {
       <div key={item.key} id={item.key} className={styles.feedCard} onClick={choiceUser}>
         <div className={styles.feedCardAvatar}>
           <div className={styles.avatar}>
-            <img src={item.appLogo} alt="logo" />
+            <Badge
+              count={item.preferences.unRead === 0 ? null : item.preferences.unRead}
+              type="danger"
+            >
+              <Avatar alt="logo" src={item.appLogo} size="small" />
+            </Badge>
           </div>
         </div>
         <div className={styles.feedCardMain}>
@@ -93,7 +100,9 @@ function userMsgList({ setSearch, setUserId }) {
               <p className={styles.feedCardNameText}>{item.name}</p>
             </div>
             {/* (item.create_time) */}
-            <div className={styles.feedCardHeaderTime}>22:45:56</div>
+            <div className={styles.feedCardHeaderTime}>
+              {dayjs(item?.lastDate).format('HH:mm:ss')}
+            </div>
           </div>
           <div className={styles.feedMessagePreviewContainer}>
             <div className={styles.feedMessagePreviewTextOverflow}>
@@ -111,13 +120,19 @@ function userMsgList({ setSearch, setUserId }) {
   const TopList = () => {
     const _topList = message
       .filter(item => item?.preferences?.top)
+      // @ts-ignore,top可能是false和时间戳，这里一定是时间戳
       .sort((a, b) => b.preferences.top - a.preferences.top);
     return _topList.map(item => (
       <>
         <div className={styles.feedCardAvatar} key={item.key} id={item.key} onClick={choiceTopUser}>
           <Tooltip content={item.name}>
             <div className={styles.avatar}>
-              <img src={item.appLogo} alt="logo" />
+              <Badge
+                count={item.preferences.unRead === 0 ? null : item.preferences.unRead}
+                type="danger"
+              >
+                <Avatar alt="logo" src={item.appLogo} size="small" />
+              </Badge>
               <div className={styles.name}>{item.name}</div>
             </div>
           </Tooltip>

@@ -49,7 +49,7 @@ const VisitorInfo: FC<GroupSettingsProps> = ({
       key: visitorKey,
     });
     broadcastChannel.addEventListener('message', (event: MessageEvent<any>) => {
-      let { serviceHistory, type } = event.data;
+      const { serviceHistory, type } = event.data;
       if (type === 'ClientboundServiceHistoryPacket') {
         openDB('cloudCourier').then(db => {
           db.getAll('subjectList')

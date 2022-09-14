@@ -43,7 +43,6 @@ export default function Register() {
     form.accountPrefix === 'phone'
       ? (regForm['phone'] = form.phone)
       : (regForm['email'] = form.email);
-    console.log(regForm);
     register(regForm)
       .then(res => {
         if (res) {

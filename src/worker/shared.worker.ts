@@ -1,3 +1,4 @@
+import type { UserMessage } from '@/types/user';
 import {
   CloudCourier,
   ClientboundPongPacket,
@@ -59,15 +60,65 @@ const cloudCourier = new CloudCourier({
   keepAliveInterval: 20, // 心跳间隔 s
 });
 
-const broadCastMyMessage = (db: IDBPDatabase) => {
-  db.getAll('userList').then(message => {
-    broadCastChannel.postMessage({
-      type: 'message',
-      message,
-    });
-  });
-};
+const broadCastMyMessage = debounce(
+  (db: IDBPDatabase) =>
+    db.getAll('userList').then((message: UserMessage[]) => {
+      let result = message.map(user => {
+        const lastTime = user.preferences.lastTime || -1;
+        let unRead = 0;
+        user.message
+          .sort((a, b) => b.timestamp - a.timestamp)
+          .find(item => {
+            if (item.timestamp > lastTime) {
+              // 如果消息的时间大于最后阅读时间，视为未读
+              unRead++;
+              return false;
+            } else {
+              return true;
+            }
+          });
+        return {
+          ...user,
+          preferences: {
+            ...user.preferences,
+            unRead,
+          },
+        };
+      });
+      result = result.map(user => {
+        const message = user.message.sort((a, b) => a.timestamp - b.timestamp);
+        return {
+          ...user,
+          message,
+          lastDate: message[message.length - 1].timestamp,
+        };
+      });
 
+      broadCastChannel.postMessage({
+        type: 'message',
+        message: result,
+      });
+    }),
+  500,
+);
+
+// 个性化配置
+function addChatList(key, message) {
+  cloudCourier.send(new ServerboundAddChatListPacket(key, message));
+  // 乐观更新个性化配置
+  instanceDB.then(async db => {
+    const tx = db.transaction('userList', 'readwrite');
+    const index = tx.store.index('key');
+    // 遍历 userID === source 的对象,将消息加进去
+    for await (const cursor of index.iterate(key)) {
+      const user = { ...cursor.value };
+      user.preferences = { ...user.preferences, ...JSON.parse(message) };
+      cursor.update(user);
+    }
+    await tx.done;
+    broadCastMyMessage(db);
+  });
+}
 const broadCastChannel = new BroadcastChannel(BROAD_CAST_CHANNEL);
 broadCastChannel.onmessage = debounce(e => {
   const { type, key, message } = e.data;
@@ -90,21 +141,7 @@ broadCastChannel.onmessage = debounce(e => {
       cloudCourier.send(new ServerboundDeleteChatListPacket(key));
       break;
     case 'ServerboundAddChatListPacket':
-      cloudCourier.send(new ServerboundAddChatListPacket(key, message));
-      // 乐观更新个性化配置
-      // FIXME 为啥两次才能过
-      instanceDB.then(async db => {
-        const tx = db.transaction('userList', 'readwrite');
-        const index = tx.store.index('key');
-        // 遍历 userID === source 的对象,将消息加进去
-        for await (const cursor of index.iterate(key)) {
-          const user = { ...cursor.value };
-          user.preferences = { ...user.preferences, ...JSON.parse(message) };
-          cursor.update(user);
-        }
-        await tx.done;
-        broadCastMyMessage(db);
-      });
+      addChatList(key, message);
       break;
     default:
       break;
@@ -139,7 +176,7 @@ function storeMsg(packet: ClientboundMessagePacket) {
   });
 }
 
-function storeUser(packet: ClientboundStrangerPacket) {
+function storeUser(packet: ClientboundStrangerPacket, stranger = false) {
   /*
     appKey 群组 ID g:10
     clientVendor 浏览器信息
@@ -168,10 +205,17 @@ function storeUser(packet: ClientboundStrangerPacket) {
             key,
             location,
             name,
+            lastDate: Date.now(),
             message: [],
           });
         }
       });
+    }
+    if (stranger) {
+      //如果是新访客，加上个性化配置。
+      console.warn('更新个性化配置');
+      const message = JSON.stringify({ lastTime: Date.now(), unRead: 0, top: false });
+      addChatList(key, message);
     }
   });
 }
@@ -304,7 +348,7 @@ const connectWs = () => {
         init(packet);
       } else if (packet instanceof ClientboundStrangerPacket) {
         // 来访客了
-        storeUser(packet);
+        storeUser(packet, true);
       } else if (packet instanceof ClientboundServiceHistoryPacket) {
         // 查询历史服务
         broadCastChannel.postMessage({

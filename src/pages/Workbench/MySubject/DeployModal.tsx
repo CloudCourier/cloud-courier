@@ -35,7 +35,6 @@ const DeployModal: FC<DeployModalIF> = props => {
       <Button
         type="primary"
         theme="solid"
-        onClick={() => console.log(11)}
         style={{
           width: 240,
           margin: '4px 50px',
