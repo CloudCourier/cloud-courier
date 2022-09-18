@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { useLocale } from '@/locales';
 import { useAppSelector } from '@/hooks/store';
 import Logo from '@/assets/images/logo.png';
+import { logout } from '@/api/user';
 
 const { Sider } = Layout;
 
@@ -66,7 +67,12 @@ const Index: FC = () => {
   const onOpenChange = data => {
     setOpenKeys([...data.openKeys]);
   };
-
+  const logoutHandle = () => {
+    logout().then(() => {
+      window.location.href = '#/login';
+      //TODO: 断开 ws ，登录后重新登录 ws
+    });
+  };
   // setSelectedKeys 和 path 双向绑定
   useEffect(() => {
     const keys: string[] = findMenuByPath(menuList, pathname, []);
@@ -89,11 +95,8 @@ const Index: FC = () => {
           text: '云信客服',
         }}
         footer={
-          <Tooltip content={'重新登录'} position="right">
-            <IconExit
-              style={{ cursor: 'pointer' }}
-              onClick={() => (window.location.href = '#/login')}
-            />
+          <Tooltip content={'退出登录'} position="right">
+            <IconExit style={{ cursor: 'pointer' }} onClick={logoutHandle} />
           </Tooltip>
         }
       />

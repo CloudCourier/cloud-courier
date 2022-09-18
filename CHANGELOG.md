@@ -1,0 +1,38 @@
+# (2022-09-18)
+
+### Bug Fixes
+
+- 不兼容 worker 提示 ([55b3dc4](https://github.com/bowlingQ/react-webpack-template/commit/55b3dc42f317330b6ab1c3b168c113bc85f035bd))
+- 解决打包报错问题 ([dc94c01](https://github.com/bowlingQ/react-webpack-template/commit/dc94c0145f743ec7e2ad8c827dcc20b2c60974f7))
+- 解决新开标签页无消息 ([7c4dd4b](https://github.com/bowlingQ/react-webpack-template/commit/7c4dd4ba98dcef46dd7d34cfabd43c5cd0a859ac))
+- 取消验证码等自动填充，解决获取验证吗按钮偏移 ([5948c98](https://github.com/bowlingQ/react-webpack-template/commit/5948c98f6454e1ea5b5b0892b3bc7b05945fbb28))
+- 修复搜索框根据名字搜索的 BUG ([246451e](https://github.com/bowlingQ/react-webpack-template/commit/246451e91115febb16cc697572f15419e1301b56))
+- 修复搜索用户错误 ([a84c3ef](https://github.com/bowlingQ/react-webpack-template/commit/a84c3ef8ac614fcf4c97b893068d00b51e3457f6))
+- 修复验证组件布局问题 ([45a7466](https://github.com/bowlingQ/react-webpack-template/commit/45a74660462655bc32928e58e5d2b34625431539))
+- 用户组卡片优化、图片上传限制 🚫 大小 ([6bdd5db](https://github.com/bowlingQ/react-webpack-template/commit/6bdd5db319340dd26dc6fa2d2e810eb9e47b4f3e))
+- api local ([9f0ec46](https://github.com/bowlingQ/react-webpack-template/commit/9f0ec46282e63a60aabb3c9385ca4f495e0bb110))
+- chane css module filename ([425f015](https://github.com/bowlingQ/react-webpack-template/commit/425f0150bef5ec6e029db5812d5c86110efc2090))
+- remove useless dependencies and add history test ([3947e02](https://github.com/bowlingQ/react-webpack-template/commit/3947e023400bd92e6ffd925c958bbae1c1cc4eaa))
+- scss module declear ([0bba7a9](https://github.com/bowlingQ/react-webpack-template/commit/0bba7a9836a3b1884911f459308d5f275e33a330))
+- sharedworker ([3fd809d](https://github.com/bowlingQ/react-webpack-template/commit/3fd809dcc512e86779d23cf7ce69924047aa0799))
+
+### Features
+
+- 工作台添加「我的邀请」 ([0ef0722](https://github.com/bowlingQ/react-webpack-template/commit/0ef072296cad5013bfdaeed47e9229cd54bd213c))
+- 模糊搜索组织用户 ([aff1145](https://github.com/bowlingQ/react-webpack-template/commit/aff1145e1d590163b683e343f4f145ba8038ef85))
+- 群管理「邀请成员」 ([4788630](https://github.com/bowlingQ/react-webpack-template/commit/4788630f1d2274ef440a0b20f586727b1d5fa74f))
+- 删除组织成员 ([953158d](https://github.com/bowlingQ/react-webpack-template/commit/953158d4decfe6b7c66a5f5579abff0415f61cd0))
+- 丝滑的「置顶、取消置顶」 ([702d2b9](https://github.com/bowlingQ/react-webpack-template/commit/702d2b92e9b38ef483661e098078a7712cb91418))
+- 新增部署逻辑，完善群组、用户信息窗，优化 worker ([77e5e5e](https://github.com/bowlingQ/react-webpack-template/commit/77e5e5e838aeaac6b2127d00ee887f277c466cef))
+- 新增梅花背景 ([824be30](https://github.com/bowlingQ/react-webpack-template/commit/824be303c7e5416282cd572d1b1c81cdde1295bd))
+- 新增未读已读，完善消息列表 ([c4105b4](https://github.com/bowlingQ/react-webpack-template/commit/c4105b4be74f3b7d1b6dd0e4d094a38844bb8d46))
+- 优化上传图片（压缩、约束） ([e410aad](https://github.com/bowlingQ/react-webpack-template/commit/e410aadb15ed5fb41deb8a8185c4ab6e4425b35b))
+- 知识库(1/3) ([bfb922f](https://github.com/bowlingQ/react-webpack-template/commit/bfb922f059f3c8a69e0523c0eb754b2f35a5b898))
+- 组织简介相关完善、工作台卡片完善 ([94d5781](https://github.com/bowlingQ/react-webpack-template/commit/94d5781f51c745618da88589faaa44027eaa5f5b))
+- add workbench card ([ae358df](https://github.com/bowlingQ/react-webpack-template/commit/ae358dfb5e595120e6ce0a0f34436e79d127bb71))
+- change ([dfa444c](https://github.com/bowlingQ/react-webpack-template/commit/dfa444caf8b357ea0c393e740e31675948610530))
+- chat init ([fc239f1](https://github.com/bowlingQ/react-webpack-template/commit/fc239f1497cb47229fe876a77a5fd545f3aed60d))
+- chat list ([d324ebf](https://github.com/bowlingQ/react-webpack-template/commit/d324ebf6526a06075b3824c377caf319838a2fa1))
+- search chioc user ([1dfdfa2](https://github.com/bowlingQ/react-webpack-template/commit/1dfdfa2e982dff5ae6b8e31b16f5acee3c938224))
+- table 完善 ([92d3dcb](https://github.com/bowlingQ/react-webpack-template/commit/92d3dcb3fbccb9f10d2951a835821445de2a5237))
+- user init ([fa2d767](https://github.com/bowlingQ/react-webpack-template/commit/fa2d767436279924923c5cc298af48dbb323b5db))

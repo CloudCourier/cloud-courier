@@ -18,12 +18,7 @@ export function register(values: RegisterForm) {
     data: values,
   });
 }
-export function logout() {
-  return http({
-    url: '/members/logout',
-    method: 'post',
-  });
-}
+
 export function query(keyword: string | number) {
   return http(`/members/query?keyword=${keyword}`);
 }
@@ -60,4 +55,8 @@ export function queryMembers(keyword: string) {
       keyword,
     },
   });
+}
+
+export function logout() {
+  return http('/members/logout');
 }

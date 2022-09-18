@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { Row } from '@douyinfe/semi-ui';
 
 export default function Index(props: { children: React.ReactNode }) {

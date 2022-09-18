@@ -1,37 +1,30 @@
-# 云信客服
+<p align="center">
+<img src="https://avatars.githubusercontent.com/u/110147430?s=200&v=4" height="150">
+</p>
 
-# TODOLIST
+<h1 align="center">
+Cloud Courier
+</h1>
 
-[x] react query + 乐观更新
+A system to help you manage messages from multiple websites. In addition, it provides plug and drop quick experience.
 
-[x] react native
+- 🚀 Only need to import a script file to enable your website to achieve customer service functions
+- 💥 Use Sharedworker to manage websocket connections, so that when multiple users and multiple tags are running at the same time, no performance issues need to be considered
 
-[x] 双击将当前窗口转换为 iframe
+## Documentation
 
-[x] service worker
+To check out docs, visit [docs](https://docs.cloudcourier.cn/).
 
-[x] 兼容不支持 sharedworker 的浏览器
+## Changelog
 
-[x] 插件化
+Detailed changes for each release are documented in the [CHANGELOG](https://github.com/CloudCourier/cloud-courier/blob/main/CHANGELOG.md).
 
-[x] 增量更新消息和用户
+## Contribution
 
-# FIXME
+Please make sure to read the [Contributing Guide](https://github.com/sanyuan0704/island/blob/master/.github/contributing.md) before making a pull request.
 
-[x] 登陆多个账号会导致聊天记录不对，客服端和访客端都是,可以等群组消息写出来再改
+## License
 
-[x] 断开尝试重连，连不上报错，下下策 刷新页面 客服端，访客端提示刷新页面
+[MIT](https://github.com/CloudCourier/cloud-courier/blob/main/LICENSE)
 
-[x] 完成后删除本地，或者云端删除
-
-[x] input 发送消息后 未清除干净
-
-# TODO
-
-visitorInfo 信息完善
-
-设置备注
-
-每周代码 review
-
-知识库
+Copyright (c) 2022-present, Baolin Zhang

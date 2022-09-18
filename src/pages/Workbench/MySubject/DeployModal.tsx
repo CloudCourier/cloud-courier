@@ -39,6 +39,7 @@ const DeployModal: FC<DeployModalIF> = props => {
           width: 240,
           margin: '4px 50px',
         }}
+        onClick={() => window.open('https://docs.cloudcourier.cn/docs/frontend/visitor-deploy')}
       >
         Learn more
       </Button>

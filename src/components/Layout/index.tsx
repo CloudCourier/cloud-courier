@@ -90,6 +90,7 @@ export default () => {
         <Layout>
           <Sider />
           <Layout style={{ marginLeft: '60px' }}>
+            {/* TODO: 不能拦截所有的断开连接情况，断网... */}
             {bannerVisible && (
               <Banner
                 onClose={() => setBannerVisible(!bannerVisible)}
