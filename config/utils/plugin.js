@@ -4,6 +4,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const WebpackBar = require('webpackbar');
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const PurgeCSSPlugin = require('purgecss-webpack-plugin');
 const DotenvPlugin = require('dotenv-webpack');
 const glob = require('glob');
@@ -46,6 +47,7 @@ const getPlugins = () => {
     dotenvPlugin,
     webpackBar,
     cleanWebpackPlugin,
+    // new BundleAnalyzerPlugin()
   ];
 };
 module.exports = {

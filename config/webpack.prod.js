@@ -29,6 +29,23 @@ const config = {
           enforce: true, // ignore splitChunks.minSize, splitChunks.minChunks, splitChunks.maxAsyncRequests and splitChunks.maxInitialRequests
           test: /[\\/]node_modules[\\/]/,
           priority: 10,
+          minChunks: 3,
+        },
+        react: {
+          name: 'react',
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+        },
+        douyinfe: {
+          name: 'douyinfe',
+          test: /[\\/]node_modules[\\/](@douyinfe)[\\/]/,
+        },
+        icon: {
+          name: 'icon',
+          test: /[\\/]node_modules[\\/](@icon-park)[\\/]/,
+        },
+        bytemd: {
+          name: 'icon',
+          test: /[\\/]node_modules[\\/](@bytemd)[\\/]/,
         },
         // 项目公共组件
         default: {
