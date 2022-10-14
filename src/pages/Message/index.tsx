@@ -7,8 +7,9 @@ import { IllustrationNoContent, IllustrationNoContentDark } from '@douyinfe/semi
 import { useAppSelector } from '@/hooks/store';
 import { useIdle } from 'react-use';
 import { BROAD_CAST_CHANNEL } from '@/consts';
+import { useParams } from 'react-router';
 
-function Message() {
+function Message(props) {
   const [selectedUser, setSelectedUser] = useState('none');
   const [userId, setUserId] = useState('');
   const userMessage = useAppSelector(state => state.message.message);
@@ -16,7 +17,7 @@ function Message() {
   const srollRef = useRef<HTMLDivElement>();
   const [search, setSearch] = useState('');
   const broadCastChannel = new BroadcastChannel(BROAD_CAST_CHANNEL);
-
+  console.log(props);
   const locateUser = (attribute: string, condition) => {
     const tempUser = userMessage.filter(item => item[attribute] === condition);
     // 将选择用户的消息列表传递给组件，进行展示

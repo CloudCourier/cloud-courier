@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/store';
 import messageSlice, { updateMessage, updateLastMessageTime } from '@/store/message.slice';
 import { getInfo } from '@/api/user';
 import { BROAD_CAST_CHANNEL } from '@/consts';
+import Footer from '@/components/Footer';
 
 export default () => {
   const [bannerVisible, setBannerVisible] = useState(false);
@@ -108,6 +109,7 @@ export default () => {
                 <Outlet />
               </Suspense>
             </Content>
+            <Footer />
           </Layout>
         </Layout>
       )}

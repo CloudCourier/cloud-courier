@@ -1,9 +1,9 @@
 import { IconExternalOpen } from '@douyinfe/semi-icons';
 import { Typography } from '@douyinfe/semi-ui';
 
-export default function CFooter() {
+export default function Footer() {
   return (
-    <div style={{ bottom: '10px', position: 'fixed' }}>
+    <div style={{ bottom: '0px', position: 'fixed', left: '50%', fontSize: '14px' }}>
       © 2021-{new Date().getFullYear()} 云信客服. All rights reserved.
       <Typography.Text
         className="m-l-5"
