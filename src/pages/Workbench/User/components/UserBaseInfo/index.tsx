@@ -6,16 +6,19 @@ import UpdatePassword from '../UpdatePassword';
 import Upload from '@/components/Upload';
 import Meta from '@douyinfe/semi-ui/lib/es/card/meta';
 import UpdateName from '../UpdateName';
+import UpdatePhone from '../UpdatePhone';
 
 export default function AccountSettings() {
-  const [updateNameModalVisible, setUpdateNameModalVisible] = useState(false); // 修改邮箱
+  const [updateNameModalVisible, setUpdateNameModalVisible] = useState(false); // 修改名称
   const [updatePasswordModalVisible, setUpdatePasswordModalVisible] = useState(false); // 修改密码
   const [updateEmailModalVisible, setUpdateEmailModalVisible] = useState(false); // 修改邮箱
+  const [updatePhoneModalVisible, setUpdatePhoneModalVisible] = useState(false); // 修改手机
   const [avatarUrl, setAvatarUrl] = useState(''); // 头像
   const [userName, setUserName] = useState(''); // 用户名
 
+  const user = getUserInfo();
+
   function initCard() {
-    const user = getUserInfo();
     setAvatarUrl(user.avatar);
     setUserName(user.username);
   }
@@ -68,17 +71,16 @@ export default function AccountSettings() {
           <List.Item
             main={
               <div>
-                <span style={{ color: 'var(--semi-color-text-0)', fontWeight: 500 }}>手机</span>
-                <p>请完善手机</p>
+                <p style={{ color: 'var(--semi-color-text-0)', fontWeight: 500 }}>手机</p>
+                {user.phone || <p>请完善手机</p>}
               </div>
             }
             extra={
               <Button
                 theme="borderless"
                 onClick={() => {
-                  setUpdateEmailModalVisible(true);
+                  setUpdatePhoneModalVisible(true);
                 }}
-                disabled={true}
               >
                 修改手机
               </Button>
@@ -87,14 +89,13 @@ export default function AccountSettings() {
           <List.Item
             main={
               <div>
-                <span style={{ color: 'var(--semi-color-text-0)', fontWeight: 500 }}>邮箱</span>
-                <p>邮箱为:1561314334@qq.com</p>
+                <p style={{ color: 'var(--semi-color-text-0)', fontWeight: 500 }}>邮箱</p>
+                {user.email || <p>请完善邮箱</p>}
               </div>
             }
             extra={
               <Button
                 theme="borderless"
-                disabled={true}
                 onClick={() => {
                   setUpdateEmailModalVisible(true);
                 }}
@@ -116,6 +117,10 @@ export default function AccountSettings() {
       <UpdateEmail
         modalVisible={updateEmailModalVisible}
         setModalVisible={setUpdateEmailModalVisible}
+      />
+      <UpdatePhone
+        modalVisible={updatePhoneModalVisible}
+        setModalVisible={setUpdatePhoneModalVisible}
       />
     </div>
   );

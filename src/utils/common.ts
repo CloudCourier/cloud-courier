@@ -166,7 +166,8 @@ export const choiceIdEle2 = e => {
     }
   }
   if (first) {
-    // 当第一次点击，就获取到ID的时候
+    // 当第一次点击，就获取到ID的时候 TODO: 待审查
+    // eslint-disable-next-line no-self-assign
     e = e;
   }
   return e;

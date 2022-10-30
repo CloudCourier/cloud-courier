@@ -3,25 +3,27 @@ import { Button, Form, useFormApi } from '@douyinfe/semi-ui';
 import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import styles from './index.scss';
 
-interface ICUserCode {
+interface UserCode {
   setCodeText: Dispatch<SetStateAction<string>>;
   timer: MutableRefObject<NodeJS.Timer | undefined>;
   clearTimer: () => void;
   codeText: string;
   loading: boolean;
   noLabel?: boolean;
+  type: string;
 }
 
-export default function UserCode(props: ICUserCode) {
+export default function UserCode(props: UserCode) {
   const formApi = useFormApi();
+  const { setCodeText, timer, clearTimer, codeText, noLabel, type, loading } = props;
   return (
     <div className={styles.smsContain}>
       <Form.Input
         label={{ text: '验证码', required: true }}
         field="code"
-        placeholder={props.noLabel ? '请输入验证码' : ''}
-        noLabel={props.noLabel}
-        rules={[{ required: true, message: '请输入验证码' }]}
+        placeholder={noLabel ? '请输入验证码' : ''}
+        noLabel={noLabel}
+        rules={[{ required: true, message: '请输入6位验证码', len: 6 }]}
         noErrorMessage
         autoComplete="off"
       />
@@ -29,13 +31,11 @@ export default function UserCode(props: ICUserCode) {
         block
         className={styles.smsBtn}
         onClick={() => {
-          formApi.validate(['email']).then(() => {
-            sendCode(formApi.getValue('email'), props.setCodeText, props.timer, props.clearTimer);
-          });
+          sendCode(type, formApi.getValue(type), setCodeText, timer, clearTimer);
         }}
-        disabled={props.codeText !== '获取验证码' || props.loading}
+        disabled={codeText !== '获取验证码' || loading}
       >
-        {props.codeText}
+        {codeText}
       </Button>
     </div>
   );

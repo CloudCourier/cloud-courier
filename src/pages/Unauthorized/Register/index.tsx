@@ -15,7 +15,6 @@ export default function Register() {
   const [accountType, setAccountType] = useState('phone');
   const formApi = useRef<BaseFormApi>();
   const [codeText, setCodeText] = useState('获取验证码');
-
   const timer = useRef<NodeJS.Timer>();
 
   const navigate = useNavigate();
@@ -34,11 +33,12 @@ export default function Register() {
   // 点击提交按钮
   function submitClick(form) {
     setLoading(true);
-    const temp = form.accountPrefix === 'phone' ? (form.phone as string) : (form.email as string);
+    const account =
+      form.accountPrefix === 'phone' ? (form.phone as string) : (form.email as string);
     const regForm = {
       password: form.password,
       code: form.code,
-      name: temp.substring(0, 3) + randomString(6), // 当个人用户注册时，随机生成一个用户名，为内部运行项目，应该不会出现重复的用户名(oﾟ▽ﾟ)o'
+      name: account.substring(0, 3) + randomString(6), // 当个人用户注册时，随机生成一个用户名。
     };
     form.accountPrefix === 'phone'
       ? (regForm['phone'] = form.phone)
@@ -47,7 +47,7 @@ export default function Register() {
       .then(res => {
         if (res) {
           ToastSuccess('注册成功，正在登入系统(oﾟ▽ﾟ)o', 5);
-          login({ login: form.account, password: form.password }).then(() => {
+          login({ login: account, password: form.password }).then(() => {
             ToastSuccess('欢迎回来 (oﾟ▽ﾟ)o', 5);
             navigate('/');
           });
@@ -120,6 +120,7 @@ export default function Register() {
           clearTimer={clearTimer}
           codeText={codeText}
           loading={loading}
+          type={formApi.current.getValue('accountPrefix')}
         />
         <Button
           block

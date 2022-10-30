@@ -1,4 +1,4 @@
-import { updateEmail, updatePassword } from '@/api/user';
+import { updatePassword, updatePhone } from '@/api/user';
 import UserCode from '@/components/UserUtils/UserCode';
 import { onModalCancel, ToastError, ToastSuccess } from '@/utils/common';
 import Validator from '@/utils/validator';
@@ -6,12 +6,12 @@ import { Button, Form, Modal } from '@douyinfe/semi-ui';
 import type { FormApi, ReactFieldError } from '@douyinfe/semi-ui/lib/es/form';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
-interface UpdateEmail {
+interface IUpdateEmail {
   modalVisible: boolean;
   setModalVisible: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function UpdateEmail(props: UpdateEmail) {
+export default function UpdateEmail(props: IUpdateEmail) {
   const formApi = useRef<FormApi>();
   const [confirmLoading, setConfirmLoading] = useState(false); // modal确认按钮的 loading状态
 
@@ -33,7 +33,7 @@ export default function UpdateEmail(props: UpdateEmail) {
 
   return (
     <Modal
-      title="修改邮箱"
+      title="修改手机"
       visible={props.modalVisible}
       onOk={() => {
         formApi.current?.submitForm();
@@ -47,7 +47,8 @@ export default function UpdateEmail(props: UpdateEmail) {
       <Form
         onSubmit={form => {
           if (confirmLoading) return;
-          modalSubmitClick(form.email, form.code, setConfirmLoading, props.setModalVisible);
+          console.log(form);
+          modalSubmitClick(form.phone, form.code, setConfirmLoading, props.setModalVisible);
         }}
         getFormApi={api => (formApi.current = api)}
         disabled={confirmLoading}
@@ -56,9 +57,9 @@ export default function UpdateEmail(props: UpdateEmail) {
         }}
       >
         <Form.Input
-          field="email"
-          label={{ text: '新邮箱', required: true }}
-          validate={Validator['emailValidate']}
+          field="phone"
+          label={{ text: '新手机', required: true }}
+          validate={Validator['phoneValidate']}
           showClear
         />
         <UserCode
@@ -68,7 +69,7 @@ export default function UpdateEmail(props: UpdateEmail) {
           clearTimer={clearTimer}
           codeText={codeText}
           loading={confirmLoading}
-          type={'email'}
+          type={'phone'}
         />
       </Form>
     </Modal>
@@ -77,13 +78,13 @@ export default function UpdateEmail(props: UpdateEmail) {
 
 // 表单提交
 function modalSubmitClick(
-  email: string,
+  phone: string,
   code: string,
   setConfirmLoading: Dispatch<SetStateAction<boolean>>,
   setModalVisible: Dispatch<SetStateAction<boolean>>,
 ) {
   setConfirmLoading(true);
-  updateEmail(email, code)
+  updatePhone(phone, code)
     .then(({ data }) => {
       ToastSuccess(data.msg);
       setConfirmLoading(false);

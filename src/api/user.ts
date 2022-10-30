@@ -60,3 +60,43 @@ export function queryMembers(keyword: string) {
 export function logout() {
   return http('/members/logout');
 }
+export function sms(type: string, account: string) {
+  const data =
+    type === 'phone'
+      ? {
+          type,
+          phone: account,
+        }
+      : {
+          type,
+          email: account,
+        };
+  console.log(type, account, data);
+  return http({
+    url: '/otp/send',
+    method: 'post',
+    data,
+  });
+}
+
+export function updatePhone(phone: string, code: string) {
+  return http({
+    url: '/members/update/phone',
+    method: 'post',
+    data: {
+      phone,
+      code,
+    },
+  });
+}
+
+export function updateEmail(email: string, code: string) {
+  return http({
+    url: '/members/update/email',
+    method: 'post',
+    data: {
+      email,
+      code,
+    },
+  });
+}
