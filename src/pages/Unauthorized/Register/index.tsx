@@ -120,7 +120,7 @@ export default function Register() {
           clearTimer={clearTimer}
           codeText={codeText}
           loading={loading}
-          type={formApi.current.getValue('accountPrefix')}
+          type={formApi.current?.getValue('accountPrefix') || 'phone'}
         />
         <Button
           block
