@@ -11,7 +11,6 @@
       var s1 = document.createElement('script');
       s1.src = files[i];
       s1.charset = 'UTF-8';
-      s1.setAttribute('crossorigin', '*');
       s0.parentNode.insertBefore(s1, s0);
     }
   }
