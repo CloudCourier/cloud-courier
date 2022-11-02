@@ -21,7 +21,7 @@ Detailed changes for each release are documented in the [CHANGELOG](https://gith
 
 ## Contribution
 
-Please make sure to read the [Contributing Guide](https://github.com/sanyuan0704/island/blob/master/.github/contributing.md) before making a pull request.
+Please make sure to read the [Contributing Guide](https://github.com/CloudCourier/cloud-courier/blob/main/.github/contributing.md) before making a pull request.
 
 ## License
 
