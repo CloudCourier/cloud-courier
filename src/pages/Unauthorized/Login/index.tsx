@@ -7,16 +7,21 @@ import LoginRegisterBase from '../components/LoginRegisterBase';
 import { STORGENAME } from '@/utils/const';
 
 import styles from './index.scss';
+import { BROAD_CAST_CHANNEL } from '@/consts';
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   // 点击提交按钮
+  const broadCastChannel = new BroadcastChannel(BROAD_CAST_CHANNEL);
   function submitClick(form) {
     setLoading(true);
     login(form)
       .then(res => {
         if (res && res?.status === 200) {
+          broadCastChannel.postMessage({
+            type: 'connect',
+          });
           ToastSuccess('欢迎回来 (oﾟ▽ﾟ)o', 5);
           localStorage.setItem(STORGENAME, JSON.stringify(res.data));
           setLoading(false);

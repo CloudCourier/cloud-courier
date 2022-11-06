@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ToastError, ToastInfo, ToastWaring } from '@/utils/common';
+import { ToastError } from '@/utils/common';
 
 const http = axios.create({
   baseURL: 'https://cccs.sunxinao.cn',

@@ -143,6 +143,9 @@ broadCastChannel.onmessage = debounce(e => {
     case 'ServerboundAddChatListPacket':
       addChatList(key, message);
       break;
+    case 'connect':
+      connect();
+      break;
     default:
       break;
   }
